@@ -6,7 +6,10 @@ import '../database_helper.dart';
 import '../mapper/journal_entity_mapper.dart';
 
 class JournalDao {
-  final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
+  final DatabaseHelper _databaseHelper;
+
+  JournalDao([DatabaseHelper? databaseHelper])
+    : _databaseHelper = databaseHelper ?? DatabaseHelper.instance;
 
   // Table name
   static const String tableName = DatabaseConstants.journalsTable;
@@ -35,6 +38,42 @@ class JournalDao {
         $columnImageUrls TEXT
       )
     ''';
+
+  // Common query helper to reduce duplication
+  Future<List<Journal>> _queryJournals({
+    String? where,
+    List<Object?>? whereArgs,
+    String? orderBy,
+    int? limit,
+  }) async {
+    final db = await _databaseHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      tableName,
+      where: where,
+      whereArgs: whereArgs,
+      orderBy: orderBy ?? '$columnCreatedAt DESC',
+      limit: limit ?? DatabaseConstants.defaultQueryLimit,
+    );
+
+    return JournalEntityMapper.mapToJournalList(maps);
+  }
+
+  // Common single-result helper
+  Future<Journal?> _querySingle({
+    required String where,
+    required List<Object?> whereArgs,
+  }) async {
+    final db = await _databaseHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      tableName,
+      where: where,
+      whereArgs: whereArgs,
+      limit: 1,
+    );
+
+    if (maps.isEmpty) return null;
+    return JournalEntityMapper.mapToJournal(maps.first);
+  }
 
   // Insert a new journal
   Future<int> insert(Journal journal) async {
@@ -68,83 +107,38 @@ class JournalDao {
 
   // Get journal by ID
   Future<Journal?> findById(String id) async {
-    final db = await _databaseHelper.database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      tableName,
-      where: '$columnId = ?',
-      whereArgs: [int.parse(id)],
-    );
-
-    if (maps.isEmpty) return null;
-    return JournalEntityMapper.mapToJournal(maps.first);
+    return _querySingle(where: '$columnId = ?', whereArgs: [int.parse(id)]);
   }
 
   // Get all journals ordered by creation date
   Future<List<Journal>> findAll() async {
-    final db = await _databaseHelper.database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      tableName,
-      orderBy: '$columnCreatedAt DESC',
-      limit: DatabaseConstants.defaultQueryLimit,
-    );
-
-    return JournalEntityMapper.mapToJournalList(maps);
+    return _queryJournals();
   }
 
   // Get favorite journals
   Future<List<Journal>> findFavorites() async {
-    final db = await _databaseHelper.database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      tableName,
-      where: '$columnIsFavorite = ?',
-      whereArgs: [1],
-      orderBy: '$columnCreatedAt DESC',
-      limit: DatabaseConstants.defaultQueryLimit,
-    );
-
-    return JournalEntityMapper.mapToJournalList(maps);
+    return _queryJournals(where: '$columnIsFavorite = ?', whereArgs: const [1]);
   }
 
   // Search journals by title or content
   Future<List<Journal>> search(String query) async {
-    final db = await _databaseHelper.database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      tableName,
+    return _queryJournals(
       where: '$columnTitle LIKE ? OR $columnContent LIKE ?',
       whereArgs: ['%$query%', '%$query%'],
-      orderBy: '$columnCreatedAt DESC',
-      limit: DatabaseConstants.defaultQueryLimit,
     );
-
-    return JournalEntityMapper.mapToJournalList(maps);
   }
 
   // Get journals by tag
   Future<List<Journal>> findByTag(String tag) async {
-    final db = await _databaseHelper.database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      tableName,
-      where: '$columnTags LIKE ?',
-      whereArgs: ['%$tag%'],
-      orderBy: '$columnCreatedAt DESC',
-      limit: DatabaseConstants.defaultQueryLimit,
-    );
-
-    return JournalEntityMapper.mapToJournalList(maps);
+    return _queryJournals(where: '$columnTags LIKE ?', whereArgs: ['%$tag%']);
   }
 
   // Get journals created between dates
   Future<List<Journal>> findByDateRange(DateTime start, DateTime end) async {
-    final db = await _databaseHelper.database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      tableName,
+    return _queryJournals(
       where: '$columnCreatedAt BETWEEN ? AND ?',
       whereArgs: [start.toIso8601String(), end.toIso8601String()],
-      orderBy: '$columnCreatedAt DESC',
-      limit: DatabaseConstants.defaultQueryLimit,
     );
-
-    return JournalEntityMapper.mapToJournalList(maps);
   }
 
   // Get journal count
@@ -172,7 +166,7 @@ class JournalDao {
     final db = await _databaseHelper.database;
     return await db.update(
       tableName,
-      {columnIsFavorite: isFavorite ? 1 : 0},
+      JournalEntityMapper.favoriteUpdateMap(isFavorite),
       where: '$columnId = ?',
       whereArgs: [int.parse(id)],
     );
