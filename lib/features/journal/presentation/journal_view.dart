@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/core/theme/colors.dart';
+import 'package:my_flutter_app/core/theme/fonts.dart';
+import 'package:my_flutter_app/core/theme/spacings.dart';
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/tag_chip.dart';
 
 class JournalView extends StatelessWidget {
   const JournalView({super.key});
   // DATA_MODEL (static for this example, would typically be in a ChangeNotifier)
-  static const String _mainImageUrl =
-      'https://www.gstatic.com/flutter-onestack-prototype/genui/example_1.jpg';
   static const String _eventDate = 'Thursday, August 28';
   static const String _eventLocation = 'Melbourne';
   static const List<String> _tags = <String>['Life', 'Travel'];
@@ -15,11 +17,6 @@ class JournalView extends StatelessWidget {
     'Quodsi haberent magnalia inter potentiam et divitias, et non illam quidem haec eo spectant haec quoque vos omnino desit illud quo solo felicitatis libertatique perficiuntur.',
     'Opus igitur est dicere possit dura omni specie, "Tu autem in specie, non videtur, nec omnino res est." Et examine ab eis praecepta eius quae',
   ];
-  static const List<String> _galleryImageUrls = <String>[
-    _mainImageUrl, // Using the same placeholder for all images
-    _mainImageUrl,
-    _mainImageUrl,
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -28,31 +25,31 @@ class JournalView extends StatelessWidget {
         slivers: <Widget>[
           SliverAppBar(
             leading: const Icon(Icons.close),
-            actions: const <Widget>[
+            actions: <Widget>[
               Icon(Icons.share),
-              SizedBox(width: 16),
+              SizedBox(width: Spacing.lg),
               Icon(Icons.edit),
-              SizedBox(width: 16),
+              SizedBox(width: Spacing.lg),
             ],
             floating: true,
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(Spacing.lg),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   const _HeaderImage(),
-                  const SizedBox(height: 16),
+                  SizedBox(height: Spacing.lg),
                   const _EventDetailsHeader(
                     date: _eventDate,
                     location: _eventLocation,
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: Spacing.sm),
                   TagChips(tags: _tags),
-                  const SizedBox(height: 16),
+                  SizedBox(height: Spacing.lg),
                   const _ContentSection(paragraphs: _contentParagraphs),
-                  const SizedBox(height: 16),
+                  SizedBox(height: Spacing.lg),
                   // ImageGallery(imageUrls: _galleryImageUrls),
                   // ImageGallery(
                   //   imageUrls: images,
@@ -83,7 +80,7 @@ class JournalView extends StatelessWidget {
 class _ContentSection extends StatelessWidget {
   final List<String> paragraphs;
 
-  const _ContentSection({required this.paragraphs, super.key});
+  const _ContentSection({required this.paragraphs});
 
   @override
   Widget build(BuildContext context) {
@@ -91,8 +88,8 @@ class _ContentSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         for (int i = 0; i < paragraphs.length; i++) ...<Widget>[
-          Text(paragraphs[i]),
-          if (i < paragraphs.length - 1) const SizedBox(height: 16),
+          Text(paragraphs[i], style: AppTypography.body),
+          if (i < paragraphs.length - 1) SizedBox(height: Spacing.lg),
         ],
       ],
     );
@@ -101,21 +98,25 @@ class _ContentSection extends StatelessWidget {
 
 /// A widget to display the main header image.
 class _HeaderImage extends StatelessWidget {
-  const _HeaderImage({super.key});
+  const _HeaderImage();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 180,
       width: double.infinity,
-      color: Colors.grey[300],
+      color: AppColors.border,
       child: Image.network(
         'https://www.gstatic.com/flutter-onestack-prototype/genui/example_1.jpg',
         fit: BoxFit.cover,
         errorBuilder:
             (BuildContext context, Object error, StackTrace? stackTrace) {
-              return const Center(
-                child: Icon(Icons.image, size: 50, color: Colors.grey),
+              return Center(
+                child: Icon(
+                  Icons.image,
+                  size: UIConstants.largeIconSize,
+                  color: AppColors.textSecondary,
+                ),
               );
             },
       ),
@@ -128,23 +129,23 @@ class _EventDetailsHeader extends StatelessWidget {
   final String date;
   final String location;
 
-  const _EventDetailsHeader({
-    required this.date,
-    required this.location,
-    super.key,
-  });
+  const _EventDetailsHeader({required this.date, required this.location});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text(date, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(date, style: AppTypography.headline2),
         Row(
           children: <Widget>[
-            const Icon(Icons.location_on, size: 16),
-            const SizedBox(width: 4),
-            Text(location),
+            Icon(
+              Icons.location_on,
+              size: UIConstants.smallIconSize,
+              color: AppColors.textSecondary,
+            ),
+            SizedBox(width: Spacing.xs),
+            Text(location, style: AppTypography.caption),
           ],
         ),
       ],

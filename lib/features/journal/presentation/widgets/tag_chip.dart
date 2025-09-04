@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
-import 'package:my_flutter_app/core/theme/spacing.dart';
-import 'package:my_flutter_app/core/theme/typography.dart';
-import 'package:my_flutter_app/core/ui_constants.dart';
+import 'package:my_flutter_app/core/theme/fonts.dart';
+import 'package:my_flutter_app/core/theme/spacings.dart';
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
 /// A widget to display a list of tags as chips.
 class TagChips extends StatelessWidget {

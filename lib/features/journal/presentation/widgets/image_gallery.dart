@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/core/theme/colors.dart';
+import 'package:my_flutter_app/core/theme/spacings.dart';
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:reorderables/reorderables.dart';
 
 class ImageGallery extends StatelessWidget {
@@ -13,8 +16,8 @@ class ImageGallery extends StatelessWidget {
 
   const ImageGallery({
     required this.imageUrls,
-    this.imageWidth = 100,
-    this.imageHeight = 100,
+    this.imageWidth = UIConstants.defaultImageSize,
+    this.imageHeight = UIConstants.defaultImageSize,
     required this.canAddPhotos,
     this.onAddPhotos = _defaultCallback,
     this.onImageTap,
@@ -44,7 +47,7 @@ class ImageGallery extends StatelessWidget {
                 child: Container(
                   width: imageWidth,
                   height: imageHeight,
-                  color: Colors.grey[300],
+                  color: AppColors.border,
                   child: Image.network(
                     url,
                     fit: BoxFit.cover,
@@ -54,11 +57,11 @@ class ImageGallery extends StatelessWidget {
                           Object error,
                           StackTrace? stackTrace,
                         ) {
-                          return const Center(
+                          return Center(
                             child: Icon(
                               Icons.image,
-                              size: 40,
-                              color: Colors.grey,
+                              size: UIConstants.mediumIconSize,
+                              color: AppColors.textSecondary,
                             ),
                           );
                         },
@@ -68,8 +71,8 @@ class ImageGallery extends StatelessWidget {
             ),
             if (onImageDelete != null)
               Positioned(
-                top: 2,
-                right: 2,
+                top: Spacing.xxs,
+                right: Spacing.xxs,
                 child: GestureDetector(
                   onTap: () => onImageDelete!(index),
                   child: Container(
@@ -77,9 +80,9 @@ class ImageGallery extends StatelessWidget {
                       color: Colors.black45,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.close,
-                      size: 18,
+                      size: UIConstants.smallIconSize,
                       color: Colors.white,
                     ),
                   ),
@@ -98,14 +101,14 @@ class ImageGallery extends StatelessWidget {
             width: imageWidth,
             height: imageHeight,
             decoration: BoxDecoration(
-              color: Colors.blueGrey.shade50,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.blueGrey.shade200, width: 1),
+              color: AppColors.border.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+              border: Border.all(color: AppColors.border, width: 1),
             ),
             child: Icon(
               Icons.add_photo_alternate_outlined,
-              color: Colors.blueGrey.shade400,
-              size: 30,
+              color: AppColors.textSecondary,
+              size: UIConstants.mediumIconSize,
             ),
           ),
         ),
@@ -113,14 +116,17 @@ class ImageGallery extends StatelessWidget {
     }
 
     return ReorderableWrap(
-      spacing: 8,
-      runSpacing: 8,
+      spacing: UIConstants.imageGallerySpacing,
+      runSpacing: UIConstants.imageGalleryRunSpacing,
       onReorder: (oldIndex, newIndex) => onReorder?.call(oldIndex, newIndex),
       // 长按拖拽效果
       buildDraggableFeedback: (context, constraints, child) {
         return Opacity(
-          opacity: 0.8,
-          child: Material(elevation: 6, child: child),
+          opacity: UIConstants.imageGalleryOpacity,
+          child: Material(
+            elevation: UIConstants.imageGalleryElevation,
+            child: child,
+          ),
         );
       },
       children: items,

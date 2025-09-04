@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
-import 'package:my_flutter_app/core/ui_constants.dart';
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
 class ImageCard extends StatelessWidget {
   final String imageUrl;
   final double imageHeight;
 
-  const ImageCard({super.key, required this.imageUrl, this.imageHeight = 150});
+  const ImageCard({
+    super.key,
+    required this.imageUrl,
+    this.imageHeight = UIConstants.defaultImageSize * 1.5,
+  });
 
   @override
   Widget build(BuildContext context) {

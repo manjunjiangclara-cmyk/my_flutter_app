@@ -1,4 +1,7 @@
+/// UI constants for consistent design system
 class UIConstants {
+  UIConstants._();
+
   // Spacing
   static const double defaultPadding = 16.0;
   static const double smallPadding = 8.0;
@@ -38,6 +41,13 @@ class UIConstants {
   // Card Dimensions
   static const double defaultCardPadding = 16.0;
   static const double defaultCardRadius = 12.0;
+
+  // Image Gallery
+  static const double defaultImageSize = 100.0;
+  static const double imageGallerySpacing = 8.0;
+  static const double imageGalleryRunSpacing = 8.0;
+  static const double imageGalleryOpacity = 0.8;
+  static const double imageGalleryElevation = 6.0;
 
   // Animation Durations
   static const Duration fastAnimation = Duration(milliseconds: 150);

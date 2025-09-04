@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/core/theme/colors.dart';
+import 'package:my_flutter_app/core/theme/fonts.dart';
+import 'package:my_flutter_app/core/theme/spacings.dart';
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
 class ComposeScreen extends StatelessWidget {
   const ComposeScreen({super.key});
@@ -18,19 +22,27 @@ class ComposeScreen extends StatelessWidget {
           children: [
             Text(
               'August 28, 2025',
-              style: TextStyle(fontSize: 16, color: Colors.black54),
+              style: AppTypography.caption.copyWith(
+                color: AppColors.textSecondary,
+              ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: Spacing.xl),
             Text(
               'Hey Anna, What is on your mind today?',
-              style: TextStyle(fontSize: 18, color: Colors.black87),
+              style: AppTypography.headline2.copyWith(
+                color: AppColors.textPrimary,
+              ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 40),
+            SizedBox(height: Spacing.xxxl),
             CircleAvatar(
-              radius: 40,
-              backgroundColor: Colors.grey.shade300,
-              child: Icon(Icons.add, size: 40, color: Colors.grey.shade400),
+              radius: UIConstants.largeIconSize,
+              backgroundColor: AppColors.border,
+              child: Icon(
+                Icons.add,
+                size: UIConstants.largeIconSize,
+                color: AppColors.textSecondary,
+              ),
             ),
           ],
         ),
