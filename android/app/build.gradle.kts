@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.my_flutter_app"
+    namespace = "com.manjun.hibi"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
