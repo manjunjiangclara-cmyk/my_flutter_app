@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
-import 'package:my_flutter_app/core/theme/typography.dart';
+import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/screens/compose_screen.dart';
 import 'package:my_flutter_app/screens/memory_screen.dart';
 import 'package:my_flutter_app/screens/settings_screen.dart';
@@ -72,17 +72,26 @@ class _MyHomePageState extends State<MyHomePage> {
             _selectedIndex = index;
           });
         },
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Text('🧠', style: TextStyle(fontSize: 20)),
+            icon: Text(
+              '🧠',
+              style: AppTypography.caption.copyWith(fontSize: 20),
+            ),
             label: 'Memory',
           ),
           BottomNavigationBarItem(
-            icon: Text('✍️', style: TextStyle(fontSize: 20)),
+            icon: Text(
+              '✍️',
+              style: AppTypography.caption.copyWith(fontSize: 20),
+            ),
             label: 'Compose',
           ),
           BottomNavigationBarItem(
-            icon: Text('⚙️', style: TextStyle(fontSize: 20)),
+            icon: Text(
+              '⚙️',
+              style: AppTypography.caption.copyWith(fontSize: 20),
+            ),
             label: 'Settings',
           ),
         ],
