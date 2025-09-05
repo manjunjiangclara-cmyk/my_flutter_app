@@ -15,5 +15,3 @@ class JournalError extends JournalViewState {
   final String message;
   JournalError(this.message);
 }
-
-
