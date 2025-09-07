@@ -166,7 +166,7 @@ class _ContentSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         for (int i = 0; i < paragraphs.length; i++) ...<Widget>[
-          Text(paragraphs[i], style: AppTypography.body),
+          Text(paragraphs[i], style: AppTypography.bodyLarge),
           if (i < paragraphs.length - 1) SizedBox(height: Spacing.lg),
         ],
       ],
@@ -222,7 +222,7 @@ class _EventDetailsHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text(date, style: AppTypography.headline2),
+        Text(date, style: AppTypography.headlineMedium),
         Row(
           children: <Widget>[
             Icon(
@@ -231,7 +231,7 @@ class _EventDetailsHeader extends StatelessWidget {
               color: AppColors.textSecondary,
             ),
             SizedBox(width: Spacing.xs),
-            Text(location, style: AppTypography.caption),
+            Text(location, style: AppTypography.labelSmall),
           ],
         ),
       ],

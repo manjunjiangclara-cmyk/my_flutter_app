@@ -91,3 +91,19 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  fonts:
+    - family: Lora
+      fonts:
+        - asset: assets/fonts/Lora-Italic-VariableFont_wght.ttf
+          style: italic
+          weight: 400
+        - asset: assets/fonts/Lora-VariableFont_wght.ttf          
+          weight: 400
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Italic-VariableFont_opsz,wght.ttf
+          style: italic
+          weight: 400
+        - asset: assets/fonts/Inter-VariableFont_opsz,wght.ttf     
+          weight: 400
