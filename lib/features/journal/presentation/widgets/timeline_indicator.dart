@@ -20,9 +20,6 @@ class TimelineIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        const SizedBox(
-          height: Spacing.sm,
-        ), // Top padding for the card's vertical margin
         // Top half of the line segment (before the dot)
         if (!isFirst)
           Expanded(child: Container(width: 2, color: lineColor))
@@ -46,9 +43,6 @@ class TimelineIndicator extends StatelessWidget {
           const SizedBox(
             height: Spacing.sm,
           ), // Half the dot height to align its center for the last item
-        const SizedBox(
-          height: Spacing.sm,
-        ), // Bottom padding for the card's vertical margin
       ],
     );
   }

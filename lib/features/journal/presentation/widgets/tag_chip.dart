@@ -13,8 +13,15 @@ class TagChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: tags.map<Widget>((String tag) {
-        return TagChip(tag: tag);
+      children: tags.asMap().entries.map<Widget>((entry) {
+        final index = entry.key;
+        final tag = entry.value;
+        return Row(
+          children: [
+            TagChip(tag: tag),
+            if (index < tags.length - 1) SizedBox(width: Spacing.sm),
+          ],
+        );
       }).toList(),
     );
   }
@@ -28,14 +35,14 @@ class TagChip extends StatelessWidget {
   const TagChip({
     super.key,
     required this.tag,
-    this.chipHorizontalPadding = Spacing.sm,
-    this.chipVerticalPadding = Spacing.xs,
+    this.chipHorizontalPadding = Spacing.xs,
+    this.chipVerticalPadding = 0,
   });
 
   @override
   Widget build(BuildContext context) {
     return Chip(
-      label: Text(tag, style: AppTypography.caption),
+      label: Text(tag, style: AppTypography.labelSmall),
       backgroundColor: AppColors.border.withValues(alpha: 0.5),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(UIConstants.defaultRadius),

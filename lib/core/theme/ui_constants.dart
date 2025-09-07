@@ -28,6 +28,7 @@ class UIConstants {
   static const double defaultIconSize = 24.0;
   static const double mediumIconSize = 32.0;
   static const double largeIconSize = 48.0;
+  static const double iconButtonSize = 30.0;
 
   // Button Heights
   static const double smallButtonHeight = 36.0;

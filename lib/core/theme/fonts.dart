@@ -1,53 +1,75 @@
 import 'package:flutter/material.dart';
 
-import 'colors.dart';
-
-/// Typography scale for the app.
 class AppTypography {
   AppTypography._();
 
-  // Families (ensure fonts are added in pubspec if custom)
-  static const String fontSans = 'Inter';
-  static const String fontSerif = 'Merriweather';
-
-  static const TextStyle headline1 = TextStyle(
-    fontFamily: fontSans,
-    fontWeight: FontWeight.w700,
-    fontSize: 24,
-    height: 1.25,
-    color: AppColors.textPrimary,
+  // ---------- Lora 字体（文学风格） ----------
+  static const TextStyle displayLarge = TextStyle(
+    fontFamily: 'Lora',
+    fontWeight: FontWeight.bold,
+    fontSize: 28, // 大标题
+    height: 48 / 40, // 行高 = 48px
   );
 
-  static const TextStyle headline2 = TextStyle(
-    fontFamily: fontSans,
-    fontWeight: FontWeight.w600,
-    fontSize: 20,
-    height: 1.3,
-    color: AppColors.textPrimary,
-  );
-
-  static const TextStyle body = TextStyle(
-    fontFamily: fontSerif,
+  static const TextStyle bodyLarge = TextStyle(
+    fontFamily: 'Lora',
     fontWeight: FontWeight.w400,
-    fontSize: 16,
-    height: 1.6,
-    color: AppColors.textPrimary,
+    fontSize: 16, // 正文
+    height: 24 / 16,
   );
 
-  static const TextStyle caption = TextStyle(
-    fontFamily: fontSans,
+  static const TextStyle bodyMedium = TextStyle(
+    fontFamily: 'Lora',
     fontWeight: FontWeight.w400,
-    fontSize: 14,
-    height: 1.4,
-    color: AppColors.textSecondary,
+    fontSize: 14, // 小正文 / 次要说明
+    height: 20 / 14,
   );
 
-  static TextTheme toTextTheme() {
-    return const TextTheme(
-      headlineLarge: headline1,
-      headlineMedium: headline2,
-      bodyLarge: body,
-      labelMedium: caption,
-    );
-  }
+  // ---------- Inter 字体（UI 元素） ----------
+  static const TextStyle headlineMedium = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w600, // SemiBold
+    fontSize: 28, // 小标题
+    height: 36 / 28,
+  );
+
+  static const TextStyle titleMedium = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w500, // Medium
+    fontSize: 20, // 副标题 / Emphasis
+    height: 28 / 20,
+  );
+
+  static const TextStyle labelLarge = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w500,
+    fontSize: 16, // 按钮文字
+    height: 24 / 16,
+  );
+
+  static const TextStyle labelMedium = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w500,
+    fontSize: 14, // 按钮文字
+    height: 20 / 14,
+  );
+
+  static const TextStyle labelSmall = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w500,
+    fontSize: 12, // 辅助文字 / Caption
+    height: 18 / 12,
+  );
+
+  // ---------- 可选：TextTheme ----------
+  static TextTheme get textTheme => const TextTheme(
+    displayLarge: displayLarge,
+    headlineMedium: headlineMedium,
+    titleMedium: titleMedium,
+    bodyLarge: bodyLarge,
+    bodyMedium: bodyMedium,
+    labelLarge: labelLarge,
+    labelMedium: labelMedium,
+    labelSmall: labelSmall,
+  );
 }
