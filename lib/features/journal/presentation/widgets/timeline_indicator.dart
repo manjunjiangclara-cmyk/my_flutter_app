@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/core/theme/spacings.dart';
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
 class TimelineIndicator extends StatelessWidget {
   final bool isFirst;
@@ -18,17 +20,19 @@ class TimelineIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        const SizedBox(height: 8), // Top padding for the card's vertical margin
+        const SizedBox(
+          height: Spacing.sm,
+        ), // Top padding for the card's vertical margin
         // Top half of the line segment (before the dot)
         if (!isFirst)
           Expanded(child: Container(width: 2, color: lineColor))
         else
           const SizedBox(
-            height: 8,
+            height: Spacing.sm,
           ), // Half the dot height to align its center for the first item
         Container(
-          width: 16,
-          height: 16,
+          width: UIConstants.smallIconSize,
+          height: UIConstants.smallIconSize,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: dotColor,
@@ -40,10 +44,10 @@ class TimelineIndicator extends StatelessWidget {
           Expanded(child: Container(width: 2, color: lineColor))
         else
           const SizedBox(
-            height: 8,
+            height: Spacing.sm,
           ), // Half the dot height to align its center for the last item
         const SizedBox(
-          height: 8,
+          height: Spacing.sm,
         ), // Bottom padding for the card's vertical margin
       ],
     );

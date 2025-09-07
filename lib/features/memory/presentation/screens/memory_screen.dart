@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/core/theme/spacings.dart';
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/timeline_indicator.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
 import 'package:my_flutter_app/features/memory/presentation/providers/memory_provider.dart';
 import 'package:my_flutter_app/features/memory/presentation/widgets/memory_card.dart';
 import 'package:provider/provider.dart';
 
-class ComposeScreen extends StatelessWidget {
-  const ComposeScreen({super.key});
+class MemoryScreen extends StatelessWidget {
+  const MemoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +25,19 @@ class ComposeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const Padding(
-        padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+      body: Padding(
+        padding: EdgeInsets.only(
+          left: UIConstants.defaultPadding,
+          right: UIConstants.defaultPadding,
+          top: UIConstants.defaultPadding,
+          bottom: UIConstants.defaultPadding,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _MemoryHeader(),
-            SizedBox(height: 16),
-            Expanded(child: _MemoryList()),
+            const _MemoryHeader(),
+            const SizedBox(height: Spacing.lg),
+            const Expanded(child: _MemoryList()),
           ],
         ),
       ),
@@ -76,7 +83,7 @@ class _MemoryList extends StatelessWidget {
                     isLast: isLast,
                     dotColor: primaryColor,
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: Spacing.lg),
                   Expanded(child: MemoryCard(memoryCardModel: memory)),
                 ],
               ),

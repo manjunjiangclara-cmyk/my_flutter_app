@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
+import 'package:my_flutter_app/features/compose/presentation/screens/compose_screen.dart';
 import 'package:my_flutter_app/features/memory/presentation/providers/memory_provider.dart';
 import 'package:my_flutter_app/features/memory/presentation/screens/memory_screen.dart';
-import 'package:my_flutter_app/screens/compose_screen.dart';
-import 'package:my_flutter_app/screens/settings_screen.dart';
+import 'package:my_flutter_app/features/settings/presentation/screens/settings_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Text(
-              '🧠',
+              '📸',
               style: AppTypography.caption.copyWith(fontSize: 20),
             ),
             label: 'Memory',

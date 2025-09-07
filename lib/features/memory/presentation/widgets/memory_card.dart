@@ -73,7 +73,7 @@ class MemoryCard extends StatelessWidget {
   Widget _buildHeaderRow() {
     return Row(
       children: <Widget>[
-        Text(memoryCardModel.date, style: AppTypography.headline2),
+        Text(memoryCardModel.date, style: AppTypography.body),
         const Spacer(),
         Icon(
           Icons.location_on,
