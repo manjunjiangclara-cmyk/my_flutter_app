@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
@@ -8,27 +9,30 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings'), centerTitle: false),
+      appBar: AppBar(
+        title: const Text(AppStrings.settings),
+        centerTitle: false,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(UIConstants.defaultPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             _SettingsSection(
-              title: 'General',
+              title: AppStrings.general,
               children: <Widget>[
                 _SettingsTile(
                   icon: Icons.palette,
-                  title: 'Theme',
-                  subtitle: 'Change app appearance',
+                  title: AppStrings.theme,
+                  subtitle: AppStrings.changeAppAppearance,
                   onTap: () {
                     // Handle theme settings
                   },
                 ),
                 _SettingsTile(
                   icon: Icons.notifications,
-                  title: 'Notifications',
-                  subtitle: 'Manage notification preferences',
+                  title: AppStrings.notifications,
+                  subtitle: AppStrings.manageNotificationPreferences,
                   onTap: () {
                     // Handle notification settings
                   },
@@ -37,20 +41,20 @@ class SettingsScreen extends StatelessWidget {
             ),
             SizedBox(height: Spacing.xl),
             _SettingsSection(
-              title: 'Data & Privacy',
+              title: AppStrings.dataAndPrivacy,
               children: <Widget>[
                 _SettingsTile(
                   icon: Icons.backup,
-                  title: 'Backup & Sync',
-                  subtitle: 'Manage your data backup',
+                  title: AppStrings.backupAndSync,
+                  subtitle: AppStrings.manageYourDataBackup,
                   onTap: () {
                     // Handle backup settings
                   },
                 ),
                 _SettingsTile(
                   icon: Icons.security,
-                  title: 'Privacy',
-                  subtitle: 'Control your privacy settings',
+                  title: AppStrings.privacy,
+                  subtitle: AppStrings.controlYourPrivacySettings,
                   onTap: () {
                     // Handle privacy settings
                   },
@@ -63,13 +67,13 @@ class SettingsScreen extends StatelessWidget {
               children: <Widget>[
                 _SettingsTile(
                   icon: Icons.info,
-                  title: 'App Version',
+                  title: AppStrings.appVersion,
                   subtitle: '1.0.0',
                   onTap: null,
                 ),
                 _SettingsTile(
                   icon: Icons.help,
-                  title: 'Help & Support',
+                  title: AppStrings.helpAndSupport,
                   subtitle: 'Get help and contact support',
                   onTap: () {
                     // Handle help

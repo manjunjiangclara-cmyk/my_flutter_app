@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/core/strings.dart';
+import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/timeline_indicator.dart';
@@ -14,14 +16,21 @@ class MemoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Memories'),
+        title: const Text(
+          AppStrings.myMemories,
+          style: AppTypography.displayLarge,
+        ),
         centerTitle: false,
         actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.add_circle),
-            onPressed: () {
-              // Action for adding a new memory
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: UIConstants.defaultPadding),
+            child: IconButton(
+              icon: const Icon(Icons.add_circle),
+              iconSize: UIConstants.iconButtonSize,
+              onPressed: () {
+                // Action for adding a new memory
+              },
+            ),
           ),
         ],
       ),
@@ -52,8 +61,8 @@ class _MemoryHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Text(
-      'August, 2025',
-      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      AppStrings.currentMonthYear,
+      style: AppTypography.titleMedium,
     );
   }
 }

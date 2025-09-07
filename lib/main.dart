@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/features/compose/presentation/screens/compose_screen.dart';
@@ -24,9 +25,10 @@ class MyApp extends StatelessWidget {
         title: 'Hibi',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: AppColors.colorScheme,
+          colorSchemeSeed: AppColors.primary,
+          // colorScheme: AppColors.colorScheme,
           scaffoldBackgroundColor: AppColors.background,
-          textTheme: AppTypography.toTextTheme(),
+          textTheme: AppTypography.textTheme,
           dividerColor: AppColors.border,
         ),
         home: const MyHomePage(title: 'Hibi'),
@@ -81,25 +83,16 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Text(
-              '📸',
-              style: AppTypography.caption.copyWith(fontSize: 20),
-            ),
-            label: 'Memory',
+            icon: Text('📸', style: AppTypography.titleMedium),
+            label: AppStrings.memory,
           ),
           BottomNavigationBarItem(
-            icon: Text(
-              '✍️',
-              style: AppTypography.caption.copyWith(fontSize: 20),
-            ),
-            label: 'Compose',
+            icon: Text('✍️', style: AppTypography.titleMedium),
+            label: AppStrings.compose,
           ),
           BottomNavigationBarItem(
-            icon: Text(
-              '⚙️',
-              style: AppTypography.caption.copyWith(fontSize: 20),
-            ),
-            label: 'Settings',
+            icon: Text('⚙️', style: AppTypography.titleMedium),
+            label: AppStrings.settings,
           ),
         ],
         type: BottomNavigationBarType.fixed,

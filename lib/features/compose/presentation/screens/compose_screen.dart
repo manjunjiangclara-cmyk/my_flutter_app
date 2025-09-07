@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
@@ -23,15 +24,15 @@ class ComposeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'August 28, 2025',
-                style: AppTypography.caption.copyWith(
+                AppStrings.sampleDate,
+                style: AppTypography.labelSmall.copyWith(
                   color: AppColors.textSecondary,
                 ),
               ),
               SizedBox(height: Spacing.xl),
               Text(
-                'Hey, What is on your mind today?',
-                style: AppTypography.headline2.copyWith(
+                AppStrings.composePrompt,
+                style: AppTypography.headlineMedium.copyWith(
                   color: AppColors.textPrimary,
                 ),
                 textAlign: TextAlign.center,
