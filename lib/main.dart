@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
+import 'package:my_flutter_app/features/memory/presentation/providers/memory_provider.dart';
+import 'package:my_flutter_app/features/memory/presentation/screens/memory_screen.dart';
 import 'package:my_flutter_app/screens/compose_screen.dart';
-import 'package:my_flutter_app/screens/memory_screen.dart';
 import 'package:my_flutter_app/screens/settings_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,15 +17,20 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Hibi',
-      theme: ThemeData(
-        colorScheme: AppColors.colorScheme,
-        scaffoldBackgroundColor: AppColors.background,
-        textTheme: AppTypography.toTextTheme(),
-        dividerColor: AppColors.border,
+    return ChangeNotifierProvider(
+      create: (context) => MemoryData(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Hibi',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: AppColors.colorScheme,
+          scaffoldBackgroundColor: AppColors.background,
+          textTheme: AppTypography.toTextTheme(),
+          dividerColor: AppColors.border,
+        ),
+        home: const MyHomePage(title: 'Hibi'),
       ),
-      home: const MyHomePage(title: 'Hibi'),
     );
   }
 }
