@@ -5,13 +5,10 @@ import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/image_card.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/tag_chip.dart';
+import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
 
 class MemoryCard extends StatelessWidget {
-  final String date;
-  final String location;
-  final List<String> tags;
-  final String description;
-  final String imageUrl;
+  final MemoryCardModel memoryCardModel;
 
   // Configurable UI parameters with sensible defaults
   final double imageHeight;
@@ -28,11 +25,7 @@ class MemoryCard extends StatelessWidget {
 
   const MemoryCard({
     super.key,
-    required this.date,
-    required this.location,
-    required this.tags,
-    required this.description,
-    required this.imageUrl,
+    required this.memoryCardModel,
     this.imageHeight = UIConstants.defaultImageSize * 1.5,
     this.borderRadius = UIConstants.defaultCardRadius,
     this.borderWidth = 1.0,
@@ -61,7 +54,10 @@ class MemoryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            ImageCard(imageUrl: imageUrl, imageHeight: imageHeight),
+            ImageCard(
+              imageUrl: memoryCardModel.imageUrl,
+              imageHeight: imageHeight,
+            ),
             SizedBox(height: sectionSpacingLarge),
             _buildHeaderRow(),
             SizedBox(height: sectionSpacingSmall),
@@ -77,7 +73,7 @@ class MemoryCard extends StatelessWidget {
   Widget _buildHeaderRow() {
     return Row(
       children: <Widget>[
-        Text(date, style: AppTypography.headline2),
+        Text(memoryCardModel.date, style: AppTypography.body),
         const Spacer(),
         Icon(
           Icons.location_on,
@@ -85,7 +81,7 @@ class MemoryCard extends StatelessWidget {
           color: AppColors.textSecondary,
         ),
         SizedBox(width: Spacing.xs),
-        Text(location, style: AppTypography.caption),
+        Text(memoryCardModel.location, style: AppTypography.caption),
       ],
     );
   }
@@ -94,11 +90,11 @@ class MemoryCard extends StatelessWidget {
     return Wrap(
       spacing: tagSpacing,
       runSpacing: tagRunSpacing,
-      children: [TagChips(tags: tags)],
+      children: [TagChips(tags: memoryCardModel.tags)],
     );
   }
 
   Widget _buildDescription() {
-    return Text(description, style: AppTypography.body);
+    return Text(memoryCardModel.description, style: AppTypography.body);
   }
 }
