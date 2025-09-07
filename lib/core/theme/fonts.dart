@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class AppTypography {
-  AppTypography._(); // 私有构造，防止实例化
+  AppTypography._();
 
   // ---------- Lora 字体（文学风格） ----------
   static const TextStyle displayLarge = TextStyle(
     fontFamily: 'Lora',
     fontWeight: FontWeight.bold,
-    fontSize: 40, // 大标题
+    fontSize: 28, // 大标题
     height: 48 / 40, // 行高 = 48px
   );
 
@@ -47,6 +47,13 @@ class AppTypography {
     height: 24 / 16,
   );
 
+  static const TextStyle labelMedium = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w500,
+    fontSize: 14, // 按钮文字
+    height: 20 / 14,
+  );
+
   static const TextStyle labelSmall = TextStyle(
     fontFamily: 'Inter',
     fontWeight: FontWeight.w500,
@@ -62,6 +69,7 @@ class AppTypography {
     bodyLarge: bodyLarge,
     bodyMedium: bodyMedium,
     labelLarge: labelLarge,
+    labelMedium: labelMedium,
     labelSmall: labelSmall,
   );
 }

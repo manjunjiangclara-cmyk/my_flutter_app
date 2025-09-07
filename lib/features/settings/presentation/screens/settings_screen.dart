@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/strings.dart';
+import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
@@ -10,7 +11,10 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppStrings.settings),
+        title: Text(
+          '${AppStrings.settings} ⚙️',
+          style: AppTypography.displayLarge,
+        ),
         centerTitle: false,
       ),
       body: Padding(
@@ -101,9 +105,9 @@ class _SettingsSection extends StatelessWidget {
       children: <Widget>[
         Text(
           title,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          style: AppTypography.titleMedium.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         SizedBox(height: Spacing.md),
         ...children,
@@ -129,8 +133,8 @@ class _SettingsTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(icon),
-      title: Text(title),
-      subtitle: Text(subtitle),
+      title: Text(title, style: AppTypography.labelLarge),
+      subtitle: Text(subtitle, style: AppTypography.bodyMedium),
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
     );

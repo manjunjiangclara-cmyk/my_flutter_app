@@ -36,7 +36,7 @@ class TagChip extends StatelessWidget {
     super.key,
     required this.tag,
     this.chipHorizontalPadding = Spacing.xs,
-    this.chipVerticalPadding = Spacing.xs,
+    this.chipVerticalPadding = 0,
   });
 
   @override

@@ -32,7 +32,7 @@ class ComposeScreen extends StatelessWidget {
               SizedBox(height: Spacing.xl),
               Text(
                 AppStrings.composePrompt,
-                style: AppTypography.headlineMedium.copyWith(
+                style: AppTypography.displayLarge.copyWith(
                   color: AppColors.textPrimary,
                 ),
                 textAlign: TextAlign.center,
@@ -40,12 +40,7 @@ class ComposeScreen extends StatelessWidget {
               SizedBox(height: Spacing.xxxl),
               CircleAvatar(
                 radius: UIConstants.largeIconSize,
-                backgroundColor: AppColors.border,
-                child: Icon(
-                  Icons.add,
-                  size: UIConstants.largeIconSize,
-                  color: AppColors.textSecondary,
-                ),
+                backgroundColor: AppColors.border
               ),
             ],
           ),

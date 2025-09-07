@@ -25,7 +25,7 @@ class MemoryScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: UIConstants.defaultPadding),
             child: IconButton(
-              icon: const Icon(Icons.add_circle),
+              icon: const Icon(Icons.add_box_rounded),
               iconSize: UIConstants.iconButtonSize,
               onPressed: () {
                 // Action for adding a new memory
@@ -45,7 +45,7 @@ class MemoryScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             const _MemoryHeader(),
-            const SizedBox(height: Spacing.lg),
+            const SizedBox(height: Spacing.md),
             const Expanded(child: _MemoryList()),
           ],
         ),
@@ -62,7 +62,7 @@ class _MemoryHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Text(
       AppStrings.currentMonthYear,
-      style: AppTypography.titleMedium,
+      style: AppTypography.labelLarge,
     );
   }
 }

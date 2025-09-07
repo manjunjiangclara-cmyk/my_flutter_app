@@ -31,7 +31,7 @@ class MemoryCard extends StatelessWidget {
     this.borderWidth = 1.0,
     this.cardPadding = UIConstants.defaultCardPadding,
     this.sectionSpacingLarge = Spacing.lg,
-    this.sectionSpacingSmall = Spacing.sm,
+    this.sectionSpacingSmall = Spacing.xxs,
     this.chipHorizontalPadding = Spacing.sm,
     this.chipVerticalPadding = Spacing.xs,
     this.tagSpacing = Spacing.sm,
@@ -73,15 +73,10 @@ class MemoryCard extends StatelessWidget {
   Widget _buildHeaderRow() {
     return Row(
       children: <Widget>[
-        Text(memoryCardModel.date, style: AppTypography.bodyMedium),
+        Text("📅${memoryCardModel.date}", style: AppTypography.labelMedium),
         const Spacer(),
-        Icon(
-          Icons.location_on,
-          size: locationIconSize,
-          color: AppColors.textSecondary,
-        ),
         SizedBox(width: Spacing.xs),
-        Text(memoryCardModel.location, style: AppTypography.labelSmall),
+        Text("📍${memoryCardModel.location}", style: AppTypography.labelSmall),
       ],
     );
   }
@@ -95,6 +90,6 @@ class MemoryCard extends StatelessWidget {
   }
 
   Widget _buildDescription() {
-    return Text(memoryCardModel.description, style: AppTypography.bodyLarge);
+    return Text(memoryCardModel.description, style: AppTypography.bodyMedium);
   }
 }

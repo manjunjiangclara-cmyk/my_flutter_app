@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       create: (context) => MemoryData(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Hibi',
+        title: AppStrings.appName,
         theme: ThemeData(
           useMaterial3: true,
           colorSchemeSeed: AppColors.primary,
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           textTheme: AppTypography.textTheme,
           dividerColor: AppColors.border,
         ),
-        home: const MyHomePage(title: 'Hibi'),
+        home: const MyHomePage(title: AppStrings.appName),
       ),
     );
   }
