@@ -1,142 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/strings.dart';
-import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/features/settings/presentation/constants/settings_constants.dart';
+import 'package:my_flutter_app/features/settings/presentation/widgets/settings_app_bar.dart';
+import 'package:my_flutter_app/features/settings/presentation/widgets/settings_list.dart';
 
+/// The main settings screen that displays all app settings in a modular way.
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          '${AppStrings.settings} ⚙️',
-          style: AppTypography.displayLarge,
-        ),
-        centerTitle: false,
-      ),
+      appBar: const SettingsAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(UIConstants.defaultPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _SettingsSection(
-              title: AppStrings.general,
-              children: <Widget>[
-                _SettingsTile(
-                  icon: Icons.palette,
-                  title: AppStrings.theme,
-                  subtitle: AppStrings.changeAppAppearance,
-                  onTap: () {
-                    // Handle theme settings
-                  },
-                ),
-                _SettingsTile(
-                  icon: Icons.notifications,
-                  title: AppStrings.notifications,
-                  subtitle: AppStrings.manageNotificationPreferences,
-                  onTap: () {
-                    // Handle notification settings
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: Spacing.xl),
-            _SettingsSection(
-              title: AppStrings.dataAndPrivacy,
-              children: <Widget>[
-                _SettingsTile(
-                  icon: Icons.backup,
-                  title: AppStrings.backupAndSync,
-                  subtitle: AppStrings.manageYourDataBackup,
-                  onTap: () {
-                    // Handle backup settings
-                  },
-                ),
-                _SettingsTile(
-                  icon: Icons.security,
-                  title: AppStrings.privacy,
-                  subtitle: AppStrings.controlYourPrivacySettings,
-                  onTap: () {
-                    // Handle privacy settings
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: Spacing.xl),
-            _SettingsSection(
-              title: 'About',
-              children: <Widget>[
-                _SettingsTile(
-                  icon: Icons.info,
-                  title: AppStrings.appVersion,
-                  subtitle: '1.0.0',
-                  onTap: null,
-                ),
-                _SettingsTile(
-                  icon: Icons.help,
-                  title: AppStrings.helpAndSupport,
-                  subtitle: 'Get help and contact support',
-                  onTap: () {
-                    // Handle help
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
+        child: SettingsList(sections: SettingsConstants.settingsSections),
       ),
-    );
-  }
-}
-
-class _SettingsSection extends StatelessWidget {
-  final String title;
-  final List<Widget> children;
-
-  const _SettingsSection({required this.title, required this.children});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          title,
-          style: AppTypography.titleMedium.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: Spacing.md),
-        ...children,
-      ],
-    );
-  }
-}
-
-class _SettingsTile extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback? onTap;
-
-  const _SettingsTile({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(title, style: AppTypography.labelLarge),
-      subtitle: Text(subtitle, style: AppTypography.bodyMedium),
-      onTap: onTap,
-      contentPadding: EdgeInsets.zero,
     );
   }
 }

@@ -96,6 +96,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
         type: BottomNavigationBarType.fixed,
+        selectedLabelStyle: AppTypography.labelSmall,
+        unselectedLabelStyle: AppTypography.labelSmall,
       ),
     );
   }
