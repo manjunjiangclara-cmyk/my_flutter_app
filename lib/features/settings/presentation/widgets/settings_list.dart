@@ -16,7 +16,6 @@ class SettingsList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: sections.asMap().entries.map((entry) {
-        final index = entry.key;
         final section = entry.value;
 
         return Column(
@@ -35,8 +34,7 @@ class SettingsList extends StatelessWidget {
                   )
                   .toList(),
             ),
-            // Add spacing between sections, but not after the last one
-            if (index < sections.length - 1) SizedBox(height: Spacing.xl),
+            if (entry.key < sections.length - 1) SizedBox(height: Spacing.lg),
           ],
         );
       }).toList(),

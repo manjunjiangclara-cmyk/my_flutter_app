@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
+import 'package:my_flutter_app/core/theme/spacings.dart';
 
 /// A reusable widget for displaying individual settings items.
 class SettingsTile extends StatelessWidget {
@@ -36,18 +37,22 @@ class SettingsTile extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: AppTypography.labelLarge.copyWith(
+        style: AppTypography.labelMedium.copyWith(
           color: enabled ? null : Theme.of(context).disabledColor,
         ),
       ),
       subtitle: Text(
         subtitle,
-        style: AppTypography.bodyMedium.copyWith(
+        style: AppTypography.labelSmall.copyWith(
           color: enabled ? null : Theme.of(context).disabledColor,
         ),
       ),
       onTap: enabled ? onTap : null,
-      contentPadding: EdgeInsets.zero,
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: Spacing.lg,
+        vertical: Spacing.xs,
+      ),
+      dense: true,
     );
   }
 }

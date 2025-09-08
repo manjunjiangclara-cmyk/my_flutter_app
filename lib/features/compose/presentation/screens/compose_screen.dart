@@ -40,7 +40,7 @@ class ComposeScreen extends StatelessWidget {
               SizedBox(height: Spacing.xxxl),
               CircleAvatar(
                 radius: UIConstants.largeIconSize,
-                backgroundColor: AppColors.border
+                backgroundColor: AppColors.border,
               ),
             ],
           ),

@@ -23,11 +23,9 @@ class SettingsSection extends StatelessWidget {
       children: <Widget>[
         Text(
           title,
-          style: AppTypography.titleMedium.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: AppTypography.bodyLarge.copyWith(fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: Spacing.md),
+        SizedBox(height: Spacing.sm),
         ...children,
       ],
     );
