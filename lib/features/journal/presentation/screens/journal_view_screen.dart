@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/core/router/navigation_helper.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
@@ -76,7 +77,10 @@ class _JournalViewContent extends StatelessWidget {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            leading: const Icon(Icons.close),
+            leading: IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () => NavigationHelper.goBack(context),
+            ),
             actions: <Widget>[
               Icon(Icons.share),
               SizedBox(width: Spacing.lg),
@@ -222,7 +226,7 @@ class _EventDetailsHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text(date, style: AppTypography.headlineMedium),
+        Text(date, style: AppTypography.titleMedium),
         Row(
           children: <Widget>[
             Icon(

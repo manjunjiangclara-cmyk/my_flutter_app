@@ -60,9 +60,9 @@ class _MemoryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
+    return Text(
       AppStrings.currentMonthYear,
-      style: AppTypography.labelLarge,
+      style: AppTypography.labelLarge.copyWith(fontWeight: FontWeight.bold),
     );
   }
 }

@@ -1,4 +1,5 @@
 class MemoryCardModel {
+  final String journalId;
   final String date;
   final String location;
   final List<String> tags;
@@ -6,6 +7,7 @@ class MemoryCardModel {
   final String imageUrl;
 
   MemoryCardModel({
+    required this.journalId,
     required this.date,
     required this.location,
     required this.tags,
