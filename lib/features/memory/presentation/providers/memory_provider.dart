@@ -5,6 +5,7 @@ import 'package:my_flutter_app/features/memory/presentation/models/memory_card_m
 class MemoryData extends ChangeNotifier {
   final List<MemoryCardModel> _memories = <MemoryCardModel>[
     MemoryCardModel(
+      journalId: 'journal_1',
       date: 'Thu, August 28',
       location: 'Melbourne',
       tags: <String>['Life', 'Travel'],
@@ -12,6 +13,7 @@ class MemoryData extends ChangeNotifier {
           'Praeterea, ex culpa non invenies unum aut non accusatis unum. Et nihil inuitam. Nemo nocere tibi erit, et non inimicos, et ne illa',
     ),
     MemoryCardModel(
+      journalId: 'journal_2',
       date: 'Wed, August 27',
       location: 'Melbourne',
       tags: <String>['Life', 'Travel'],
@@ -19,6 +21,7 @@ class MemoryData extends ChangeNotifier {
           'Praeterea, ex culpa non invenies unum aut non accusatis unum. Et nihil inuitam. Nemo nocere tibi erit, et non inimicos, et ne illa',
     ),
     MemoryCardModel(
+      journalId: 'journal_3',
       date: 'Tue, August 26',
       location: 'Sydney',
       tags: <String>['Work', 'Conference'],
@@ -26,6 +29,7 @@ class MemoryData extends ChangeNotifier {
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     ),
     MemoryCardModel(
+      journalId: 'journal_4',
       date: 'Mon, August 25',
       location: 'Brisbane',
       tags: <String>['Friends', 'Adventure'],

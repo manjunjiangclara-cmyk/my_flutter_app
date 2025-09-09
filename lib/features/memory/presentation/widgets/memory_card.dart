@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/features/journal/presentation/router/journal_router.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/image_card.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/tag_chip.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
@@ -49,22 +51,31 @@ class MemoryCard extends StatelessWidget {
       ),
       elevation: 0,
       color: Theme.of(context).cardColor,
-      child: Padding(
-        padding: EdgeInsets.all(cardPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            ImageCard(
-              imageUrl: memoryCardModel.imageUrl,
-              imageHeight: imageHeight,
-            ),
-            SizedBox(height: sectionSpacingLarge),
-            _buildHeaderRow(),
-            SizedBox(height: sectionSpacingSmall),
-            _buildTags(),
-            SizedBox(height: sectionSpacingSmall),
-            _buildDescription(),
-          ],
+      child: InkWell(
+        onTap: () => context.push(
+          JournalRouter.journalViewPath.replaceAll(
+            ':journalId',
+            memoryCardModel.journalId,
+          ),
+        ),
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: Padding(
+          padding: EdgeInsets.all(cardPadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              ImageCard(
+                imageUrl: memoryCardModel.imageUrl,
+                imageHeight: imageHeight,
+              ),
+              SizedBox(height: sectionSpacingLarge),
+              _buildHeaderRow(),
+              SizedBox(height: sectionSpacingSmall),
+              _buildTags(),
+              SizedBox(height: sectionSpacingSmall),
+              _buildDescription(),
+            ],
+          ),
         ),
       ),
     );
@@ -82,10 +93,10 @@ class MemoryCard extends StatelessWidget {
   }
 
   Widget _buildTags() {
-    return Wrap(
+    return TagChips(
+      tags: memoryCardModel.tags,
       spacing: tagSpacing,
       runSpacing: tagRunSpacing,
-      children: [TagChips(tags: memoryCardModel.tags)],
     );
   }
 

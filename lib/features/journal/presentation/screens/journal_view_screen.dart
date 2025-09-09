@@ -226,7 +226,7 @@ class _EventDetailsHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text(date, style: AppTypography.headlineMedium),
+        Text(date, style: AppTypography.titleMedium),
         Row(
           children: <Widget>[
             Icon(

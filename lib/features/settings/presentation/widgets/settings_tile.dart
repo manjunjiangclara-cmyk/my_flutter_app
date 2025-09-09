@@ -37,14 +37,16 @@ class SettingsTile extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: AppTypography.labelMedium.copyWith(
+        style: AppTypography.bodyLarge.copyWith(
           color: enabled ? null : Theme.of(context).disabledColor,
         ),
       ),
       subtitle: Text(
         subtitle,
-        style: AppTypography.labelSmall.copyWith(
-          color: enabled ? null : Theme.of(context).disabledColor,
+        style: AppTypography.labelMedium.copyWith(
+          color: enabled
+              ? Theme.of(context).hintColor
+              : Theme.of(context).disabledColor,
         ),
       ),
       onTap: enabled ? onTap : null,
