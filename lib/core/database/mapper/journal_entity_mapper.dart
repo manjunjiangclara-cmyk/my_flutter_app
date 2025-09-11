@@ -1,4 +1,4 @@
-import '../../../../features/journal/domain/entities/journal.dart';
+import '../../../shared/domain/entities/journal.dart';
 import '../../utils/string_list_parser.dart';
 
 class JournalEntityMapper {

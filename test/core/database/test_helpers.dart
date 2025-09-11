@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_flutter_app/features/journal/domain/entities/journal.dart';
+import 'package:my_flutter_app/shared/domain/entities/journal.dart';
 
 /// Test helper class for database tests
 class DatabaseTestHelpers {

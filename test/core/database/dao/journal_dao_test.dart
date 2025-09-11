@@ -3,7 +3,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:my_flutter_app/core/database/dao/journal_dao.dart';
 import 'package:my_flutter_app/core/database/database_helper.dart';
-import 'package:my_flutter_app/features/journal/domain/entities/journal.dart';
+import 'package:my_flutter_app/shared/domain/entities/journal.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'journal_dao_test.mocks.dart';

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../domain/entities/journal.dart';
+import '../../../../../shared/domain/entities/journal.dart';
 
 abstract class JournalViewState extends Equatable {
   const JournalViewState();

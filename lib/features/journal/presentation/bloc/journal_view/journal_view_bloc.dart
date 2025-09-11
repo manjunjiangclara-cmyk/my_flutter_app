@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 
-import '../../../domain/usecases/get_journal_by_id.dart';
+import '../../../../../shared/domain/usecases/get_journal_by_id.dart';
 import 'journal_view_event.dart';
 import 'journal_view_state.dart';
 

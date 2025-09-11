@@ -11,7 +11,7 @@ class JournalModel extends Journal {
     super.isFavorite,
     super.imageUrls,
   });
-  
+
   factory JournalModel.fromJson(Map<String, dynamic> json) {
     return JournalModel(
       id: json['id'] as String,
@@ -24,7 +24,7 @@ class JournalModel extends Journal {
       imageUrls: List<String>.from(json['image_urls'] ?? []),
     );
   }
-  
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -37,7 +37,7 @@ class JournalModel extends Journal {
       'image_urls': imageUrls,
     };
   }
-  
+
   factory JournalModel.fromEntity(Journal journal) {
     return JournalModel(
       id: journal.id,

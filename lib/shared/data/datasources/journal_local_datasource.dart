@@ -1,4 +1,4 @@
-import '../../../../core/database/dao/journal_dao.dart';
+import '../../../core/database/dao/journal_dao.dart';
 import '../../domain/entities/journal.dart';
 
 abstract class JournalLocalDataSource {

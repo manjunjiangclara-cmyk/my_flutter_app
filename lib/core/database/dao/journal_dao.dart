@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
-import '../../../../features/journal/domain/entities/journal.dart';
+import '../../../shared/domain/entities/journal.dart';
 import '../database_constants.dart';
 import '../database_helper.dart';
 import '../mapper/journal_entity_mapper.dart';

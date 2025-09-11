@@ -1,8 +1,8 @@
 import 'package:go_router/go_router.dart';
-import 'package:my_flutter_app/features/journal/data/datasources/journal_local_datasource.dart';
-import 'package:my_flutter_app/features/journal/data/repositories_impl/journal_repository_impl.dart';
-import 'package:my_flutter_app/features/journal/domain/usecases/get_journal_by_id.dart';
 import 'package:my_flutter_app/features/journal/presentation/screens/journal_view_screen.dart';
+import 'package:my_flutter_app/shared/data/datasources/journal_local_datasource.dart';
+import 'package:my_flutter_app/shared/data/repositories_impl/journal_repository_impl.dart';
+import 'package:my_flutter_app/shared/domain/usecases/get_journal_by_id.dart';
 
 /// Journal feature router configuration
 class JournalRouter {

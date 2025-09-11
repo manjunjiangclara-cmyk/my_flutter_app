@@ -6,8 +6,8 @@ import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
-import '../../../journal/domain/entities/journal.dart';
-import '../../../journal/domain/usecases/get_journal_by_id.dart';
+import '../../../../shared/domain/entities/journal.dart';
+import '../../../../shared/domain/usecases/get_journal_by_id.dart';
 import '../bloc/journal_view/journal_view_bloc.dart';
 import '../bloc/journal_view/journal_view_event.dart';
 import '../bloc/journal_view/journal_view_state.dart';
