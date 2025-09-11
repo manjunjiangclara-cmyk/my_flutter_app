@@ -16,10 +16,7 @@ class MemoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MemoryBloc(),
-      child: const _MemoryScreenView(),
-    );
+    return const _MemoryScreenView();
   }
 }
 
