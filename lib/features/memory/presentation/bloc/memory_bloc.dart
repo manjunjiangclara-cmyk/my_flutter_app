@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:my_flutter_app/features/memory/presentation/constants/memory_constants.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
 
@@ -6,6 +7,7 @@ import 'memory_event.dart';
 import 'memory_state.dart';
 
 /// BLoC for managing memory screen state and business logic
+@injectable
 class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
   MemoryBloc() : super(const MemoryInitial()) {
     on<MemoryLoadRequested>(_onLoadRequested);

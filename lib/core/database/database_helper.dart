@@ -1,9 +1,11 @@
+import 'package:injectable/injectable.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'dao/journal_dao.dart';
 import 'database_constants.dart';
 
+@singleton
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
   static Database? _database;
