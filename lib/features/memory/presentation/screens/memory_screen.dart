@@ -1,23 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/strings.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/timeline_indicator.dart';
+import 'package:my_flutter_app/features/memory/presentation/bloc/memory_bloc.dart';
+import 'package:my_flutter_app/features/memory/presentation/bloc/memory_event.dart';
+import 'package:my_flutter_app/features/memory/presentation/bloc/memory_state.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
-import 'package:my_flutter_app/features/memory/presentation/providers/memory_provider.dart';
+import 'package:my_flutter_app/features/memory/presentation/strings/memory_strings.dart';
 import 'package:my_flutter_app/features/memory/presentation/widgets/memory_card.dart';
-import 'package:provider/provider.dart';
 
 class MemoryScreen extends StatelessWidget {
   const MemoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => MemoryBloc(),
+      child: const _MemoryScreenView(),
+    );
+  }
+}
+
+class _MemoryScreenView extends StatelessWidget {
+  const _MemoryScreenView();
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          AppStrings.myMemories,
+          MemoryStrings.myMemories,
           style: AppTypography.displayLarge,
         ),
         centerTitle: false,
@@ -61,7 +75,7 @@ class _MemoryHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      AppStrings.currentMonthYear,
+      MemoryStrings.currentMonthYear,
       style: AppTypography.labelLarge.copyWith(fontWeight: FontWeight.bold),
     );
   }
@@ -73,32 +87,64 @@ class _MemoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MemoryData>(
-      builder: (BuildContext context, MemoryData memoryData, Widget? child) {
-        return ListView.builder(
-          itemCount: memoryData.memories.length,
-          itemBuilder: (BuildContext context, int index) {
-            final MemoryCardModel memory = memoryData.memories[index];
-            final Color primaryColor = Theme.of(context).colorScheme.primary;
-            final bool isFirst = index == 0;
-            final bool isLast = index == memoryData.memories.length - 1;
+    return BlocBuilder<MemoryBloc, MemoryState>(
+      builder: (context, state) {
+        if (state is MemoryLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-            return IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  TimelineIndicator(
-                    isFirst: isFirst,
-                    isLast: isLast,
-                    dotColor: primaryColor,
+        if (state is MemoryError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(state.message),
+                const SizedBox(height: Spacing.md),
+                ElevatedButton(
+                  onPressed: () => context.read<MemoryBloc>().add(
+                    const MemoryLoadRequested(),
                   ),
-                  const SizedBox(width: Spacing.lg),
-                  Expanded(child: MemoryCard(memoryCardModel: memory)),
-                ],
-              ),
-            );
-          },
-        );
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        if (state is MemoryLoaded) {
+          final memories = state.filteredMemories;
+
+          if (memories.isEmpty) {
+            return const Center(child: Text(MemoryStrings.noMemoriesFound));
+          }
+
+          return ListView.builder(
+            itemCount: memories.length,
+            itemBuilder: (BuildContext context, int index) {
+              final MemoryCardModel memory = memories[index];
+              final Color primaryColor = Theme.of(context).colorScheme.primary;
+              final bool isFirst = index == 0;
+              final bool isLast = index == memories.length - 1;
+
+              return IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    TimelineIndicator(
+                      isFirst: isFirst,
+                      isLast: isLast,
+                      dotColor: primaryColor,
+                    ),
+                    const SizedBox(width: Spacing.lg),
+                    Expanded(child: MemoryCard(memoryCardModel: memory)),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }

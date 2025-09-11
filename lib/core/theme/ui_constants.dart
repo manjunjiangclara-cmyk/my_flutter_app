@@ -59,4 +59,27 @@ class UIConstants {
   static const double mobileBreakpoint = 600.0;
   static const double tabletBreakpoint = 900.0;
   static const double desktopBreakpoint = 1200.0;
+
+  // Compose Screen Specific
+  static const double photoAttachmentHeight = 120.0;
+  static const double photoAttachmentSize = 100.0;
+  static const double photoAttachmentIconSize = 40.0;
+  static const double photoAttachmentCloseIconSize = 16.0;
+  static const double photoAttachmentCloseButtonPadding = 4.0;
+  static const double photoAttachmentCloseButtonSize = 24.0;
+  static const double photoAttachmentMargin = 8.0;
+
+  static const double locationIconSize = 16.0;
+  static const double tagCloseIconSize = 14.0;
+  static const double tagCloseIconSpacing = 4.0;
+
+  static const double actionButtonIconSize = 24.0;
+  static const double actionButtonPadding = 12.0;
+
+  static const double dialogBorderWidth = 1.0;
+  static const double dialogOpacity = 0.3;
+  static const double dialogCloseOpacity = 0.54;
+
+  static const double postingIndicatorSize = 16.0;
+  static const double postingIndicatorStrokeWidth = 2.0;
 }

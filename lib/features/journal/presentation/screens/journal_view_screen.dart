@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/router/navigation_helper.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
@@ -12,7 +13,7 @@ import '../bloc/journal_view/journal_view_event.dart';
 import '../bloc/journal_view/journal_view_state.dart';
 import '../widgets/tag_chip.dart';
 
-class JournalViewScreen extends StatefulWidget {
+class JournalViewScreen extends StatelessWidget {
   final String journalId;
   final GetJournalById getJournalById;
 
@@ -23,41 +24,56 @@ class JournalViewScreen extends StatefulWidget {
   });
 
   @override
-  State<JournalViewScreen> createState() => _JournalViewScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          JournalViewBloc(getJournalById: getJournalById)
+            ..add(LoadJournal(journalId)),
+      child: const _JournalViewScreenView(),
+    );
+  }
 }
 
-class _JournalViewScreenState extends State<JournalViewScreen> {
-  late final JournalViewBloc _bloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _bloc = JournalViewBloc(getJournalById: widget.getJournalById);
-    _bloc.add(LoadJournal(widget.journalId));
-  }
-
-  @override
-  void dispose() {
-    _bloc.dispose();
-    super.dispose();
-  }
+class _JournalViewScreenView extends StatelessWidget {
+  const _JournalViewScreenView();
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<JournalViewState>(
-      stream: _bloc.stream,
-      initialData: _bloc.state,
-      builder: (context, snapshot) {
-        final state = snapshot.data;
+    return BlocBuilder<JournalViewBloc, JournalViewState>(
+      builder: (context, state) {
         if (state is JournalLoading || state is JournalInitial) {
-          return const Center(child: CircularProgressIndicator());
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
         if (state is JournalError) {
-          return Center(child: Text(state.message));
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(state.message),
+                  const SizedBox(height: Spacing.md),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Get the journal ID from the parent widget
+                      final parent = context
+                          .findAncestorWidgetOfExactType<JournalViewScreen>();
+                      if (parent != null) {
+                        context.read<JournalViewBloc>().add(
+                          LoadJournal(parent.journalId),
+                        );
+                      }
+                    },
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+          );
         }
         if (state is JournalLoaded) {
-          final Journal journal = state.journal;
-          return _JournalViewContent(journal: journal);
+          return _JournalViewContent(journal: state.journal);
         }
         return const SizedBox.shrink();
       },
