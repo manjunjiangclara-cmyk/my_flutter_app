@@ -1,11 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 import 'package:my_flutter_app/core/constants.dart';
 
 import 'compose_event.dart';
 import 'compose_state.dart';
 
 /// BLoC for managing compose screen state and business logic
+@injectable
 class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   final TextEditingController textController = TextEditingController();
   final TextEditingController locationController = TextEditingController();

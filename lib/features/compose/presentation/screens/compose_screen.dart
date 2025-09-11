@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart';
@@ -22,7 +23,7 @@ class ComposeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ComposeBloc(),
+      create: (context) => getIt<ComposeBloc>(),
       child: const _ComposeScreenView(),
     );
   }

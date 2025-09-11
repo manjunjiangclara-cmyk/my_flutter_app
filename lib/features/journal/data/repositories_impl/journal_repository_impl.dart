@@ -1,10 +1,12 @@
 import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/journal.dart';
 import '../../domain/repositories/journal_repository.dart';
 import '../datasources/journal_local_datasource.dart';
 
+@injectable
 class JournalRepositoryImpl implements JournalRepository {
   final JournalLocalDataSource localDataSource;
 

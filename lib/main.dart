@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/router/router_exports.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
@@ -9,6 +10,9 @@ import 'package:provider/provider.dart';
 void main() {
   // Setup global error handling
   GlobalErrorHandler.setup();
+
+  // Initialize dependency injection
+  configureDependencies();
 
   // Run app with error handling zone
   GlobalErrorHandler.runAppWithErrorHandling(() {
@@ -24,7 +28,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AppTabController()),
+        ChangeNotifierProvider(create: (context) => getIt<AppTabController>()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

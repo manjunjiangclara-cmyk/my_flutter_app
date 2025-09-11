@@ -1,3 +1,5 @@
+import 'package:injectable/injectable.dart';
+
 import '../../../../core/database/dao/journal_dao.dart';
 import '../../domain/entities/journal.dart';
 
@@ -12,6 +14,7 @@ abstract class JournalLocalDataSource {
   Future<List<Journal>> getFavoriteJournals();
 }
 
+@injectable
 class JournalLocalDataSourceImpl implements JournalLocalDataSource {
   final JournalDao _journalDao = JournalDao();
 
