@@ -6,23 +6,23 @@ class DatabaseTestHelpers {
   /// Creates a sample journal for testing
   static Journal createSampleJournal({
     String id = '1',
-    String title = 'Test Journal',
     String content = 'Test content',
     DateTime? createdAt,
     DateTime? updatedAt,
     bool isFavorite = false,
     List<String> tags = const ['test', 'sample'],
     List<String> imageUrls = const ['image1.jpg'],
+    String? location,
   }) {
     return Journal(
       id: id,
-      title: title,
       content: content,
       createdAt: createdAt ?? DateTime.parse('2024-01-01T10:00:00.000Z'),
       updatedAt: updatedAt ?? DateTime.parse('2024-01-01T11:00:00.000Z'),
       isFavorite: isFavorite,
       tags: tags,
       imageUrls: imageUrls,
+      location: location,
     );
   }
 
@@ -31,13 +31,13 @@ class DatabaseTestHelpers {
     return List.generate(count, (index) {
       return createSampleJournal(
         id: (index + 1).toString(),
-        title: 'Test Journal ${index + 1}',
         content: 'Test content ${index + 1}',
         createdAt: DateTime.parse('2024-01-0${index + 1}T10:00:00.000Z'),
         updatedAt: DateTime.parse('2024-01-0${index + 1}T11:00:00.000Z'),
         isFavorite: index % 2 == 0, // Alternate favorites
         tags: ['tag${index + 1}', 'sample'],
         imageUrls: ['image${index + 1}.jpg'],
+        location: 'Location ${index + 1}',
       );
     });
   }
@@ -45,23 +45,23 @@ class DatabaseTestHelpers {
   /// Creates a sample database row map for testing
   static Map<String, dynamic> createSampleDbRow({
     int id = 1,
-    String title = 'Test Journal',
     String content = 'Test content',
     String createdAt = '2024-01-01T10:00:00.000Z',
     String updatedAt = '2024-01-01T11:00:00.000Z',
     int isFavorite = 0,
     String tags = 'test,sample',
     String imageUrls = 'image1.jpg',
+    String? location,
   }) {
     return {
       'id': id,
-      'title': title,
       'content': content,
       'created_at': createdAt,
       'updated_at': updatedAt,
       'is_favorite': isFavorite,
       'tags': tags,
       'image_urls': imageUrls,
+      'location': location,
     };
   }
 
@@ -70,13 +70,13 @@ class DatabaseTestHelpers {
     return List.generate(count, (index) {
       return createSampleDbRow(
         id: index + 1,
-        title: 'Test Journal ${index + 1}',
         content: 'Test content ${index + 1}',
         createdAt: '2024-01-0${index + 1}T10:00:00.000Z',
         updatedAt: '2024-01-0${index + 1}T11:00:00.000Z',
         isFavorite: index % 2,
         tags: 'tag${index + 1},sample',
         imageUrls: 'image${index + 1}.jpg',
+        location: 'Location ${index + 1}',
       );
     });
   }
@@ -90,13 +90,13 @@ class DatabaseTestHelpers {
     if (!ignoreId) {
       expect(actual.id, expected.id);
     }
-    expect(actual.title, expected.title);
     expect(actual.content, expected.content);
     expect(actual.createdAt, expected.createdAt);
     expect(actual.updatedAt, expected.updatedAt);
     expect(actual.isFavorite, expected.isFavorite);
     expect(actual.tags, expected.tags);
     expect(actual.imageUrls, expected.imageUrls);
+    expect(actual.location, expected.location);
   }
 
   /// Asserts that a journal matches a database row
@@ -105,7 +105,6 @@ class DatabaseTestHelpers {
     Map<String, dynamic> dbRow,
   ) {
     expect(journal.id, dbRow['id'].toString());
-    expect(journal.title, dbRow['title']);
     expect(journal.content, dbRow['content']);
     expect(journal.createdAt, DateTime.parse(dbRow['created_at']));
     expect(journal.updatedAt, DateTime.parse(dbRow['updated_at']));

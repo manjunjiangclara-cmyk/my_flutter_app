@@ -9,13 +9,13 @@ void main() {
         // Arrange
         final dbRow = {
           'id': 1,
-          'title': 'Test Journal',
           'content': 'Test content',
           'created_at': '2024-01-01T10:00:00.000Z',
           'updated_at': '2024-01-01T11:00:00.000Z',
           'is_favorite': 1,
           'tags': 'personal,reflection',
           'image_urls': 'image1.jpg,image2.jpg',
+          'location': 'Test Location',
         };
 
         // Act
@@ -23,26 +23,26 @@ void main() {
 
         // Assert
         expect(result.id, '1');
-        expect(result.title, 'Test Journal');
         expect(result.content, 'Test content');
         expect(result.createdAt, DateTime.parse('2024-01-01T10:00:00.000Z'));
         expect(result.updatedAt, DateTime.parse('2024-01-01T11:00:00.000Z'));
         expect(result.isFavorite, true);
         expect(result.tags, ['personal', 'reflection']);
         expect(result.imageUrls, ['image1.jpg', 'image2.jpg']);
+        expect(result.location, 'Test Location');
       });
 
       test('should handle null tags and imageUrls', () {
         // Arrange
         final dbRow = {
           'id': 2,
-          'title': 'Test Journal 2',
           'content': 'Test content 2',
           'created_at': '2024-01-01T10:00:00.000Z',
           'updated_at': '2024-01-01T11:00:00.000Z',
           'is_favorite': 0,
           'tags': null,
           'image_urls': null,
+          'location': null,
         };
 
         // Act
@@ -52,19 +52,20 @@ void main() {
         expect(result.tags, isEmpty);
         expect(result.imageUrls, isEmpty);
         expect(result.isFavorite, false);
+        expect(result.location, null);
       });
 
       test('should handle empty tags and imageUrls strings', () {
         // Arrange
         final dbRow = {
           'id': 3,
-          'title': 'Test Journal 3',
           'content': 'Test content 3',
           'created_at': '2024-01-01T10:00:00.000Z',
           'updated_at': '2024-01-01T11:00:00.000Z',
           'is_favorite': 0,
           'tags': '',
           'image_urls': '',
+          'location': null,
         };
 
         // Act
@@ -79,13 +80,13 @@ void main() {
         // Arrange
         final dbRow = {
           'id': 4,
-          'title': 'Test Journal 4',
           'content': 'Test content 4',
           'created_at': '2024-01-01T10:00:00.000Z',
           'updated_at': '2024-01-01T11:00:00.000Z',
           'is_favorite': 0,
           'tags': 'tag1,,tag2,',
           'image_urls': ',image1.jpg,,image2.jpg,',
+          'location': null,
         };
 
         // Act
@@ -100,13 +101,13 @@ void main() {
         // Arrange
         final dbRow = {
           'id': 5,
-          'title': 'Test Journal 5',
           'content': 'Test content 5',
           'created_at': '2024-01-01T10:00:00.000Z',
           'updated_at': '2024-01-01T11:00:00.000Z',
           'is_favorite': 0,
           'tags': ' tag1 , tag2 ',
           'image_urls': ' image1.jpg , image2.jpg ',
+          'location': 'Location with spaces',
         };
 
         // Act
@@ -124,23 +125,23 @@ void main() {
         final dbRows = [
           {
             'id': 1,
-            'title': 'Journal 1',
             'content': 'Content 1',
             'created_at': '2024-01-01T10:00:00.000Z',
             'updated_at': '2024-01-01T11:00:00.000Z',
             'is_favorite': 1,
             'tags': 'tag1',
             'image_urls': 'image1.jpg',
+            'location': 'Location 1',
           },
           {
             'id': 2,
-            'title': 'Journal 2',
             'content': 'Content 2',
             'created_at': '2024-01-01T12:00:00.000Z',
             'updated_at': '2024-01-01T13:00:00.000Z',
             'is_favorite': 0,
             'tags': 'tag2',
             'image_urls': 'image2.jpg',
+            'location': 'Location 2',
           },
         ];
 
@@ -149,8 +150,8 @@ void main() {
 
         // Assert
         expect(result, hasLength(2));
-        expect(result[0].title, 'Journal 1');
-        expect(result[1].title, 'Journal 2');
+        expect(result[0].content, 'Content 1');
+        expect(result[1].content, 'Content 2');
         expect(result[0].isFavorite, true);
         expect(result[1].isFavorite, false);
       });
@@ -174,26 +175,26 @@ void main() {
           // Arrange
           final journal = Journal(
             id: '0',
-            title: 'Test Journal',
             content: 'Test content',
             createdAt: DateTime.parse('2024-01-01T10:00:00.000Z'),
             updatedAt: DateTime.parse('2024-01-01T11:00:00.000Z'),
             isFavorite: true,
             tags: ['personal', 'reflection'],
             imageUrls: ['image1.jpg', 'image2.jpg'],
+            location: 'Test Location',
           );
 
           // Act
           final result = JournalEntityMapper.journalToMap(journal);
 
           // Assert
-          expect(result['title'], 'Test Journal');
           expect(result['content'], 'Test content');
           expect(result['created_at'], '2024-01-01T10:00:00.000Z');
           expect(result['updated_at'], '2024-01-01T11:00:00.000Z');
           expect(result['is_favorite'], 1);
           expect(result['tags'], 'personal,reflection');
           expect(result['image_urls'], 'image1.jpg,image2.jpg');
+          expect(result['location'], 'Test Location');
           expect(
             result.containsKey('id'),
             false,
@@ -205,13 +206,13 @@ void main() {
         // Arrange
         final journal = Journal(
           id: '0',
-          title: 'Test Journal',
           content: 'Test content',
           createdAt: DateTime.parse('2024-01-01T10:00:00.000Z'),
           updatedAt: DateTime.parse('2024-01-01T11:00:00.000Z'),
           isFavorite: false,
           tags: [],
           imageUrls: [],
+          location: null,
         );
 
         // Act
@@ -229,25 +230,25 @@ void main() {
         // Arrange
         final journal = Journal(
           id: '1',
-          title: 'Updated Journal',
           content: 'Updated content',
           createdAt: DateTime.parse('2024-01-01T10:00:00.000Z'),
           updatedAt: DateTime.parse('2024-01-01T12:00:00.000Z'),
           isFavorite: true,
           tags: ['updated', 'tag'],
           imageUrls: ['new-image.jpg'],
+          location: 'Updated Location',
         );
 
         // Act
         final result = JournalEntityMapper.journalToUpdateMap(journal);
 
         // Assert
-        expect(result['title'], 'Updated Journal');
         expect(result['content'], 'Updated content');
         expect(result['updated_at'], '2024-01-01T12:00:00.000Z');
         expect(result['is_favorite'], 1);
         expect(result['tags'], 'updated,tag');
         expect(result['image_urls'], 'new-image.jpg');
+        expect(result['location'], 'Updated Location');
         expect(
           result.containsKey('id'),
           false,

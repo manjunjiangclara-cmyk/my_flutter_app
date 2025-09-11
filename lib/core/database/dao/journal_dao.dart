@@ -16,26 +16,26 @@ class JournalDao {
 
   // Column names
   static const String columnId = DatabaseConstants.journalId;
-  static const String columnTitle = DatabaseConstants.journalTitle;
   static const String columnContent = DatabaseConstants.journalContent;
   static const String columnCreatedAt = DatabaseConstants.journalCreatedAt;
   static const String columnUpdatedAt = DatabaseConstants.journalUpdatedAt;
   static const String columnIsFavorite = DatabaseConstants.journalIsFavorite;
   static const String columnTags = DatabaseConstants.journalTags;
   static const String columnImageUrls = DatabaseConstants.journalImageUrls;
+  static const String columnLocation = DatabaseConstants.journalLocation;
 
   // Create table SQL
   static const String createTableSQL =
       '''
       CREATE TABLE $tableName(
         $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
-        $columnTitle TEXT NOT NULL,
         $columnContent TEXT NOT NULL,
         $columnCreatedAt TEXT NOT NULL,
         $columnUpdatedAt TEXT NOT NULL,
         $columnIsFavorite INTEGER DEFAULT ${DatabaseConstants.defaultIsFavorite},
         $columnTags TEXT,
-        $columnImageUrls TEXT
+        $columnImageUrls TEXT,
+        $columnLocation TEXT
       )
     ''';
 
@@ -120,11 +120,11 @@ class JournalDao {
     return _queryJournals(where: '$columnIsFavorite = ?', whereArgs: const [1]);
   }
 
-  // Search journals by title or content
+  // Search journals by content
   Future<List<Journal>> search(String query) async {
     return _queryJournals(
-      where: '$columnTitle LIKE ? OR $columnContent LIKE ?',
-      whereArgs: ['%$query%', '%$query%'],
+      where: '$columnContent LIKE ?',
+      whereArgs: ['%$query%'],
     );
   }
 

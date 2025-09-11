@@ -28,13 +28,13 @@ void main() {
         // Arrange
         final journal = Journal(
           id: '0',
-          title: 'Test Journal',
           content: 'Test content',
           createdAt: DateTime.parse('2024-01-01T10:00:00.000Z'),
           updatedAt: DateTime.parse('2024-01-01T11:00:00.000Z'),
           isFavorite: true,
           tags: ['personal', 'reflection'],
           imageUrls: ['image1.jpg'],
+          location: 'Test Location',
         );
 
         when(mockDatabaseHelper.database).thenAnswer((_) async => mockDatabase);
@@ -54,13 +54,13 @@ void main() {
         // Arrange
         final journal = Journal(
           id: '1',
-          title: 'Updated Journal',
           content: 'Updated content',
           createdAt: DateTime.parse('2024-01-01T10:00:00.000Z'),
           updatedAt: DateTime.parse('2024-01-01T12:00:00.000Z'),
           isFavorite: false,
           tags: ['updated'],
           imageUrls: [],
+          location: 'Updated Location',
         );
 
         when(mockDatabaseHelper.database).thenAnswer((_) async => mockDatabase);
@@ -129,13 +129,13 @@ void main() {
         const journalId = '1';
         final dbRow = {
           'id': 1,
-          'title': 'Test Journal',
           'content': 'Test content',
           'created_at': '2024-01-01T10:00:00.000Z',
           'updated_at': '2024-01-01T11:00:00.000Z',
           'is_favorite': 1,
           'tags': 'personal,reflection',
           'image_urls': 'image1.jpg',
+          'location': 'Test Location',
         };
 
         when(mockDatabaseHelper.database).thenAnswer((_) async => mockDatabase);
@@ -153,7 +153,7 @@ void main() {
 
         // Assert
         expect(result, isNotNull);
-        expect(result!.title, 'Test Journal');
+        expect(result!.content, 'Test content');
         expect(result.isFavorite, true);
         verify(
           mockDatabase.query(
@@ -193,23 +193,23 @@ void main() {
         final dbRows = [
           {
             'id': 1,
-            'title': 'Journal 1',
             'content': 'Content 1',
             'created_at': '2024-01-01T10:00:00.000Z',
             'updated_at': '2024-01-01T11:00:00.000Z',
             'is_favorite': 1,
             'tags': 'tag1',
             'image_urls': 'image1.jpg',
+            'location': 'Location 1',
           },
           {
             'id': 2,
-            'title': 'Journal 2',
             'content': 'Content 2',
             'created_at': '2024-01-01T12:00:00.000Z',
             'updated_at': '2024-01-01T13:00:00.000Z',
             'is_favorite': 0,
             'tags': 'tag2',
             'image_urls': 'image2.jpg',
+            'location': 'Location 2',
           },
         ];
 
@@ -227,8 +227,8 @@ void main() {
 
         // Assert
         expect(result, hasLength(2));
-        expect(result[0].title, 'Journal 1');
-        expect(result[1].title, 'Journal 2');
+        expect(result[0].content, 'Content 1');
+        expect(result[1].content, 'Content 2');
         verify(
           mockDatabase.query(
             JournalDao.tableName,
@@ -245,13 +245,13 @@ void main() {
         final dbRows = [
           {
             'id': 1,
-            'title': 'Favorite Journal',
             'content': 'Favorite content',
             'created_at': '2024-01-01T10:00:00.000Z',
             'updated_at': '2024-01-01T11:00:00.000Z',
             'is_favorite': 1,
             'tags': 'favorite',
             'image_urls': 'favorite.jpg',
+            'location': 'Favorite Location',
           },
         ];
 
@@ -271,7 +271,7 @@ void main() {
 
         // Assert
         expect(result, hasLength(1));
-        expect(result[0].title, 'Favorite Journal');
+        expect(result[0].content, 'Favorite content');
         expect(result[0].isFavorite, true);
         verify(
           mockDatabase.query(
@@ -286,19 +286,19 @@ void main() {
     });
 
     group('search', () {
-      test('should search journals by title or content', () async {
+      test('should search journals by content', () async {
         // Arrange
         const query = 'test';
         final dbRows = [
           {
             'id': 1,
-            'title': 'Test Journal',
-            'content': 'Some content',
+            'content': 'Test content',
             'created_at': '2024-01-01T10:00:00.000Z',
             'updated_at': '2024-01-01T11:00:00.000Z',
             'is_favorite': 0,
             'tags': 'tag1',
             'image_urls': '',
+            'location': 'Test Location',
           },
         ];
 
@@ -318,12 +318,12 @@ void main() {
 
         // Assert
         expect(result, hasLength(1));
-        expect(result[0].title, 'Test Journal');
+        expect(result[0].content, 'Test content');
         verify(
           mockDatabase.query(
             JournalDao.tableName,
-            where: 'title LIKE ? OR content LIKE ?',
-            whereArgs: ['%test%', '%test%'],
+            where: 'content LIKE ?',
+            whereArgs: ['%test%'],
             orderBy: 'created_at DESC',
             limit: 50,
           ),
@@ -338,13 +338,13 @@ void main() {
         final dbRows = [
           {
             'id': 1,
-            'title': 'Personal Journal',
             'content': 'Personal content',
             'created_at': '2024-01-01T10:00:00.000Z',
             'updated_at': '2024-01-01T11:00:00.000Z',
             'is_favorite': 0,
             'tags': 'personal,reflection',
             'image_urls': '',
+            'location': 'Personal Location',
           },
         ];
 
@@ -364,7 +364,7 @@ void main() {
 
         // Assert
         expect(result, hasLength(1));
-        expect(result[0].title, 'Personal Journal');
+        expect(result[0].content, 'Personal content');
         verify(
           mockDatabase.query(
             JournalDao.tableName,
@@ -385,13 +385,13 @@ void main() {
         final dbRows = [
           {
             'id': 1,
-            'title': 'January Journal',
             'content': 'January content',
             'created_at': '2024-01-15T10:00:00.000Z',
             'updated_at': '2024-01-15T11:00:00.000Z',
             'is_favorite': 0,
             'tags': 'january',
             'image_urls': '',
+            'location': 'January Location',
           },
         ];
 
@@ -411,7 +411,7 @@ void main() {
 
         // Assert
         expect(result, hasLength(1));
-        expect(result[0].title, 'January Journal');
+        expect(result[0].content, 'January content');
         verify(
           mockDatabase.query(
             JournalDao.tableName,
@@ -451,23 +451,23 @@ void main() {
         final journals = [
           Journal(
             id: '0',
-            title: 'Journal 1',
             content: 'Content 1',
             createdAt: DateTime.parse('2024-01-01T10:00:00.000Z'),
             updatedAt: DateTime.parse('2024-01-01T11:00:00.000Z'),
             isFavorite: false,
             tags: [],
             imageUrls: [],
+            location: 'Location 1',
           ),
           Journal(
             id: '0',
-            title: 'Journal 2',
             content: 'Content 2',
             createdAt: DateTime.parse('2024-01-01T12:00:00.000Z'),
             updatedAt: DateTime.parse('2024-01-01T13:00:00.000Z'),
             isFavorite: true,
             tags: ['favorite'],
             imageUrls: ['image.jpg'],
+            location: 'Location 2',
           ),
         ];
 
@@ -527,13 +527,13 @@ void main() {
 
       test('should have correct column names', () {
         expect(JournalDao.columnId, 'id');
-        expect(JournalDao.columnTitle, 'title');
         expect(JournalDao.columnContent, 'content');
         expect(JournalDao.columnCreatedAt, 'created_at');
         expect(JournalDao.columnUpdatedAt, 'updated_at');
         expect(JournalDao.columnIsFavorite, 'is_favorite');
         expect(JournalDao.columnTags, 'tags');
         expect(JournalDao.columnImageUrls, 'image_urls');
+        expect(JournalDao.columnLocation, 'location');
       });
 
       test('should have valid create table SQL', () {
@@ -542,8 +542,8 @@ void main() {
           JournalDao.createTableSQL,
           contains('id INTEGER PRIMARY KEY AUTOINCREMENT'),
         );
-        expect(JournalDao.createTableSQL, contains('title TEXT NOT NULL'));
         expect(JournalDao.createTableSQL, contains('content TEXT NOT NULL'));
+        expect(JournalDao.createTableSQL, contains('location TEXT'));
       });
     });
   });

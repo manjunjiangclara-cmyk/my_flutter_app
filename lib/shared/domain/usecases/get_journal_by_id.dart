@@ -12,7 +12,6 @@ class GetJournalById implements UseCase<Journal, GetJournalByIdParams> {
 
   final mockJournal = Journal(
     id: 'mock-journal-001',
-    title: 'A Day in the Mountains',
     content:
         '''The crisp morning air filled my lungs as I began the ascent up Eagle Peak. The trail wound through ancient pine forests, their branches creating a natural cathedral overhead. Each step brought me closer to the summit, and with it, a sense of peace I hadn't felt in weeks.
 

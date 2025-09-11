@@ -14,6 +14,9 @@ import 'package:my_flutter_app/features/compose/presentation/widgets/compose_tex
 import 'package:my_flutter_app/features/compose/presentation/widgets/location_display.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/photo_attachments.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/tags_display.dart';
+import 'package:my_flutter_app/shared/data/datasources/journal_local_datasource.dart';
+import 'package:my_flutter_app/shared/data/repositories_impl/journal_repository_impl.dart';
+import 'package:my_flutter_app/shared/domain/usecases/create_journal.dart';
 
 /// Main compose screen with improved organization and tap-to-edit functionality
 class ComposeScreen extends StatelessWidget {
@@ -22,7 +25,16 @@ class ComposeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ComposeBloc(),
+      create: (context) {
+        // Create the dependency chain for CreateJournal
+        final localDataSource = JournalLocalDataSourceImpl();
+        final repository = JournalRepositoryImpl(
+          localDataSource: localDataSource,
+        );
+        final createJournal = CreateJournal(repository);
+
+        return ComposeBloc(createJournal);
+      },
       child: const _ComposeScreenView(),
     );
   }
