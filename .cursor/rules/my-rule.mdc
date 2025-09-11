@@ -5,3 +5,5 @@ alwaysApply: true
 ---
 Generate proposal and steps first. 
 Ask me whether to go ahead before you make any changes.
+If new constant string is created, move it to strings.dart
+Do not use magic numbers, put UI specific constants into theme/ui_constants instead

@@ -24,6 +24,13 @@ class AppStrings {
   // ---------- Screens: Compose ----------
   static const String composePrompt = 'Hey, What is on your mind today?';
   static const String sampleDate = 'August 28, 2025';
+  static const String post = 'Post';
+  static const String addLocation = 'Add Location';
+  static const String addTag = 'Add Tag';
+  static const String searchLocationHint = 'Search for a location...';
+  static const String enterTagHint = 'Enter a tag...';
+  static const String memoryLodgedSuccessfully =
+      'Your memory has been safely lodged ❤️';
 
   // ---------- Screens: Journal ----------
   static const String location = 'Location';

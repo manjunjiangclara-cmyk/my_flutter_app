@@ -4,7 +4,6 @@ import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/utils/error_handler.dart';
-import 'package:my_flutter_app/features/memory/presentation/providers/memory_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -25,7 +24,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => MemoryData()),
         ChangeNotifierProvider(create: (context) => AppTabController()),
       ],
       child: MaterialApp.router(
