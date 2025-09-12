@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:my_flutter_app/core/bloc/base_bloc.dart';
 import 'package:my_flutter_app/core/usecase/usecase.dart';
 import 'package:my_flutter_app/core/utils/date_formatter.dart';
@@ -10,6 +11,7 @@ import 'memory_event.dart';
 import 'memory_state.dart';
 
 /// BLoC for managing memory screen state and business logic
+@injectable
 class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
   final GetJournals _getJournals;
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/router/navigation_helper.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
@@ -27,8 +28,7 @@ class JournalViewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          JournalViewBloc(getJournalById: getJournalById)
-            ..add(LoadJournal(journalId)),
+          getIt<JournalViewBloc>()..add(LoadJournal(journalId)),
       child: const _JournalViewScreenView(),
     );
   }

@@ -1,0 +1,87 @@
+// dart format width=80
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// **************************************************************************
+// InjectableConfigGenerator
+// **************************************************************************
+
+// ignore_for_file: type=lint
+// coverage:ignore-file
+
+// ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:get_it/get_it.dart' as _i174;
+import 'package:injectable/injectable.dart' as _i526;
+import 'package:my_flutter_app/core/database/database_helper.dart' as _i607;
+import 'package:my_flutter_app/core/router/tab_controller.dart' as _i1002;
+import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart'
+    as _i1036;
+import 'package:my_flutter_app/features/journal/presentation/bloc/journal_view/journal_view_bloc.dart'
+    as _i478;
+import 'package:my_flutter_app/features/memory/presentation/bloc/memory_bloc.dart'
+    as _i160;
+import 'package:my_flutter_app/shared/data/datasources/journal_local_datasource.dart'
+    as _i424;
+import 'package:my_flutter_app/shared/data/repositories_impl/journal_repository_impl.dart'
+    as _i705;
+import 'package:my_flutter_app/shared/domain/repositories/journal_repository.dart'
+    as _i690;
+import 'package:my_flutter_app/shared/domain/usecases/create_journal.dart'
+    as _i808;
+import 'package:my_flutter_app/shared/domain/usecases/delete_journal.dart'
+    as _i682;
+import 'package:my_flutter_app/shared/domain/usecases/get_journal_by_id.dart'
+    as _i368;
+import 'package:my_flutter_app/shared/domain/usecases/get_journals.dart'
+    as _i654;
+import 'package:my_flutter_app/shared/domain/usecases/search_journals.dart'
+    as _i1017;
+import 'package:my_flutter_app/shared/domain/usecases/update_journal.dart'
+    as _i513;
+
+extension GetItInjectableX on _i174.GetIt {
+  // initializes the registration of main-scope dependencies inside of GetIt
+  _i174.GetIt init({
+    String? environment,
+    _i526.EnvironmentFilter? environmentFilter,
+  }) {
+    final gh = _i526.GetItHelper(this, environment, environmentFilter);
+    gh.factory<_i1002.AppTabController>(() => _i1002.AppTabController());
+    gh.factory<_i424.JournalLocalDataSourceImpl>(
+      () => _i424.JournalLocalDataSourceImpl(),
+    );
+    gh.singleton<_i607.DatabaseHelper>(() => _i607.DatabaseHelper.new());
+    gh.factory<_i705.JournalRepositoryImpl>(
+      () => _i705.JournalRepositoryImpl(
+        localDataSource: gh<_i424.JournalLocalDataSource>(),
+      ),
+    );
+    gh.factory<_i1017.SearchJournals>(
+      () => _i1017.SearchJournals(gh<_i690.JournalRepository>()),
+    );
+    gh.factory<_i654.GetJournals>(
+      () => _i654.GetJournals(gh<_i690.JournalRepository>()),
+    );
+    gh.factory<_i808.CreateJournal>(
+      () => _i808.CreateJournal(gh<_i690.JournalRepository>()),
+    );
+    gh.factory<_i513.UpdateJournal>(
+      () => _i513.UpdateJournal(gh<_i690.JournalRepository>()),
+    );
+    gh.factory<_i682.DeleteJournal>(
+      () => _i682.DeleteJournal(gh<_i690.JournalRepository>()),
+    );
+    gh.factory<_i368.GetJournalById>(
+      () => _i368.GetJournalById(gh<_i690.JournalRepository>()),
+    );
+    gh.factory<_i478.JournalViewBloc>(
+      () => _i478.JournalViewBloc(getJournalById: gh<_i368.GetJournalById>()),
+    );
+    gh.factory<_i160.MemoryBloc>(
+      () => _i160.MemoryBloc(getJournals: gh<_i654.GetJournals>()),
+    );
+    gh.factory<_i1036.ComposeBloc>(
+      () => _i1036.ComposeBloc(gh<_i808.CreateJournal>()),
+    );
+    return this;
+  }
+}

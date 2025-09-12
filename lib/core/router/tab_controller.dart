@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 
 /// Tab controller for managing bottom navigation state
+@injectable
 class AppTabController extends ChangeNotifier {
   int _currentIndex = 0;
 

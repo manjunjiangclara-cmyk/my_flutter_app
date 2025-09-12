@@ -1,7 +1,6 @@
 import 'package:go_router/go_router.dart';
+import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/features/journal/presentation/screens/journal_view_screen.dart';
-import 'package:my_flutter_app/shared/data/datasources/journal_local_datasource.dart';
-import 'package:my_flutter_app/shared/data/repositories_impl/journal_repository_impl.dart';
 import 'package:my_flutter_app/shared/domain/usecases/get_journal_by_id.dart';
 
 /// Journal feature router configuration
@@ -16,12 +15,7 @@ class JournalRouter {
       name: journalViewName,
       builder: (context, state) {
         final journalId = state.pathParameters['journalId']!;
-        // Create the dependency chain for GetJournalById
-        final localDataSource = JournalLocalDataSourceImpl();
-        final repository = JournalRepositoryImpl(
-          localDataSource: localDataSource,
-        );
-        final getJournalById = GetJournalById(repository);
+        final getJournalById = getIt<GetJournalById>();
 
         return JournalViewScreen(
           journalId: journalId,
