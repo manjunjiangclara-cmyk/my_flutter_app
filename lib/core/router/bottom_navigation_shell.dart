@@ -9,6 +9,7 @@ import 'package:my_flutter_app/features/memory/presentation/screens/memory_scree
 import 'package:my_flutter_app/features/settings/presentation/screens/settings_screen.dart';
 import 'package:my_flutter_app/shared/data/datasources/journal_local_datasource.dart';
 import 'package:my_flutter_app/shared/data/repositories_impl/journal_repository_impl.dart';
+import 'package:my_flutter_app/shared/domain/usecases/delete_journal.dart';
 import 'package:my_flutter_app/shared/domain/usecases/get_journals.dart';
 import 'package:provider/provider.dart';
 
@@ -31,11 +32,14 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
         localDataSource: localDataSource,
       );
       final getJournals = GetJournals(repository);
+      final deleteJournal = DeleteJournal(repository);
 
       // Define the pages locally to avoid navigation transitions
       _pages = <Widget>[
         BlocProvider(
-          create: (context) => MemoryBloc(getJournals: getJournals),
+          create: (context) => MemoryBloc(
+            getJournals: getJournals
+          ),
           child: const MemoryScreen(),
         ),
         const ComposeHomeScreen(),

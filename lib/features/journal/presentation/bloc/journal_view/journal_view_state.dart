@@ -34,3 +34,11 @@ class JournalError extends JournalViewState {
   @override
   List<Object?> get props => [message];
 }
+
+class JournalDeleting extends JournalViewState {
+  const JournalDeleting();
+}
+
+class JournalDeleted extends JournalViewState {
+  const JournalDeleted();
+}
