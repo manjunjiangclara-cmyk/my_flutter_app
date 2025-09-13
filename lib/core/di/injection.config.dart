@@ -73,14 +73,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i368.GetJournalById>(
       () => _i368.GetJournalById(gh<_i690.JournalRepository>()),
     );
-    gh.factory<_i478.JournalViewBloc>(
-      () => _i478.JournalViewBloc(getJournalById: gh<_i368.GetJournalById>()),
-    );
     gh.factory<_i160.MemoryBloc>(
       () => _i160.MemoryBloc(getJournals: gh<_i654.GetJournals>()),
     );
     gh.factory<_i1036.ComposeBloc>(
       () => _i1036.ComposeBloc(gh<_i808.CreateJournal>()),
+    );
+    gh.factory<_i478.JournalViewBloc>(
+      () => _i478.JournalViewBloc(
+        getJournalById: gh<_i368.GetJournalById>(),
+        deleteJournal: gh<_i682.DeleteJournal>(),
+      ),
     );
     return this;
   }

@@ -15,3 +15,12 @@ class LoadJournal extends JournalViewEvent {
   @override
   List<Object?> get props => [id];
 }
+
+class DeleteJournal extends JournalViewEvent {
+  final String id;
+
+  const DeleteJournal(this.id);
+
+  @override
+  List<Object?> get props => [id];
+}

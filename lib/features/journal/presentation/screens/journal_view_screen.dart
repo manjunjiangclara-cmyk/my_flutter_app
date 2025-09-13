@@ -6,6 +6,7 @@ import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/features/memory/presentation/strings/memory_strings.dart';
 
 import '../../../../shared/domain/entities/journal.dart';
 import '../../../../shared/domain/usecases/get_journal_by_id.dart';
@@ -39,45 +40,93 @@ class _JournalViewScreenView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<JournalViewBloc, JournalViewState>(
-      builder: (context, state) {
-        if (state is JournalLoading || state is JournalInitial) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+    return BlocListener<JournalViewBloc, JournalViewState>(
+      listener: (context, state) {
+        if (state is JournalDeleted) {
+          // Navigate back to memory screen after successful deletion
+          NavigationHelper.goBack(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text(MemoryStrings.deleteMemorySuccess)),
           );
+        } else if (state is JournalError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
-        if (state is JournalError) {
-          return Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(state.message),
-                  const SizedBox(height: Spacing.md),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Get the journal ID from the parent widget
-                      final parent = context
-                          .findAncestorWidgetOfExactType<JournalViewScreen>();
-                      if (parent != null) {
-                        context.read<JournalViewBloc>().add(
-                          LoadJournal(parent.journalId),
-                        );
-                      }
-                    },
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-        if (state is JournalLoaded) {
-          return _JournalViewContent(journal: state.journal);
-        }
-        return const SizedBox.shrink();
       },
+      child: BlocBuilder<JournalViewBloc, JournalViewState>(
+        builder: (context, state) {
+          if (state is JournalLoading ||
+              state is JournalInitial ||
+              state is JournalDeleting) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+          if (state is JournalError) {
+            return Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(state.message),
+                    const SizedBox(height: Spacing.md),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Get the journal ID from the parent widget
+                        final parent = context
+                            .findAncestorWidgetOfExactType<JournalViewScreen>();
+                        if (parent != null) {
+                          context.read<JournalViewBloc>().add(
+                            LoadJournal(parent.journalId),
+                          );
+                        }
+                      },
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+          if (state is JournalLoaded) {
+            return _JournalViewContent(journal: state.journal);
+          }
+          return const SizedBox.shrink();
+        },
+      ),
     );
+  }
+
+  /// Shows a confirmation dialog before deleting a journal
+  static void _showDeleteConfirmationDialog(
+    BuildContext context,
+    String journalId,
+  ) {
+    showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(MemoryStrings.deleteMemoryTitle),
+          content: const Text(MemoryStrings.deleteMemoryMessage),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text(MemoryStrings.cancelButton),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              child: const Text(MemoryStrings.deleteButton),
+            ),
+          ],
+        );
+      },
+    ).then((confirmed) {
+      if (confirmed == true) {
+        context.read<JournalViewBloc>().add(DeleteJournal(journalId));
+      }
+    });
   }
 }
 
@@ -98,10 +147,26 @@ class _JournalViewContent extends StatelessWidget {
               onPressed: () => NavigationHelper.goBack(context),
             ),
             actions: <Widget>[
-              Icon(Icons.share),
-              SizedBox(width: Spacing.lg),
-              Icon(Icons.edit),
-              SizedBox(width: Spacing.lg),
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () =>
+                    _JournalViewScreenView._showDeleteConfirmationDialog(
+                      context,
+                      journal.id,
+                    ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.share),
+                onPressed: () {
+                  // TODO: Implement share functionality
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                  // TODO: Implement edit functionality
+                },
+              ),
             ],
             floating: true,
           ),
