@@ -30,7 +30,8 @@ class JournalLocalDataSourceImpl implements JournalLocalDataSource {
 
   @override
   Future<void> cacheJournal(Journal journal) async {
-    if (journal.id == '0') {
+    final existing = await _journalDao.findById(journal.id);
+    if (existing == null) {
       // Insert new journal
       await _journalDao.insert(journal);
     } else {

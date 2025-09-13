@@ -64,11 +64,13 @@ class MemoryCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              ImageCard(
-                imageUrl: memoryCardModel.imageUrl,
-                imageHeight: imageHeight,
-              ),
-              SizedBox(height: sectionSpacingLarge),
+              if (memoryCardModel.imageUrl != null) ...[
+                ImageCard(
+                  imageUrl: memoryCardModel.imageUrl!,
+                  imageHeight: imageHeight,
+                ),
+                SizedBox(height: sectionSpacingLarge),
+              ],
               _buildHeaderRow(),
               SizedBox(height: sectionSpacingSmall),
               _buildTags(),
@@ -101,6 +103,6 @@ class MemoryCard extends StatelessWidget {
   }
 
   Widget _buildDescription() {
-    return Text(memoryCardModel.description, style: AppTypography.bodyMedium);
+    return Text(memoryCardModel.description, style: AppTypography.bodyLarge);
   }
 }

@@ -39,7 +39,7 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
     // Use first image URL if available, otherwise use default
     final imageUrl = journal.imageUrls.isNotEmpty
         ? journal.imageUrls.first
-        : 'https://www.gstatic.com/flutter-onestack-prototype/genui/example_1.jpg';
+        : null;
 
     // Truncate content if too long for description
     final description = journal.content.length > 100

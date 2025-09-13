@@ -141,7 +141,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
       // Create Journal entity from compose content
       final now = DateTime.now();
       final journal = Journal(
-        id: now.millisecondsSinceEpoch.toString(),
+        id: now.toUtc().millisecondsSinceEpoch.toString(),
         content: currentState.text,
         createdAt: now,
         updatedAt: now,
