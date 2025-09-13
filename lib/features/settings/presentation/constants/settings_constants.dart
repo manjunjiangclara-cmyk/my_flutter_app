@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/features/settings/presentation/models/settings_item_model.dart';
+import 'package:my_flutter_app/features/settings/presentation/screens/theme_selection_screen.dart';
 
 /// Constants and configuration for the settings screen.
 class SettingsConstants {
@@ -18,15 +19,19 @@ class SettingsConstants {
           icon: Icons.palette,
           title: AppStrings.theme,
           subtitle: AppStrings.changeAppAppearance,
-          onTap: () {
-            // Handle theme settings
+          onTap: (context) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const ThemeSelectionScreen(),
+              ),
+            );
           },
         ),
         SettingsItemModel(
           icon: Icons.notifications,
           title: AppStrings.notifications,
           subtitle: AppStrings.manageNotificationPreferences,
-          onTap: () {
+          onTap: (context) {
             // Handle notification settings
           },
         ),
@@ -39,7 +44,7 @@ class SettingsConstants {
           icon: Icons.backup,
           title: AppStrings.backupAndSync,
           subtitle: AppStrings.manageYourDataBackup,
-          onTap: () {
+          onTap: (context) {
             // Handle backup settings
           },
         ),
@@ -47,7 +52,7 @@ class SettingsConstants {
           icon: Icons.security,
           title: AppStrings.privacy,
           subtitle: AppStrings.controlYourPrivacySettings,
-          onTap: () {
+          onTap: (context) {
             // Handle privacy settings
           },
         ),
@@ -66,7 +71,7 @@ class SettingsConstants {
           icon: Icons.help,
           title: AppStrings.helpAndSupport,
           subtitle: 'Get help and contact support',
-          onTap: () {
+          onTap: (context) {
             // Handle help
           },
         ),

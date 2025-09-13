@@ -48,4 +48,14 @@ class AppStrings {
   static const String manageYourDataBackup = 'Manage your data backup';
   static const String controlYourPrivacySettings =
       'Control your privacy settings';
+
+  // ---------- Theme Settings ----------
+  static const String lightTheme = 'Light';
+  static const String darkTheme = 'Dark';
+  static const String systemTheme = 'System';
+  static const String selectTheme = 'Select Theme';
+  static const String themeDescription = 'Choose how the app looks';
+  static const String followSystemTheme = 'Follow system setting';
+  static const String alwaysLight = 'Always light';
+  static const String alwaysDark = 'Always dark';
 }

@@ -12,7 +12,7 @@ class SettingsItemModel {
   final String subtitle;
 
   /// The callback to execute when the item is tapped.
-  final VoidCallback? onTap;
+  final void Function(BuildContext)? onTap;
 
   /// Whether this item is enabled (can be tapped).
   final bool enabled;

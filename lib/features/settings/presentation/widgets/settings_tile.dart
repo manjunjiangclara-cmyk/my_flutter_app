@@ -14,7 +14,7 @@ class SettingsTile extends StatelessWidget {
   final String subtitle;
 
   /// The callback to execute when the tile is tapped.
-  final VoidCallback? onTap;
+  final void Function(BuildContext)? onTap;
 
   /// Whether this tile is enabled (can be tapped).
   final bool enabled;
@@ -49,7 +49,7 @@ class SettingsTile extends StatelessWidget {
               : Theme.of(context).disabledColor,
         ),
       ),
-      onTap: enabled ? onTap : null,
+      onTap: enabled ? () => onTap?.call(context) : null,
       contentPadding: const EdgeInsets.symmetric(
         horizontal: Spacing.lg,
         vertical: Spacing.xs,
