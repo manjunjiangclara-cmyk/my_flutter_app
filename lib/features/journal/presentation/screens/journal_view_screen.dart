@@ -9,7 +9,6 @@ import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/memory/presentation/strings/memory_strings.dart';
 
 import '../../../../shared/domain/entities/journal.dart';
-import '../../../../shared/domain/usecases/get_journal_by_id.dart';
 import '../bloc/journal_view/journal_view_bloc.dart';
 import '../bloc/journal_view/journal_view_event.dart';
 import '../bloc/journal_view/journal_view_state.dart';
@@ -17,13 +16,8 @@ import '../widgets/tag_chip.dart';
 
 class JournalViewScreen extends StatelessWidget {
   final String journalId;
-  final GetJournalById getJournalById;
 
-  const JournalViewScreen({
-    super.key,
-    required this.journalId,
-    required this.getJournalById,
-  });
+  const JournalViewScreen({super.key, required this.journalId});
 
   @override
   Widget build(BuildContext context) {
