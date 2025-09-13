@@ -86,16 +86,16 @@ class _MemoryList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MemoryBloc, MemoryState>(
       builder: (context, state) {
-        if (state is MemoryLoading) {
+        if (state.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (state is MemoryError) {
+        if (state.errorMessage != null) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(state.message),
+                Text(state.errorMessage!),
                 const SizedBox(height: Spacing.md),
                 ElevatedButton(
                   onPressed: () => context.read<MemoryBloc>().add(
@@ -108,14 +108,28 @@ class _MemoryList extends StatelessWidget {
           );
         }
 
-        if (state is MemoryLoaded) {
-          final memories = state.filteredMemories;
+        final memories = state.filteredMemories;
 
-          if (memories.isEmpty) {
-            return const Center(child: Text(MemoryStrings.noMemoriesFound));
-          }
+        if (memories.isEmpty) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<MemoryBloc>().add(const MemoryRefreshRequested());
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: const Center(child: Text(MemoryStrings.noMemoriesFound)),
+              ),
+            ),
+          );
+        }
 
-          return ListView.builder(
+        return RefreshIndicator(
+          onRefresh: () async {
+            context.read<MemoryBloc>().add(const MemoryRefreshRequested());
+          },
+          child: ListView.builder(
             itemCount: memories.length,
             itemBuilder: (BuildContext context, int index) {
               final MemoryCardModel memory = memories[index];
@@ -138,10 +152,8 @@ class _MemoryList extends StatelessWidget {
                 ),
               );
             },
-          );
-        }
-
-        return const Center(child: CircularProgressIndicator());
+          ),
+        );
       },
     );
   }

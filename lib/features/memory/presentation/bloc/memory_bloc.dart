@@ -17,7 +17,7 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
 
   MemoryBloc({required GetJournals getJournals})
     : _getJournals = getJournals,
-      super(const MemoryInitial()) {
+      super(const MemoryState()) {
     on<MemoryLoadRequested>(_onLoadRequested);
     on<MemoryRefreshRequested>(_onRefreshRequested);
     on<MemoryFilterByTagRequested>(_onFilterByTagRequested);
@@ -60,7 +60,7 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
     MemoryLoadRequested event,
     Emitter<MemoryState> emit,
   ) async {
-    emit(const MemoryLoading());
+    emit(state.copyWith(isLoading: true, errorMessage: null));
 
     final result = await _getJournals(NoParams());
 
@@ -68,11 +68,21 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
       result,
       (journals) {
         final memoryCards = journals.map(_mapJournalToMemoryCard).toList();
-        emit(MemoryLoaded(memories: memoryCards));
+        emit(
+          state.copyWith(
+            memories: memoryCards,
+            isLoading: false,
+            errorMessage: null,
+          ),
+        );
       },
       onFailure: (failure) => emit(
-        MemoryError(
-          mapFailureToMessageWithContext(failure, 'Failed to load memories'),
+        state.copyWith(
+          isLoading: false,
+          errorMessage: mapFailureToMessageWithContext(
+            failure,
+            'Failed to load memories',
+          ),
         ),
       ),
     );
@@ -82,60 +92,49 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
     MemoryRefreshRequested event,
     Emitter<MemoryState> emit,
   ) async {
-    if (state is MemoryLoaded) {
-      final currentState = state as MemoryLoaded;
-      emit(currentState.copyWith());
+    emit(state.copyWith(isLoading: true, errorMessage: null));
 
-      final result = await _getJournals(NoParams());
+    final result = await _getJournals(NoParams());
 
-      handleUseCaseResult(
-        result,
-        (journals) {
-          final memoryCards = journals.map(_mapJournalToMemoryCard).toList();
-          emit(
-            MemoryLoaded(
-              memories: memoryCards,
-              searchQuery: currentState.searchQuery,
-              filterTag: currentState.filterTag,
-            ),
-          );
-        },
-        onFailure: (failure) => emit(
-          MemoryError(
-            mapFailureToMessageWithContext(
-              failure,
-              'Failed to refresh memories',
-            ),
+    handleUseCaseResult(
+      result,
+      (journals) {
+        final memoryCards = journals.map(_mapJournalToMemoryCard).toList();
+        emit(
+          state.copyWith(
+            memories: memoryCards,
+            isLoading: false,
+            errorMessage: null,
+          ),
+        );
+      },
+      onFailure: (failure) => emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: mapFailureToMessageWithContext(
+            failure,
+            'Failed to refresh memories',
           ),
         ),
-      );
-    }
+      ),
+    );
   }
 
   void _onFilterByTagRequested(
     MemoryFilterByTagRequested event,
     Emitter<MemoryState> emit,
   ) {
-    if (state is MemoryLoaded) {
-      final currentState = state as MemoryLoaded;
-      emit(currentState.copyWith(filterTag: event.tag));
-    }
+    emit(state.copyWith(filterTag: event.tag));
   }
 
   void _onFilterCleared(MemoryFilterCleared event, Emitter<MemoryState> emit) {
-    if (state is MemoryLoaded) {
-      final currentState = state as MemoryLoaded;
-      emit(currentState.copyWith(filterTag: null));
-    }
+    emit(state.copyWith(filterTag: null));
   }
 
   void _onSearchRequested(
     MemorySearchRequested event,
     Emitter<MemoryState> emit,
   ) {
-    if (state is MemoryLoaded) {
-      final currentState = state as MemoryLoaded;
-      emit(currentState.copyWith(searchQuery: event.query));
-    }
+    emit(state.copyWith(searchQuery: event.query));
   }
 }
