@@ -1,4 +1,4 @@
-import '../../../../features/journal/domain/entities/journal.dart';
+import '../../../shared/domain/entities/journal.dart';
 import '../../utils/string_list_parser.dart';
 
 class JournalEntityMapper {
@@ -6,13 +6,13 @@ class JournalEntityMapper {
   static Journal mapToJournal(Map<String, dynamic> map) {
     return Journal(
       id: map['id'].toString(),
-      title: map['title'],
       content: map['content'],
       createdAt: DateTime.parse(map['created_at']),
       updatedAt: DateTime.parse(map['updated_at']),
       isFavorite: map['is_favorite'] == 1,
       tags: parseCommaSeparatedString(map['tags']),
       imageUrls: parseCommaSeparatedString(map['image_urls']),
+      location: map['location'],
     );
   }
 
@@ -26,25 +26,25 @@ class JournalEntityMapper {
   /// Converts a Journal entity to a database row map for insertion
   static Map<String, dynamic> journalToMap(Journal journal) {
     return {
-      'title': journal.title,
       'content': journal.content,
       'created_at': journal.createdAt.toIso8601String(),
       'updated_at': journal.updatedAt.toIso8601String(),
       'is_favorite': journal.isFavorite ? 1 : 0,
       'tags': journal.tags.join(','),
       'image_urls': journal.imageUrls.join(','),
+      'location': journal.location,
     };
   }
 
   /// Converts a Journal entity to a database row map for updates
   static Map<String, dynamic> journalToUpdateMap(Journal journal) {
     return {
-      'title': journal.title,
       'content': journal.content,
       'updated_at': journal.updatedAt.toIso8601String(),
       'is_favorite': journal.isFavorite ? 1 : 0,
       'tags': journal.tags.join(','),
       'image_urls': journal.imageUrls.join(','),
+      'location': journal.location,
     };
   }
 

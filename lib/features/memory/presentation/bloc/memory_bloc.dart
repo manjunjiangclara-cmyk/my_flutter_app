@@ -1,15 +1,23 @@
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:my_flutter_app/features/memory/presentation/constants/memory_constants.dart';
+import 'package:my_flutter_app/core/bloc/base_bloc.dart';
+import 'package:my_flutter_app/core/usecase/usecase.dart';
+import 'package:my_flutter_app/core/utils/date_formatter.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
+import 'package:my_flutter_app/shared/domain/entities/journal.dart';
+import 'package:my_flutter_app/shared/domain/usecases/get_journals.dart';
 
 import 'memory_event.dart';
 import 'memory_state.dart';
 
 /// BLoC for managing memory screen state and business logic
 @injectable
-class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
-  MemoryBloc() : super(const MemoryInitial()) {
+class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
+  final GetJournals _getJournals;
+
+  MemoryBloc({required GetJournals getJournals})
+    : _getJournals = getJournals,
+      super(const MemoryState()) {
     on<MemoryLoadRequested>(_onLoadRequested);
     on<MemoryRefreshRequested>(_onRefreshRequested);
     on<MemoryFilterByTagRequested>(_onFilterByTagRequested);
@@ -20,109 +28,113 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
     add(const MemoryLoadRequested());
   }
 
-  // Mock data - in a real app, this would come from a repository
-  final List<MemoryCardModel> _mockMemories = [
-    MemoryCardModel(
-      journalId: 'journal_1',
-      date: 'Thu, August 28',
-      location: 'Melbourne',
-      tags: <String>['Life', 'Travel'],
-      description:
-          'Praeterea, ex culpa non invenies unum aut non accusatis unum. Et nihil inuitam. Nemo nocere tibi erit, et non inimicos, et ne illa',
-    ),
-    MemoryCardModel(
-      journalId: 'journal_2',
-      date: 'Wed, August 27',
-      location: 'Melbourne',
-      tags: <String>['Life', 'Travel'],
-      description:
-          'Praeterea, ex culpa non invenies unum aut non accusatis unum. Et nihil inuitam. Nemo nocere tibi erit, et non inimicos, et ne illa',
-    ),
-    MemoryCardModel(
-      journalId: 'journal_3',
-      date: 'Tue, August 26',
-      location: 'Sydney',
-      tags: <String>['Work', 'Conference'],
-      description:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ),
-    MemoryCardModel(
-      journalId: 'journal_4',
-      date: 'Mon, August 25',
-      location: 'Brisbane',
-      tags: <String>['Friends', 'Adventure'],
-      description:
-          'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-    ),
-  ];
+  /// Maps a Journal entity to MemoryCardModel for UI display
+  MemoryCardModel _mapJournalToMemoryCard(Journal journal) {
+    // Format date as "EEE, MMMM d" (e.g., "Thu, August 28")
+    final formattedDate = DateFormatter.formatDate(
+      journal.createdAt,
+      format: 'EEE, MMMM d',
+    );
+
+    // Use first image URL if available, otherwise use default
+    final imageUrl = journal.imageUrls.isNotEmpty
+        ? journal.imageUrls.first
+        : null;
+
+    // Truncate content if too long for description
+    final description = journal.content.length > 100
+        ? '${journal.content.substring(0, 100)}...'
+        : journal.content;
+
+    return MemoryCardModel(
+      journalId: journal.id,
+      date: formattedDate,
+      location: journal.location ?? 'Unknown',
+      tags: journal.tags,
+      description: description,
+      imageUrl: imageUrl,
+    );
+  }
 
   void _onLoadRequested(
     MemoryLoadRequested event,
     Emitter<MemoryState> emit,
   ) async {
-    emit(const MemoryLoading());
+    emit(state.copyWith(isLoading: true, errorMessage: null));
 
-    try {
-      // Simulate loading delay
-      await Future.delayed(
-        const Duration(milliseconds: MemoryConstants.loadDelayMs),
-      );
-      emit(MemoryLoaded(memories: _mockMemories));
-    } catch (e) {
-      emit(MemoryError('Failed to load memories: $e'));
-    }
+    final result = await _getJournals(NoParams());
+
+    handleUseCaseResult(
+      result,
+      (journals) {
+        final memoryCards = journals.map(_mapJournalToMemoryCard).toList();
+        emit(
+          state.copyWith(
+            memories: memoryCards,
+            isLoading: false,
+            errorMessage: null,
+          ),
+        );
+      },
+      onFailure: (failure) => emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: mapFailureToMessageWithContext(
+            failure,
+            'Failed to load memories',
+          ),
+        ),
+      ),
+    );
   }
 
   void _onRefreshRequested(
     MemoryRefreshRequested event,
     Emitter<MemoryState> emit,
   ) async {
-    if (state is MemoryLoaded) {
-      final currentState = state as MemoryLoaded;
-      emit(currentState.copyWith());
+    emit(state.copyWith(isLoading: true, errorMessage: null));
 
-      try {
-        // Simulate refresh delay
-        await Future.delayed(
-          const Duration(milliseconds: MemoryConstants.refreshDelayMs),
-        );
+    final result = await _getJournals(NoParams());
+
+    handleUseCaseResult(
+      result,
+      (journals) {
+        final memoryCards = journals.map(_mapJournalToMemoryCard).toList();
         emit(
-          MemoryLoaded(
-            memories: _mockMemories,
-            searchQuery: currentState.searchQuery,
-            filterTag: currentState.filterTag,
+          state.copyWith(
+            memories: memoryCards,
+            isLoading: false,
+            errorMessage: null,
           ),
         );
-      } catch (e) {
-        emit(MemoryError('Failed to refresh memories: $e'));
-      }
-    }
+      },
+      onFailure: (failure) => emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: mapFailureToMessageWithContext(
+            failure,
+            'Failed to refresh memories',
+          ),
+        ),
+      ),
+    );
   }
 
   void _onFilterByTagRequested(
     MemoryFilterByTagRequested event,
     Emitter<MemoryState> emit,
   ) {
-    if (state is MemoryLoaded) {
-      final currentState = state as MemoryLoaded;
-      emit(currentState.copyWith(filterTag: event.tag));
-    }
+    emit(state.copyWith(filterTag: event.tag));
   }
 
   void _onFilterCleared(MemoryFilterCleared event, Emitter<MemoryState> emit) {
-    if (state is MemoryLoaded) {
-      final currentState = state as MemoryLoaded;
-      emit(currentState.copyWith(filterTag: null));
-    }
+    emit(state.copyWith(filterTag: null));
   }
 
   void _onSearchRequested(
     MemorySearchRequested event,
     Emitter<MemoryState> emit,
   ) {
-    if (state is MemoryLoaded) {
-      final currentState = state as MemoryLoaded;
-      emit(currentState.copyWith(searchQuery: event.query));
-    }
+    emit(state.copyWith(searchQuery: event.query));
   }
 }

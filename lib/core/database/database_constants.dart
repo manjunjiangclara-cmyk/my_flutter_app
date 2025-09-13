@@ -10,13 +10,13 @@ class DatabaseConstants {
 
   // Journal Table Columns
   static const String journalId = 'id';
-  static const String journalTitle = 'title';
   static const String journalContent = 'content';
   static const String journalCreatedAt = 'created_at';
   static const String journalUpdatedAt = 'updated_at';
   static const String journalIsFavorite = 'is_favorite';
   static const String journalTags = 'tags';
   static const String journalImageUrls = 'image_urls';
+  static const String journalLocation = 'location';
 
   // Tags Table Columns
   static const String tagId = 'id';

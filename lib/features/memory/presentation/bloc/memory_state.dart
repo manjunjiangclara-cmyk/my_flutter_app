@@ -1,32 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
 
-/// Base class for all memory states
-abstract class MemoryState extends Equatable {
-  const MemoryState();
-
-  @override
-  List<Object?> get props => [];
-}
-
-/// Initial state when memory screen is first loaded
-class MemoryInitial extends MemoryState {
-  const MemoryInitial();
-}
-
-/// State when memories are being loaded
-class MemoryLoading extends MemoryState {
-  const MemoryLoading();
-}
-
-/// State when memories are loaded successfully
-class MemoryLoaded extends MemoryState {
+/// Single state class for all memory operations
+class MemoryState extends Equatable {
   final List<MemoryCardModel> memories;
+  final bool isLoading;
+  final String? errorMessage;
   final String? searchQuery;
   final String? filterTag;
 
-  const MemoryLoaded({
-    required this.memories,
+  const MemoryState({
+    this.memories = const [],
+    this.isLoading = false,
+    this.errorMessage,
     this.searchQuery,
     this.filterTag,
   });
@@ -56,58 +42,28 @@ class MemoryLoaded extends MemoryState {
   }
 
   /// Copy with method for immutable state updates
-  MemoryLoaded copyWith({
+  MemoryState copyWith({
     List<MemoryCardModel>? memories,
+    bool? isLoading,
+    String? errorMessage,
     String? searchQuery,
     String? filterTag,
   }) {
-    return MemoryLoaded(
+    return MemoryState(
       memories: memories ?? this.memories,
+      isLoading: isLoading ?? this.isLoading,
+      errorMessage: errorMessage ?? this.errorMessage,
       searchQuery: searchQuery ?? this.searchQuery,
       filterTag: filterTag ?? this.filterTag,
     );
   }
 
   @override
-  List<Object?> get props => [memories, searchQuery, filterTag];
-}
-
-/// State when memory operation fails
-class MemoryError extends MemoryState {
-  final String message;
-
-  const MemoryError(this.message);
-
-  @override
-  List<Object?> get props => [message];
-}
-
-/// State when memory is being added
-class MemoryAdding extends MemoryState {
-  final List<MemoryCardModel> memories;
-
-  const MemoryAdding({required this.memories});
-
-  @override
-  List<Object?> get props => [memories];
-}
-
-/// State when memory is being updated
-class MemoryUpdating extends MemoryState {
-  final List<MemoryCardModel> memories;
-
-  const MemoryUpdating({required this.memories});
-
-  @override
-  List<Object?> get props => [memories];
-}
-
-/// State when memory is being deleted
-class MemoryDeleting extends MemoryState {
-  final List<MemoryCardModel> memories;
-
-  const MemoryDeleting({required this.memories});
-
-  @override
-  List<Object?> get props => [memories];
+  List<Object?> get props => [
+    memories,
+    isLoading,
+    errorMessage,
+    searchQuery,
+    filterTag,
+  ];
 }

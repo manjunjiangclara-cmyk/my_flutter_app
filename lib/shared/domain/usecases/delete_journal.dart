@@ -1,9 +1,11 @@
 import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../../core/error/failures.dart';
-import '../../../../core/usecase/usecase.dart';
+import '../../../core/error/failures.dart';
+import '../../../core/usecase/usecase.dart';
 import '../repositories/journal_repository.dart';
 
+@injectable
 class DeleteJournal implements UseCase<bool, DeleteJournalParams> {
   final JournalRepository repository;
 

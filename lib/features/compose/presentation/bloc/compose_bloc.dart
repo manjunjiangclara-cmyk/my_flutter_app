@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
-import 'package:my_flutter_app/core/constants.dart';
+import 'package:my_flutter_app/shared/domain/entities/journal.dart';
+import 'package:my_flutter_app/shared/domain/usecases/create_journal.dart';
 
 import 'compose_event.dart';
 import 'compose_state.dart';
@@ -9,6 +10,7 @@ import 'compose_state.dart';
 /// BLoC for managing compose screen state and business logic
 @injectable
 class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
+  final CreateJournal _createJournal;
   final TextEditingController textController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController tagController = TextEditingController();
@@ -17,7 +19,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   final FocusNode locationFocusNode = FocusNode();
   final FocusNode tagFocusNode = FocusNode();
 
-  ComposeBloc() : super(const ComposeInitial()) {
+  ComposeBloc(this._createJournal) : super(const ComposeInitial()) {
     on<ComposeTextChanged>(_onTextChanged);
     on<ComposePhotoAdded>(_onPhotoAdded);
     on<ComposePhotoRemoved>(_onPhotoRemoved);
@@ -136,19 +138,35 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     );
 
     try {
-      // Simulate posting delay
-      await Future.delayed(
-        const Duration(seconds: AppConstants.postingDelaySeconds),
+      // Create Journal entity from compose content
+      final now = DateTime.now();
+      final journal = Journal(
+        id: now.toUtc().millisecondsSinceEpoch.toString(),
+        content: currentState.text,
+        createdAt: now,
+        updatedAt: now,
+        tags: currentState.selectedTags,
+        imageUrls: currentState.attachedPhotos,
+        location: currentState.selectedLocation,
       );
 
-      // Emit success state
-      emit(const ComposePostSuccess());
+      // Call CreateJournal usecase - this will take as long as the actual database operation
+      final result = await _createJournal(CreateJournalParams(journal));
 
-      // Reset to initial state after successful post
-      await Future.delayed(
-        const Duration(milliseconds: AppConstants.postingSuccessDelayMs),
+      result.fold(
+        (failure) {
+          emit(
+            ComposePostFailure('Failed to save journal: ${failure.message}'),
+          );
+        },
+        (savedJournal) {
+          // Emit success state
+          emit(const ComposePostSuccess());
+
+          // Reset to initial state immediately after successful post
+          emit(const ComposeInitial());
+        },
       );
-      emit(const ComposeInitial());
     } catch (e) {
       emit(ComposePostFailure('Failed to post: $e'));
     }
