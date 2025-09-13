@@ -1,7 +1,8 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
+import 'package:my_flutter_app/features/journal/presentation/bloc/journal_view/journal_view_bloc.dart';
 import 'package:my_flutter_app/features/journal/presentation/screens/journal_view_screen.dart';
-import 'package:my_flutter_app/shared/domain/usecases/get_journal_by_id.dart';
 
 /// Journal feature router configuration
 class JournalRouter {
@@ -15,11 +16,9 @@ class JournalRouter {
       name: journalViewName,
       builder: (context, state) {
         final journalId = state.pathParameters['journalId']!;
-        final getJournalById = getIt<GetJournalById>();
-
-        return JournalViewScreen(
-          journalId: journalId,
-          getJournalById: getJournalById,
+        return BlocProvider(
+          create: (context) => getIt<JournalViewBloc>(),
+          child: JournalViewScreen(journalId: journalId),
         );
       },
     ),
