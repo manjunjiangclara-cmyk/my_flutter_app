@@ -133,7 +133,6 @@ class _MemoryList extends StatelessWidget {
             itemCount: memories.length,
             itemBuilder: (BuildContext context, int index) {
               final MemoryCardModel memory = memories[index];
-              final Color primaryColor = Theme.of(context).colorScheme.primary;
               final bool isFirst = index == 0;
               final bool isLast = index == memories.length - 1;
 
@@ -141,11 +140,7 @@ class _MemoryList extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    TimelineIndicator(
-                      isFirst: isFirst,
-                      isLast: isLast,
-                      dotColor: primaryColor,
-                    ),
+                    TimelineIndicator(isFirst: isFirst, isLast: isLast),
                     const SizedBox(width: Spacing.lg),
                     Expanded(child: MemoryCard(memoryCardModel: memory)),
                   ],

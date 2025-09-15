@@ -82,4 +82,9 @@ class UIConstants {
 
   static const double postingIndicatorSize = 16.0;
   static const double postingIndicatorStrokeWidth = 2.0;
+
+  // Timeline Indicator
+  static const double timelineDotSize = 14.0;
+  static const double timelineLineWidth = 2.0;
+  static const double timelineLineBorderWidth = 2.0;
 }

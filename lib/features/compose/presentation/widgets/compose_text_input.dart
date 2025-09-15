@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/strings.dart';
-import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 
 class ComposeTextInput extends StatelessWidget {
@@ -21,10 +20,11 @@ class ComposeTextInput extends StatelessWidget {
       controller: controller,
       focusNode: focusNode,
       maxLines: null,
+      cursorColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
       decoration: InputDecoration(
         hintText: AppStrings.composePrompt,
         hintStyle: AppTypography.bodyLarge.copyWith(
-          color: AppColors.textSecondary,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
         border: InputBorder.none,
         contentPadding: EdgeInsets.zero,

@@ -14,7 +14,7 @@ class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.close),
+        icon: const Icon(Icons.arrow_back_ios_new),
         onPressed: () => Navigator.of(context).pop(),
       ),
       title: Text(
@@ -22,19 +22,12 @@ class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: AppTypography.bodyLarge.copyWith(fontWeight: FontWeight.bold),
       ),
       actions: [
-        TextButton(
+        IconButton(
+          icon: const Icon(Icons.save_alt_outlined),
           onPressed: canPost ? onPost : null,
-          child: Text(
-            AppStrings.post,
-            style: AppTypography.labelLarge.copyWith(
-              color: canPost
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.38),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          color: canPost
+              ? Theme.of(context).colorScheme.onSurface
+              : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
         ),
       ],
     );

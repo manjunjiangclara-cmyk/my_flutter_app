@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
@@ -26,9 +25,9 @@ class ComposeActionButtons extends StatelessWidget {
         color: Theme.of(context).scaffoldBackgroundColor,
         border: Border(
           top: BorderSide(
-            color: AppColors.border.withValues(
-              alpha: UIConstants.dialogOpacity,
-            ),
+            color: Theme.of(
+              context,
+            ).colorScheme.outline.withValues(alpha: UIConstants.dialogOpacity),
             width: UIConstants.dialogBorderWidth,
           ),
         ),
@@ -70,14 +69,12 @@ class ComposeActionButtons extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(UIConstants.actionButtonPadding),
         decoration: BoxDecoration(
-          color: AppColors.border.withValues(alpha: UIConstants.dialogOpacity),
+          color: Theme.of(
+            context,
+          ).colorScheme.outline.withValues(alpha: UIConstants.dialogOpacity),
           borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
         ),
-        child: Icon(
-          icon,
-          color: Theme.of(context).colorScheme.primary,
-          size: UIConstants.actionButtonIconSize,
-        ),
+        child: Icon(icon, size: UIConstants.actionButtonIconSize),
       ),
     );
   }

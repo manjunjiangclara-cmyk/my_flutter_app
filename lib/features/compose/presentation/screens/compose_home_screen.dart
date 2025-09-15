@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/strings.dart';
-import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
@@ -27,14 +26,14 @@ class ComposeHomeScreen extends StatelessWidget {
               Text(
                 AppStrings.sampleDate,
                 style: AppTypography.labelSmall.copyWith(
-                  color: AppColors.textSecondary,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
               SizedBox(height: Spacing.xl),
               Text(
                 AppStrings.composePrompt,
                 style: AppTypography.displayLarge.copyWith(
-                  color: AppColors.textPrimary,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -43,11 +42,11 @@ class ComposeHomeScreen extends StatelessWidget {
                 onTap: () => _navigateToCompose(context),
                 child: CircleAvatar(
                   radius: UIConstants.largeIconSize,
-                  backgroundColor: AppColors.border,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   child: Icon(
                     Icons.add,
                     size: UIConstants.largeIconSize,
-                    color: AppColors.textSecondary,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),

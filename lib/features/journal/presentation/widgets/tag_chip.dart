@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
@@ -143,10 +142,10 @@ class _TagChipsState extends State<TagChips> {
           vertical: Spacing.xxs,
         ),
         decoration: BoxDecoration(
-          color: AppColors.border.withValues(alpha: 0.3),
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
           border: Border.all(
-            color: AppColors.border.withValues(alpha: 0.5),
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
             width: 1,
           ),
         ),
@@ -216,7 +215,9 @@ class TagChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Chip(
       label: Text(tag, style: AppTypography.labelSmall),
-      backgroundColor: AppColors.border.withValues(alpha: 0.5),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.outline.withValues(alpha: 0.5),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
         side: BorderSide.none,

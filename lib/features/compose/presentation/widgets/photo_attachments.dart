@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
 class PhotoAttachments extends StatelessWidget {
@@ -35,11 +34,11 @@ class PhotoAttachments extends StatelessWidget {
                     borderRadius: BorderRadius.circular(
                       UIConstants.defaultRadius,
                     ),
-                    color: AppColors.border,
+                    color: Theme.of(context).colorScheme.outline,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.image,
-                    color: AppColors.textSecondary,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     size: UIConstants.photoAttachmentIconSize,
                   ),
                 ),

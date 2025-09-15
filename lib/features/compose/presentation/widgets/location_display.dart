@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
@@ -19,24 +18,26 @@ class LocationDisplay extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(Spacing.sm),
       decoration: BoxDecoration(
-        color: AppColors.border.withValues(alpha: UIConstants.dialogOpacity),
+        color: Theme.of(
+          context,
+        ).colorScheme.outline.withValues(alpha: UIConstants.dialogOpacity),
         borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
       ),
       child: Row(
         children: [
-          const Icon(
+          Icon(
             Icons.location_on,
             size: UIConstants.locationIconSize,
-            color: AppColors.textSecondary,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
           const SizedBox(width: Spacing.xs),
           Expanded(child: Text(location, style: AppTypography.labelMedium)),
           GestureDetector(
             onTap: onRemove,
-            child: const Icon(
+            child: Icon(
               Icons.close,
               size: UIConstants.locationIconSize,
-              color: AppColors.textSecondary,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ],

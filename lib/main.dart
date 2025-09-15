@@ -49,16 +49,17 @@ class MyApp extends StatelessWidget {
 
   /// Build light theme
   ThemeData _buildLightTheme() {
+    final colorScheme = AppColors.lightColorScheme;
     return ThemeData(
       useMaterial3: true,
-      colorScheme: AppColors.lightColorScheme,
-      scaffoldBackgroundColor: AppColors.backgroundLight,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: colorScheme.surface,
       textTheme: AppTypography.textTheme,
-      dividerColor: AppColors.borderLight,
-      cardColor: AppColors.backgroundLight,
+      dividerColor: colorScheme.outline,
+      cardColor: colorScheme.surface,
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.backgroundLight,
-        foregroundColor: AppColors.textPrimaryLight,
+        backgroundColor: colorScheme.surface,
+        foregroundColor: colorScheme.onSurface,
         elevation: 0,
       ),
     );
@@ -66,16 +67,17 @@ class MyApp extends StatelessWidget {
 
   /// Build dark theme
   ThemeData _buildDarkTheme() {
+    final colorScheme = AppColors.darkColorScheme;
     return ThemeData(
       useMaterial3: true,
-      colorScheme: AppColors.darkColorScheme,
-      scaffoldBackgroundColor: AppColors.backgroundDark,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: colorScheme.surface,
       textTheme: AppTypography.textTheme,
-      dividerColor: AppColors.borderDark,
-      cardColor: AppColors.backgroundDark,
+      dividerColor: colorScheme.outline,
+      cardColor: colorScheme.surface,
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.backgroundDark,
-        foregroundColor: AppColors.textPrimaryDark,
+        backgroundColor: colorScheme.surface,
+        foregroundColor: colorScheme.onSurface,
         elevation: 0,
       ),
     );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:reorderables/reorderables.dart';
@@ -47,7 +46,7 @@ class ImageGallery extends StatelessWidget {
                 child: Container(
                   width: imageWidth,
                   height: imageHeight,
-                  color: AppColors.border,
+                  color: Theme.of(context).colorScheme.outline,
                   child: Image.network(
                     url,
                     fit: BoxFit.cover,
@@ -61,7 +60,9 @@ class ImageGallery extends StatelessWidget {
                             child: Icon(
                               Icons.image,
                               size: UIConstants.mediumIconSize,
-                              color: AppColors.textSecondary,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
                             ),
                           );
                         },
@@ -101,13 +102,16 @@ class ImageGallery extends StatelessWidget {
             width: imageWidth,
             height: imageHeight,
             decoration: BoxDecoration(
-              color: AppColors.border.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
               borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
-              border: Border.all(color: AppColors.border, width: 1),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.outline,
+                width: 1,
+              ),
             ),
             child: Icon(
               Icons.add_photo_alternate_outlined,
-              color: AppColors.textSecondary,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               size: UIConstants.mediumIconSize,
             ),
           ),

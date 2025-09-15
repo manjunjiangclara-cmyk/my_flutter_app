@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
@@ -47,10 +46,13 @@ class MemoryCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: Spacing.sm),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(borderRadius),
-        side: BorderSide(color: AppColors.border, width: borderWidth),
+        side: BorderSide(
+          color: Theme.of(context).colorScheme.outline,
+          width: borderWidth,
+        ),
       ),
       elevation: 0,
-      color: Theme.of(context).cardColor,
+      color: Theme.of(context).colorScheme.surface,
       child: InkWell(
         onTap: () => context.push(
           JournalRouter.journalViewPath.replaceAll(

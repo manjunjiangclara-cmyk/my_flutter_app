@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/router/navigation_helper.dart';
-import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
@@ -264,26 +263,26 @@ class _HeaderImage extends StatelessWidget {
     return Container(
       height: 180,
       width: double.infinity,
-      color: AppColors.border,
+      color: Theme.of(context).colorScheme.outline,
       child: imageUrls.isNotEmpty
           ? Image.network(
               imageUrls.first,
               fit: BoxFit.cover,
               errorBuilder:
                   (BuildContext context, Object error, StackTrace? stackTrace) {
-                    return _buildPlaceholder();
+                    return _buildPlaceholder(context);
                   },
             )
-          : _buildPlaceholder(),
+          : _buildPlaceholder(context),
     );
   }
 
-  Widget _buildPlaceholder() {
+  Widget _buildPlaceholder(BuildContext context) {
     return Center(
       child: Icon(
         Icons.image,
         size: UIConstants.largeIconSize,
-        color: AppColors.textSecondary,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
       ),
     );
   }
@@ -307,7 +306,7 @@ class _EventDetailsHeader extends StatelessWidget {
             Icon(
               Icons.location_on,
               size: UIConstants.smallIconSize,
-              color: AppColors.textSecondary,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             SizedBox(width: Spacing.xs),
             Text(location, style: AppTypography.labelSmall),

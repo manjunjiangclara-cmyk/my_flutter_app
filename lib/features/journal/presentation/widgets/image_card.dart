@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
 class ImageCard extends StatelessWidget {
@@ -25,12 +24,12 @@ class ImageCard extends StatelessWidget {
             (BuildContext context, Object error, StackTrace? stackTrace) =>
                 Container(
                   height: imageHeight,
-                  color: AppColors.border,
+                  color: Theme.of(context).colorScheme.outline,
                   child: Center(
                     child: Icon(
                       Icons.broken_image,
                       size: UIConstants.largeIconSize,
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),
