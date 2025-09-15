@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/core/widgets/action_button.dart';
 
 class ComposeActionButtons extends StatelessWidget {
   final VoidCallback onAddPhoto;
@@ -35,46 +36,26 @@ class ComposeActionButtons extends StatelessWidget {
       child: SafeArea(
         child: Row(
           children: [
-            _buildActionButton(
-              context,
+            ActionButton.filled(
               icon: Icons.image_outlined,
-              onTap: onAddPhoto,
+              onPressed: onAddPhoto,
+              tooltip: 'Add Photo',
             ),
             const SizedBox(width: Spacing.lg),
-            _buildActionButton(
-              context,
+            ActionButton.filled(
               icon: Icons.location_on_outlined,
-              onTap: onAddLocation,
+              onPressed: onAddLocation,
+              tooltip: 'Add Location',
             ),
             const SizedBox(width: Spacing.lg),
-            _buildActionButton(
-              context,
+            ActionButton.filled(
               icon: Icons.tag_outlined,
-              onTap: onAddTag,
+              onPressed: onAddTag,
+              tooltip: 'Add Tag',
             ),
             const Spacer(),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildActionButton(
-    BuildContext context, {
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(UIConstants.actionButtonPadding),
-        decoration: BoxDecoration(
-          color: Theme.of(
-            context,
-          ).colorScheme.outline.withValues(alpha: UIConstants.dialogOpacity),
-          borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
-        ),
-        child: Icon(icon, size: UIConstants.actionButtonIconSize),
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/router/navigation_helper.dart';
-import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/core/widgets/action_button.dart';
 import 'package:my_flutter_app/features/journal/presentation/strings/journal_strings.dart';
 
 /// App bar widget for journal view screen
@@ -20,41 +20,23 @@ class JournalAppBar extends StatelessWidget {
         tooltip: JournalStrings.closeJournal,
       ),
       actions: [
-        _buildActionButton(
+        ActionButton(
           icon: Icons.edit_outlined,
           onPressed: onEdit,
           tooltip: JournalStrings.editJournal,
         ),
-        _buildActionButton(
+        ActionButton(
           icon: Icons.delete_outline,
           onPressed: onDelete,
           tooltip: JournalStrings.deleteJournal,
         ),
-        _buildActionButton(
+        ActionButton(
           icon: Icons.ios_share,
           onPressed: onShare,
           tooltip: JournalStrings.shareJournal,
         ),
       ],
       floating: true,
-    );
-  }
-
-  Widget _buildActionButton({
-    required IconData icon,
-    VoidCallback? onPressed,
-    required String tooltip,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: UIConstants.journalAppBarIconPadding,
-      ),
-      child: IconButton(
-        icon: Icon(icon),
-        iconSize: UIConstants.journalAppBarIconSize,
-        onPressed: onPressed,
-        tooltip: tooltip,
-      ),
     );
   }
 }
