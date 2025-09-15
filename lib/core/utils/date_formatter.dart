@@ -38,4 +38,43 @@ class DateFormatter {
   static String getMonthName(DateTime date) {
     return DateFormat('MMMM').format(date);
   }
+
+  /// Formats today's date in the format used by compose screens (e.g., "August 28, 2025")
+  static String getTodayFormatted() {
+    final today = DateTime.now();
+    return DateFormat('MMMM d, yyyy').format(today);
+  }
+
+  /// Formats a date in the journal view style (e.g., "Thursday, August 28")
+  static String formatJournalDate(DateTime date) {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    const weekdays = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ];
+
+    final weekday = weekdays[date.weekday - 1];
+    final month = months[date.month - 1];
+    final day = date.day;
+
+    return '$weekday, $month $day';
+  }
 }

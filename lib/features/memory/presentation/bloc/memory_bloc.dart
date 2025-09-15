@@ -49,7 +49,7 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
     return MemoryCardModel(
       journalId: journal.id,
       date: formattedDate,
-      location: journal.location ?? 'Unknown',
+      location: journal.location,
       tags: journal.tags,
       description: description,
       imageUrl: imageUrl,

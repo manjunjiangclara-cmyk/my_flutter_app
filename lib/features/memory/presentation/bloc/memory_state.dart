@@ -33,7 +33,8 @@ class MemoryState extends Equatable {
       final query = searchQuery!.toLowerCase();
       filtered = filtered.where((memory) {
         return memory.description.toLowerCase().contains(query) ||
-            memory.location.toLowerCase().contains(query) ||
+            (memory.location != null &&
+                memory.location!.toLowerCase().contains(query)) ||
             memory.tags.any((tag) => tag.toLowerCase().contains(query));
       }).toList();
     }

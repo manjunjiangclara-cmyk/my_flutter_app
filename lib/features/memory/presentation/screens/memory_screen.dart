@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
-import 'package:my_flutter_app/features/journal/presentation/widgets/timeline_indicator.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_event.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_state.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
 import 'package:my_flutter_app/features/memory/presentation/strings/memory_strings.dart';
 import 'package:my_flutter_app/features/memory/presentation/widgets/memory_card.dart';
+import 'package:my_flutter_app/features/memory/presentation/widgets/timeline_indicator.dart';
 
 class MemoryScreen extends StatelessWidget {
   const MemoryScreen({super.key});
@@ -34,7 +34,7 @@ class _MemoryScreenView extends StatelessWidget {
         centerTitle: false,
         actions: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(right: UIConstants.defaultPadding),
+            padding: const EdgeInsets.only(right: UIConstants.smallPadding),
             child: IconButton(
               icon: const Icon(Icons.add_box_rounded),
               iconSize: UIConstants.iconButtonSize,

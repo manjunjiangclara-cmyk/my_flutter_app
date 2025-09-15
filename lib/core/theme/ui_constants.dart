@@ -87,4 +87,10 @@ class UIConstants {
   static const double timelineDotSize = 14.0;
   static const double timelineLineWidth = 2.0;
   static const double timelineLineBorderWidth = 2.0;
+
+  // Journal View Screen
+  static const double journalHeaderImageHeight = 180.0;
+  static const double journalAppBarIconSize = 24.0;
+  static const double journalAppBarIconPadding = 8.0;
+  static const double journalContentPadding = 16.0;
 }

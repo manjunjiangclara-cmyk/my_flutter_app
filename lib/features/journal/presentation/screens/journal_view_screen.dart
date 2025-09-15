@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
-import 'package:my_flutter_app/core/router/navigation_helper.dart';
-import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
-import 'package:my_flutter_app/features/memory/presentation/strings/memory_strings.dart';
+import 'package:my_flutter_app/core/utils/date_formatter.dart';
 
+import '../../../../core/widgets/tag_chip.dart';
 import '../../../../shared/domain/entities/journal.dart';
 import '../bloc/journal_view/journal_view_bloc.dart';
 import '../bloc/journal_view/journal_view_event.dart';
 import '../bloc/journal_view/journal_view_state.dart';
-import '../widgets/tag_chip.dart';
+import '../strings/journal_strings.dart';
+import '../widgets/journal_app_bar.dart';
+import '../widgets/journal_content_section.dart';
+import '../widgets/journal_delete_dialog.dart';
+import '../widgets/journal_error_state.dart';
+import '../widgets/journal_event_details.dart';
+import '../widgets/journal_header_image.dart';
+import '../widgets/journal_loading_state.dart';
 
 class JournalViewScreen extends StatelessWidget {
   final String journalId;
@@ -36,10 +42,9 @@ class _JournalViewScreenView extends StatelessWidget {
     return BlocListener<JournalViewBloc, JournalViewState>(
       listener: (context, state) {
         if (state is JournalDeleted) {
-          // Navigate back to memory screen after successful deletion
-          NavigationHelper.goBack(context);
+          Navigator.of(context).pop();
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text(MemoryStrings.deleteMemorySuccess)),
+            const SnackBar(content: Text(JournalStrings.deleteJournalSuccess)),
           );
         } else if (state is JournalError) {
           ScaffoldMessenger.of(
@@ -52,267 +57,108 @@ class _JournalViewScreenView extends StatelessWidget {
           if (state is JournalLoading ||
               state is JournalInitial ||
               state is JournalDeleting) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
+            return const JournalLoadingState();
           }
+
           if (state is JournalError) {
-            return Scaffold(
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(state.message),
-                    const SizedBox(height: Spacing.md),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Get the journal ID from the parent widget
-                        final parent = context
-                            .findAncestorWidgetOfExactType<JournalViewScreen>();
-                        if (parent != null) {
-                          context.read<JournalViewBloc>().add(
-                            LoadJournal(parent.journalId),
-                          );
-                        }
-                      },
-                      child: const Text('Retry'),
-                    ),
-                  ],
-                ),
-              ),
+            return JournalErrorState(
+              message: state.message,
+              onRetry: () => _retryLoadJournal(context),
             );
           }
+
           if (state is JournalLoaded) {
-            return _JournalViewContent(journal: state.journal);
+            return _JournalViewContent(
+              journal: state.journal,
+              onEdit: () => _handleEdit(context),
+              onDelete: () => _handleDelete(context, state.journal.id),
+              onShare: () => _handleShare(context),
+            );
           }
+
           return const SizedBox.shrink();
         },
       ),
     );
   }
 
-  /// Shows a confirmation dialog before deleting a journal
-  static void _showDeleteConfirmationDialog(
-    BuildContext context,
-    String journalId,
-  ) {
-    showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(MemoryStrings.deleteMemoryTitle),
-          content: const Text(MemoryStrings.deleteMemoryMessage),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text(MemoryStrings.cancelButton),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              style: TextButton.styleFrom(foregroundColor: Colors.red),
-              child: const Text(MemoryStrings.deleteButton),
-            ),
-          ],
-        );
-      },
-    ).then((confirmed) {
-      if (confirmed == true) {
+  void _retryLoadJournal(BuildContext context) {
+    final parent = context.findAncestorWidgetOfExactType<JournalViewScreen>();
+    if (parent != null) {
+      context.read<JournalViewBloc>().add(LoadJournal(parent.journalId));
+    }
+  }
+
+  void _handleEdit(BuildContext context) {
+    // TODO: Implement edit functionality
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Edit functionality coming soon')),
+    );
+  }
+
+  void _handleDelete(BuildContext context, String journalId) {
+    JournalDeleteDialog.show(
+      context,
+      journalId: journalId,
+      onConfirm: () {
         context.read<JournalViewBloc>().add(DeleteJournal(journalId));
-      }
-    });
+      },
+    );
+  }
+
+  void _handleShare(BuildContext context) {
+    // TODO: Implement share functionality
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Share functionality coming soon')),
+    );
   }
 }
 
 /// A widget to display the journal content with rich UI
 class _JournalViewContent extends StatelessWidget {
   final Journal journal;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+  final VoidCallback onShare;
 
-  const _JournalViewContent({required this.journal});
+  const _JournalViewContent({
+    required this.journal,
+    required this.onEdit,
+    required this.onDelete,
+    required this.onShare,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          SliverAppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () => NavigationHelper.goBack(context),
-            ),
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () =>
-                    _JournalViewScreenView._showDeleteConfirmationDialog(
-                      context,
-                      journal.id,
-                    ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.share),
-                onPressed: () {
-                  // TODO: Implement share functionality
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {
-                  // TODO: Implement edit functionality
-                },
-              ),
-            ],
-            floating: true,
-          ),
+          JournalAppBar(onEdit: onEdit, onDelete: onDelete, onShare: onShare),
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.all(Spacing.lg),
+              padding: const EdgeInsets.all(UIConstants.journalContentPadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  _HeaderImage(imageUrls: journal.imageUrls),
-                  SizedBox(height: Spacing.lg),
-                  _EventDetailsHeader(
-                    date: _formatDate(journal.createdAt),
-                    location:
-                        'Unknown', // Journal entity doesn't have location field
+                  JournalHeaderImage(imageUrls: journal.imageUrls),
+                  const SizedBox(height: Spacing.lg),
+                  JournalEventDetails(
+                    date: DateFormatter.formatJournalDate(journal.createdAt),
+                    location: journal.location,
                   ),
-                  SizedBox(height: Spacing.sm),
+                  const SizedBox(height: Spacing.sm),
                   if (journal.tags.isNotEmpty) ...[
                     TagChips(tags: journal.tags),
-                    SizedBox(height: Spacing.lg),
+                    const SizedBox(height: Spacing.lg),
                   ],
-                  _ContentSection(content: journal.content),
-                  SizedBox(height: Spacing.lg),
+                  JournalContentSection(content: journal.content),
+                  const SizedBox(height: Spacing.lg),
                 ],
               ),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  String _formatDate(DateTime date) {
-    // Format the date as "Thursday, August 28" style
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    const weekdays = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ];
-
-    final weekday = weekdays[date.weekday - 1];
-    final month = months[date.month - 1];
-    final day = date.day;
-
-    return '$weekday, $month $day';
-  }
-}
-
-/// A widget to display a section of content with multiple paragraphs.
-class _ContentSection extends StatelessWidget {
-  final String content;
-
-  const _ContentSection({required this.content});
-
-  @override
-  Widget build(BuildContext context) {
-    // Split content into paragraphs (assuming double newlines separate paragraphs)
-    final paragraphs = content
-        .split('\n\n')
-        .where((p) => p.trim().isNotEmpty)
-        .toList();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        for (int i = 0; i < paragraphs.length; i++) ...<Widget>[
-          Text(paragraphs[i], style: AppTypography.bodyLarge),
-          if (i < paragraphs.length - 1) SizedBox(height: Spacing.lg),
-        ],
-      ],
-    );
-  }
-}
-
-/// A widget to display the main header image.
-class _HeaderImage extends StatelessWidget {
-  final List<String> imageUrls;
-
-  const _HeaderImage({required this.imageUrls});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 180,
-      width: double.infinity,
-      color: Theme.of(context).colorScheme.outline,
-      child: imageUrls.isNotEmpty
-          ? Image.network(
-              imageUrls.first,
-              fit: BoxFit.cover,
-              errorBuilder:
-                  (BuildContext context, Object error, StackTrace? stackTrace) {
-                    return _buildPlaceholder(context);
-                  },
-            )
-          : _buildPlaceholder(context),
-    );
-  }
-
-  Widget _buildPlaceholder(BuildContext context) {
-    return Center(
-      child: Icon(
-        Icons.image,
-        size: UIConstants.largeIconSize,
-        color: Theme.of(context).colorScheme.onSurfaceVariant,
-      ),
-    );
-  }
-}
-
-/// A widget to display event details like date and location.
-class _EventDetailsHeader extends StatelessWidget {
-  final String date;
-  final String location;
-
-  const _EventDetailsHeader({required this.date, required this.location});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(date, style: AppTypography.titleMedium),
-        Row(
-          children: <Widget>[
-            Icon(
-              Icons.location_on,
-              size: UIConstants.smallIconSize,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            SizedBox(width: Spacing.xs),
-            Text(location, style: AppTypography.labelSmall),
-          ],
-        ),
-      ],
     );
   }
 }
