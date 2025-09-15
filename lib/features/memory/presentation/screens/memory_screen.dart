@@ -61,8 +61,27 @@ class _MemoryScreenView extends StatelessWidget {
 }
 
 /// Renders a list of memories with a vertical timeline indicator.
-class _MemoryList extends StatelessWidget {
+class _MemoryList extends StatefulWidget {
   const _MemoryList();
+
+  @override
+  State<_MemoryList> createState() => _MemoryListState();
+}
+
+class _MemoryListState extends State<_MemoryList> {
+  // Track which month-year groups are expanded (all expanded by default)
+  final Set<String> _expandedGroups = <String>{};
+
+  /// Toggles the expanded state of a month-year group
+  void _toggleGroup(String monthYear) {
+    setState(() {
+      if (_expandedGroups.contains(monthYear)) {
+        _expandedGroups.remove(monthYear);
+      } else {
+        _expandedGroups.add(monthYear);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +134,15 @@ class _MemoryList extends StatelessWidget {
           groupedMemories,
         );
 
+        // Expand all groups by default if they haven't been toggled yet
+        if (_expandedGroups.isEmpty && sortedKeys.isNotEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              _expandedGroups.addAll(sortedKeys);
+            });
+          });
+        }
+
         return RefreshIndicator(
           onRefresh: () async {
             context.read<MemoryBloc>().add(const MemoryRefreshRequested());
@@ -143,7 +171,10 @@ class _MemoryList extends StatelessWidget {
     int totalCount = 0;
     for (final key in sortedKeys) {
       totalCount += 1; // Header
-      totalCount += groupedMemories[key]!.length; // Memories
+      // Only count memories if the group is expanded
+      if (_expandedGroups.contains(key)) {
+        totalCount += groupedMemories[key]!.length; // Memories
+      }
     }
     return totalCount;
   }
@@ -159,15 +190,21 @@ class _MemoryList extends StatelessWidget {
 
     for (final key in sortedKeys) {
       final memories = groupedMemories[key]!;
+      final isExpanded = _expandedGroups.contains(key);
 
       // Check if this index is the header for this group
       if (currentIndex == index) {
-        return MonthYearHeader(monthYear: key);
+        return MonthYearHeader(
+          monthYear: key,
+          isExpanded: isExpanded,
+          onTap: () => _toggleGroup(key),
+        );
       }
       currentIndex++;
 
       // Check if this index is within the memories for this group
-      if (index < currentIndex + memories.length) {
+      // Only show memories if the group is expanded
+      if (isExpanded && index < currentIndex + memories.length) {
         final memoryIndex = index - currentIndex;
         final memory = memories[memoryIndex];
         final isFirst = memoryIndex == 0;
@@ -185,7 +222,10 @@ class _MemoryList extends StatelessWidget {
         );
       }
 
-      currentIndex += memories.length;
+      // If group is collapsed, skip the memories
+      if (isExpanded) {
+        currentIndex += memories.length;
+      }
     }
 
     // Fallback (should not reach here)
