@@ -8,7 +8,9 @@ import 'package:my_flutter_app/features/memory/presentation/bloc/memory_event.da
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_state.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
 import 'package:my_flutter_app/features/memory/presentation/strings/memory_strings.dart';
+import 'package:my_flutter_app/features/memory/presentation/utils/memory_grouping_utils.dart';
 import 'package:my_flutter_app/features/memory/presentation/widgets/memory_card.dart';
+import 'package:my_flutter_app/features/memory/presentation/widgets/month_year_header.dart';
 import 'package:my_flutter_app/features/memory/presentation/widgets/timeline_indicator.dart';
 
 class MemoryScreen extends StatelessWidget {
@@ -52,28 +54,8 @@ class _MemoryScreenView extends StatelessWidget {
           top: UIConstants.defaultPadding,
           bottom: UIConstants.defaultPadding,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const _MemoryHeader(),
-            const SizedBox(height: Spacing.md),
-            const Expanded(child: _MemoryList()),
-          ],
-        ),
+        child: const Expanded(child: _MemoryList()),
       ),
-    );
-  }
-}
-
-/// Displays the header for the memory list, showing the current month and year.
-class _MemoryHeader extends StatelessWidget {
-  const _MemoryHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      MemoryStrings.currentMonthYear,
-      style: AppTypography.labelLarge.copyWith(fontWeight: FontWeight.bold),
     );
   }
 }
@@ -125,31 +107,88 @@ class _MemoryList extends StatelessWidget {
           );
         }
 
+        // Group memories by month and year
+        final groupedMemories = MemoryGroupingUtils.groupMemoriesByMonthYear(
+          memories,
+        );
+        final sortedKeys = MemoryGroupingUtils.getSortedMonthYearKeys(
+          groupedMemories,
+        );
+
         return RefreshIndicator(
           onRefresh: () async {
             context.read<MemoryBloc>().add(const MemoryRefreshRequested());
           },
           child: ListView.builder(
-            itemCount: memories.length,
+            itemCount: _calculateTotalItemCount(groupedMemories, sortedKeys),
             itemBuilder: (BuildContext context, int index) {
-              final MemoryCardModel memory = memories[index];
-              final bool isFirst = index == 0;
-              final bool isLast = index == memories.length - 1;
-
-              return IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    TimelineIndicator(isFirst: isFirst, isLast: isLast),
-                    const SizedBox(width: Spacing.lg),
-                    Expanded(child: MemoryCard(memoryCardModel: memory)),
-                  ],
-                ),
+              return _buildGroupedMemoryItem(
+                context,
+                groupedMemories,
+                sortedKeys,
+                index,
               );
             },
           ),
         );
       },
     );
+  }
+
+  /// Calculates the total number of items including headers and memories
+  int _calculateTotalItemCount(
+    Map<String, List<MemoryCardModel>> groupedMemories,
+    List<String> sortedKeys,
+  ) {
+    int totalCount = 0;
+    for (final key in sortedKeys) {
+      totalCount += 1; // Header
+      totalCount += groupedMemories[key]!.length; // Memories
+    }
+    return totalCount;
+  }
+
+  /// Builds a single item in the grouped memory list (either header or memory)
+  Widget _buildGroupedMemoryItem(
+    BuildContext context,
+    Map<String, List<MemoryCardModel>> groupedMemories,
+    List<String> sortedKeys,
+    int index,
+  ) {
+    int currentIndex = 0;
+
+    for (final key in sortedKeys) {
+      final memories = groupedMemories[key]!;
+
+      // Check if this index is the header for this group
+      if (currentIndex == index) {
+        return MonthYearHeader(monthYear: key);
+      }
+      currentIndex++;
+
+      // Check if this index is within the memories for this group
+      if (index < currentIndex + memories.length) {
+        final memoryIndex = index - currentIndex;
+        final memory = memories[memoryIndex];
+        final isFirst = memoryIndex == 0;
+        final isLast = memoryIndex == memories.length - 1;
+
+        return IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              TimelineIndicator(isFirst: isFirst, isLast: isLast),
+              const SizedBox(width: Spacing.lg),
+              Expanded(child: MemoryCard(memoryCardModel: memory)),
+            ],
+          ),
+        );
+      }
+
+      currentIndex += memories.length;
+    }
+
+    // Fallback (should not reach here)
+    return const SizedBox.shrink();
   }
 }

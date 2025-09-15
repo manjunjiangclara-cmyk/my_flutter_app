@@ -4,7 +4,6 @@ class MemoryStrings {
 
   // ---------- UI Text ----------
   static const String myMemories = 'My Memories';
-  static const String currentMonthYear = 'August, 2025';
   static const String noMemoriesFound = 'No memories found';
 
   // ---------- Messages ----------
