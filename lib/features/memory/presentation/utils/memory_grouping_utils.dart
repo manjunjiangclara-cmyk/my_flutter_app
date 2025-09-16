@@ -13,7 +13,7 @@ class MemoryGroupingUtils {
     final Map<MonthYearKey, List<MemoryCardModel>> groupedMemories = {};
 
     for (final memory in memories) {
-      try {
+      try { 
         final monthYearKey = MonthYearKey.fromDateTime(memory.date);
         groupedMemories.putIfAbsent(monthYearKey, () => []).add(memory);
       } catch (e) {

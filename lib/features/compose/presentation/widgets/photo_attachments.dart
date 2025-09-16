@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/features/compose/presentation/widgets/photo_viewer.dart';
 
 class PhotoAttachments extends StatelessWidget {
   final List<File> photos;
@@ -50,60 +51,71 @@ class PhotoAttachments extends StatelessWidget {
   }
 
   Widget _buildPhotoItem(BuildContext context, File photo, int index) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-          width: 1,
+    return GestureDetector(
+      onTap: () => _openPhotoViewer(context, index),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+            width: 1,
+          ),
         ),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Image.file(
-                photo,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.outline.withValues(alpha: 0.1),
-                    child: Icon(
-                      Icons.broken_image,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      size: UIConstants.photoAttachmentIconSize,
-                    ),
-                  );
-                },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Image.file(
+                  photo,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.outline.withValues(alpha: 0.1),
+                      child: Icon(
+                        Icons.broken_image,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        size: UIConstants.photoAttachmentIconSize,
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-            Positioned(
-              top: UIConstants.photoAttachmentCloseButtonPadding,
-              right: UIConstants.photoAttachmentCloseButtonPadding,
-              child: GestureDetector(
-                onTap: () => onRemovePhoto(index),
-                child: Container(
-                  padding: const EdgeInsets.all(
-                    UIConstants.photoAttachmentCloseButtonPadding,
-                  ),
-                  decoration: const BoxDecoration(
-                    color: Colors.black54,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.white,
-                    size: UIConstants.photoAttachmentCloseIconSize,
+              Positioned(
+                top: UIConstants.photoAttachmentCloseButtonPadding,
+                right: UIConstants.photoAttachmentCloseButtonPadding,
+                child: GestureDetector(
+                  onTap: () => onRemovePhoto(index),
+                  child: Container(
+                    padding: const EdgeInsets.all(
+                      UIConstants.photoAttachmentCloseButtonPadding,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Colors.black54,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: UIConstants.photoAttachmentCloseIconSize,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  void _openPhotoViewer(BuildContext context, int initialIndex) {
+    PhotoViewer.show(
+      context: context,
+      photos: photos,
+      initialIndex: initialIndex,
     );
   }
 }
