@@ -14,7 +14,10 @@ class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      automaticallyImplyLeading: false,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios_new),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
       title: Text(
         AppStrings.sampleDate,
         style: AppTypography.bodyLarge.copyWith(fontWeight: FontWeight.bold),
