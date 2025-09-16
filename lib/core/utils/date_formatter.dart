@@ -1,6 +1,49 @@
 import 'package:intl/intl.dart';
 
 class DateFormatter {
+  // Private constants to avoid duplication
+  static const List<String> _weekdays = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+
+  // Single source of truth for month data
+  static const List<String> _months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  // Helper method to get month number (1-based)
+  static int _getMonthNumber(String monthName) {
+    final index = _months.indexOf(monthName);
+    return index >= 0 ? index + 1 : 1; // Return 1 as fallback
+  }
+
+  // Helper method to get month name by number (1-based)
+  static String _getMonthName(int monthNumber) {
+    final index = monthNumber - 1;
+    return (index >= 0 && index < _months.length) ? _months[index] : _months[0];
+  }
+
+  // Private constructor to prevent instantiation
+  DateFormatter._();
+
+  // Basic formatting methods using intl package
   static String formatDate(DateTime date, {String format = 'yyyy-MM-dd'}) {
     return DateFormat(format).format(date);
   }
@@ -16,6 +59,7 @@ class DateFormatter {
     return DateFormat(format).format(time);
   }
 
+  // Relative time formatting
   static String getRelativeTime(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
@@ -31,6 +75,7 @@ class DateFormatter {
     }
   }
 
+  // Day and month name getters using intl package
   static String getDayOfWeek(DateTime date) {
     return DateFormat('EEEE').format(date);
   }
@@ -39,7 +84,7 @@ class DateFormatter {
     return DateFormat('MMMM').format(date);
   }
 
-  /// Formats today's date in the format used by compose screens (e.g., "August 28, 2025")
+  // Specific date formatting methods
   static String getTodayFormatted() {
     final today = DateTime.now();
     return DateFormat('MMMM d, yyyy').format(today);
@@ -47,34 +92,54 @@ class DateFormatter {
 
   /// Formats a date in the journal view style (e.g., "Thursday, August 28")
   static String formatJournalDate(DateTime date) {
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    const weekdays = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ];
-
-    final weekday = weekdays[date.weekday - 1];
-    final month = months[date.month - 1];
+    final weekday = _weekdays[date.weekday - 1];
+    final month = _getMonthName(date.month);
     final day = date.day;
 
     return '$weekday, $month $day';
+  }
+
+  /// Extracts month and year from DateTime for grouping
+  /// Input: DateTime -> Output: "August, 2025"
+  static String? extractMonthYear(DateTime date) {
+    try {
+      final month = _getMonthName(date.month);
+      final year = date.year;
+      return '$month, $year';
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Gets sorted month-year keys (newest first) for grouping
+  static List<String> getSortedMonthYearKeys(
+    Map<String, List<dynamic>> groupedItems,
+  ) {
+    final keys = groupedItems.keys.toList();
+    keys.sort(_compareMonthYearKeys);
+    return keys;
+  }
+
+  // Private helper method for sorting month-year keys
+  static int _compareMonthYearKeys(String a, String b) {
+    final aParts = a.split(', ');
+    final bParts = b.split(', ');
+
+    if (aParts.length >= 2 && bParts.length >= 2) {
+      final aYear = int.tryParse(aParts[1]) ?? 0;
+      final bYear = int.tryParse(bParts[1]) ?? 0;
+
+      if (aYear != bYear) {
+        return bYear.compareTo(aYear); // Newest year first
+      }
+
+      // If same year, sort by month
+      final aMonth = _getMonthNumber(aParts[0]);
+      final bMonth = _getMonthNumber(bParts[0]);
+
+      return bMonth.compareTo(aMonth); // Newest month first
+    }
+
+    return 0;
   }
 }

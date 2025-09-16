@@ -60,4 +60,7 @@ class AppStrings {
   static const String followSystemTheme = 'Follow system setting';
   static const String alwaysLight = 'Always light';
   static const String alwaysDark = 'Always dark';
+
+  // ---------- Date Formatting ----------
+  static const String memoryCardDateFormat = 'EEE, MMMM d';
 }

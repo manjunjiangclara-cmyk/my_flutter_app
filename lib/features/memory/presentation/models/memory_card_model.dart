@@ -1,6 +1,6 @@
 class MemoryCardModel {
   final String journalId;
-  final String date;
+  final DateTime date;
   final String? location;
   final List<String> tags;
   final String description;

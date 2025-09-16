@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:my_flutter_app/core/bloc/base_bloc.dart';
 import 'package:my_flutter_app/core/usecase/usecase.dart';
-import 'package:my_flutter_app/core/utils/date_formatter.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
 import 'package:my_flutter_app/shared/domain/entities/journal.dart';
 import 'package:my_flutter_app/shared/domain/usecases/get_journals.dart';
@@ -30,12 +29,6 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
 
   /// Maps a Journal entity to MemoryCardModel for UI display
   MemoryCardModel _mapJournalToMemoryCard(Journal journal) {
-    // Format date as "EEE, MMMM d" (e.g., "Thu, August 28")
-    final formattedDate = DateFormatter.formatDate(
-      journal.createdAt,
-      format: 'EEE, MMMM d',
-    );
-
     // Use first image URL if available, otherwise use default
     final imageUrl = journal.imageUrls.isNotEmpty
         ? journal.imageUrls.first
@@ -48,7 +41,7 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
 
     return MemoryCardModel(
       journalId: journal.id,
-      date: formattedDate,
+      date: journal.createdAt,
       location: journal.location,
       tags: journal.tags,
       description: description,
