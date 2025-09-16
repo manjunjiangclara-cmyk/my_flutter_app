@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/router/navigation_helper.dart';
-import 'package:my_flutter_app/core/widgets/action_button.dart';
 import 'package:my_flutter_app/features/journal/presentation/strings/journal_strings.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/action_button.dart';
 
 /// App bar widget for journal view screen
 class JournalAppBar extends StatelessWidget {

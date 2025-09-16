@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/constants.dart';
+import 'package:my_flutter_app/core/constants/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Service for managing app theme preferences

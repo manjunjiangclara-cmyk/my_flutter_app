@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
-import 'package:my_flutter_app/core/widgets/action_button.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/action_button.dart';
 
 class ComposeActionButtons extends StatelessWidget {
   final VoidCallback onAddPhoto;

@@ -5,8 +5,8 @@ import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/date_formatter.dart';
 
-import '../../../../core/widgets/tag_chip.dart';
 import '../../../../shared/domain/entities/journal.dart';
+import '../../../../shared/presentation/widgets/tag_chip.dart';
 import '../bloc/journal_view/journal_view_bloc.dart';
 import '../bloc/journal_view/journal_view_event.dart';
 import '../bloc/journal_view/journal_view_state.dart';

@@ -4,8 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
-import 'package:my_flutter_app/core/services/image_picker_service.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/core/utils/image_picker_service.dart';
 import 'package:my_flutter_app/shared/domain/entities/journal.dart';
 import 'package:my_flutter_app/shared/domain/usecases/create_journal.dart';
 
