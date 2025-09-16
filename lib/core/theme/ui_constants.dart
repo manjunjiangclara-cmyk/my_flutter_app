@@ -93,4 +93,12 @@ class UIConstants {
   static const double journalAppBarIconSize = 24.0;
   static const double journalAppBarIconPadding = 8.0;
   static const double journalContentPadding = 16.0;
+
+  // Tag Chip Specific
+  static const double tagChipWidthPadding = 16.0;
+  static const double tagChipBorderWidth = 1.0;
+  static const double tagChipMoreButtonIconSpacing = 2.0;
+  static const double tagChipMoreButtonIconSize = 16.0;
+  static const double tagChipCollapseButtonIconSpacing = 4.0;
+  static const double tagChipCollapseButtonIconSize = 16.0;
 }
