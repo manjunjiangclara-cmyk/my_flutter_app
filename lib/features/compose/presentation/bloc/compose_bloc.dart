@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/services/image_picker_service.dart';
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/shared/domain/entities/journal.dart';
 import 'package:my_flutter_app/shared/domain/usecases/create_journal.dart';
 
@@ -68,7 +69,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
     try {
       final files = await _imagePickerService.pickMultipleImages(
-        imageQuality: 85,
+        imageQuality: UIConstants.imageQuality,
       );
 
       if (files.isNotEmpty) {

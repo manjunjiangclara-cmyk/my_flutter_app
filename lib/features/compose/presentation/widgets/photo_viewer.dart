@@ -47,7 +47,7 @@ class _PhotoViewerState extends State<PhotoViewer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
         children: [
           // Photo viewer
@@ -64,19 +64,23 @@ class _PhotoViewerState extends State<PhotoViewer> {
                 onTap: () => Navigator.of(context).pop(),
                 child: Center(
                   child: InteractiveViewer(
-                    minScale: 0.5,
-                    maxScale: 3.0,
+                    minScale: UIConstants.photoViewerMinScale,
+                    maxScale: UIConstants.photoViewerMaxScale,
                     child: Image.file(
                       widget.photos[index],
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
-                          color: Colors.grey[800],
-                          child: const Center(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.surfaceContainerHighest,
+                          child: Center(
                             child: Icon(
                               Icons.broken_image,
-                              color: Colors.white,
-                              size: 64,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                              size: UIConstants.photoViewerErrorIconSize,
                             ),
                           ),
                         );
@@ -104,7 +108,9 @@ class _PhotoViewerState extends State<PhotoViewer> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.black.withValues(alpha: 0.7),
+                      Theme.of(context).colorScheme.surface.withValues(
+                        alpha: UIConstants.photoViewerGradientOpacity,
+                      ),
                       Colors.transparent,
                     ],
                   ),
@@ -113,18 +119,18 @@ class _PhotoViewerState extends State<PhotoViewer> {
                   children: [
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.close,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onSurface,
                         size: UIConstants.defaultIconSize,
                       ),
                     ),
                     const Spacer(),
                     Text(
                       '${_currentIndex + 1} / ${widget.photos.length}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: UIConstants.photoViewerCounterFontSize,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -151,7 +157,9 @@ class _PhotoViewerState extends State<PhotoViewer> {
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                       colors: [
-                        Colors.black.withValues(alpha: 0.7),
+                        Theme.of(context).colorScheme.surface.withValues(
+                          alpha: UIConstants.photoViewerGradientOpacity,
+                        ),
                         Colors.transparent,
                       ],
                     ),
@@ -163,14 +171,20 @@ class _PhotoViewerState extends State<PhotoViewer> {
                       ...List.generate(
                         widget.photos.length,
                         (index) => Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          width: 8,
-                          height: 8,
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: UIConstants.photoViewerDotSpacing,
+                          ),
+                          width: UIConstants.photoViewerDotSize,
+                          height: UIConstants.photoViewerDotSize,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: index == _currentIndex
-                                ? Colors.white
-                                : Colors.white.withValues(alpha: 0.5),
+                                ? Theme.of(context).colorScheme.onSurface
+                                : Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface.withValues(
+                                    alpha: UIConstants.photoViewerDotOpacity,
+                                  ),
                           ),
                         ),
                       ),

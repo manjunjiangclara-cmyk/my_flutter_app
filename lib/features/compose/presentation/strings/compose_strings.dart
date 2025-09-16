@@ -1,3 +1,4 @@
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/date_formatter.dart';
 
 /// Compose feature-specific strings
@@ -21,7 +22,8 @@ class ComposeStrings {
       'Your memory has been safely lodged ❤️';
   static const String postingMemory = 'Posting your memory...';
   static const String postFailed = 'Failed to post your memory';
-  static const String photoLimitReached = 'Maximum 9 photos allowed';
+  static String get photoLimitReached =>
+      'Maximum ${UIConstants.maxPhotos} photos allowed';
   static const String permissionDenied =
       'Permission denied. Please enable camera and gallery access in settings.';
   static const String imageTooLarge =

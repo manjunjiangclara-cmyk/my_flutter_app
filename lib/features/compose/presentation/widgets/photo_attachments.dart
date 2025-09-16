@@ -40,14 +40,15 @@ class PhotoAttachments extends StatelessWidget {
   }
 
   double _getPhotoSize(BuildContext context) {
-    // Calculate size based on screen width - 3 photos per row
+    // Calculate size based on screen width - photos per row
     final screenWidth = MediaQuery.of(context).size.width;
     final padding = UIConstants.defaultPadding * 2; // Left and right padding
     final spacing = UIConstants.photoGridSpacing * 2; // Spacing between photos
-    final photoSize = (screenWidth - padding - spacing) / 3;
+    final photoSize =
+        (screenWidth - padding - spacing) / UIConstants.photosPerRow;
 
     // Set a reasonable minimum and maximum size
-    return photoSize.clamp(80.0, 120.0);
+    return photoSize.clamp(UIConstants.photoMinSize, UIConstants.photoMaxSize);
   }
 
   Widget _buildPhotoItem(BuildContext context, File photo, int index) {
@@ -57,8 +58,10 @@ class PhotoAttachments extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
           border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-            width: 1,
+            color: Theme.of(context).colorScheme.outline.withValues(
+              alpha: UIConstants.photoBorderOpacity,
+            ),
+            width: UIConstants.photoBorderWidth,
           ),
         ),
         child: ClipRRect(
@@ -71,9 +74,9 @@ class PhotoAttachments extends StatelessWidget {
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.outline.withValues(alpha: 0.1),
+                      color: Theme.of(context).colorScheme.outline.withValues(
+                        alpha: UIConstants.photoErrorBackgroundOpacity,
+                      ),
                       child: Icon(
                         Icons.broken_image,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -92,13 +95,16 @@ class PhotoAttachments extends StatelessWidget {
                     padding: const EdgeInsets.all(
                       UIConstants.photoAttachmentCloseButtonPadding,
                     ),
-                    decoration: const BoxDecoration(
-                      color: Colors.black54,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surfaceContainerHighest
+                          .withValues(alpha: 0.8),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.close,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       size: UIConstants.photoAttachmentCloseIconSize,
                     ),
                   ),
