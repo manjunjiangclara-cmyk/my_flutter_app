@@ -8,7 +8,6 @@ import 'package:my_flutter_app/features/memory/presentation/bloc/memory_event.da
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_state.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
 import 'package:my_flutter_app/features/memory/presentation/strings/memory_strings.dart';
-import 'package:my_flutter_app/features/memory/presentation/utils/memory_grouping_utils.dart';
 import 'package:my_flutter_app/features/memory/presentation/widgets/memory_card.dart';
 import 'package:my_flutter_app/features/memory/presentation/widgets/month_year_header.dart';
 import 'package:my_flutter_app/features/memory/presentation/widgets/timeline_indicator.dart';
@@ -48,11 +47,9 @@ class _MemoryScreenView extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.only(
-          left: UIConstants.defaultPadding,
-          right: UIConstants.defaultPadding,
-          top: UIConstants.defaultPadding,
-          bottom: UIConstants.defaultPadding,
+        padding: EdgeInsets.symmetric(
+          horizontal: UIConstants.defaultPadding,
+          vertical: UIConstants.defaultPadding,
         ),
         child: const Expanded(child: _MemoryList()),
       ),
@@ -70,15 +67,15 @@ class _MemoryList extends StatefulWidget {
 
 class _MemoryListState extends State<_MemoryList> {
   // Track which month-year groups are expanded (all expanded by default)
-  final Set<String> _expandedGroups = <String>{};
+  final Set<MonthYearKey> _expandedGroups = <MonthYearKey>{};
 
   /// Toggles the expanded state of a month-year group
-  void _toggleGroup(String monthYear) {
+  void _toggleGroup(MonthYearKey monthYearKey) {
     setState(() {
-      if (_expandedGroups.contains(monthYear)) {
-        _expandedGroups.remove(monthYear);
+      if (_expandedGroups.contains(monthYearKey)) {
+        _expandedGroups.remove(monthYearKey);
       } else {
-        _expandedGroups.add(monthYear);
+        _expandedGroups.add(monthYearKey);
       }
     });
   }
@@ -109,7 +106,7 @@ class _MemoryListState extends State<_MemoryList> {
           );
         }
 
-        final memories = state.filteredMemories;
+        final memories = state.memories;
 
         if (memories.isEmpty) {
           return RefreshIndicator(
@@ -126,13 +123,9 @@ class _MemoryListState extends State<_MemoryList> {
           );
         }
 
-        // Group memories by month and year
-        final groupedMemories = MemoryGroupingUtils.groupMemoriesByMonthYear(
-          memories,
-        );
-        final sortedKeys = MemoryGroupingUtils.getSortedMonthYearKeys(
-          groupedMemories,
-        );
+        // Use grouped memories from state
+        final groupedMemories = state.groupedMemories;
+        final sortedKeys = state.sortedGroupKeys;
 
         // Expand all groups by default if they haven't been toggled yet
         if (_expandedGroups.isEmpty && sortedKeys.isNotEmpty) {
@@ -165,8 +158,8 @@ class _MemoryListState extends State<_MemoryList> {
 
   /// Calculates the total number of items including headers and memories
   int _calculateTotalItemCount(
-    Map<String, List<MemoryCardModel>> groupedMemories,
-    List<String> sortedKeys,
+    Map<MonthYearKey, List<MemoryCardModel>> groupedMemories,
+    List<MonthYearKey> sortedKeys,
   ) {
     int totalCount = 0;
     for (final key in sortedKeys) {
@@ -182,8 +175,8 @@ class _MemoryListState extends State<_MemoryList> {
   /// Builds a single item in the grouped memory list (either header or memory)
   Widget _buildGroupedMemoryItem(
     BuildContext context,
-    Map<String, List<MemoryCardModel>> groupedMemories,
-    List<String> sortedKeys,
+    Map<MonthYearKey, List<MemoryCardModel>> groupedMemories,
+    List<MonthYearKey> sortedKeys,
     int index,
   ) {
     int currentIndex = 0;
@@ -195,7 +188,7 @@ class _MemoryListState extends State<_MemoryList> {
       // Check if this index is the header for this group
       if (currentIndex == index) {
         return MonthYearHeader(
-          monthYear: key,
+          monthYear: key.displayString,
           isExpanded: isExpanded,
           onTap: () => _toggleGroup(key),
         );

@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:my_flutter_app/core/bloc/base_bloc.dart';
 import 'package:my_flutter_app/core/usecase/usecase.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
+import 'package:my_flutter_app/features/memory/presentation/utils/memory_grouping_utils.dart';
 import 'package:my_flutter_app/shared/domain/entities/journal.dart';
 import 'package:my_flutter_app/shared/domain/usecases/get_journals.dart';
 
@@ -61,9 +62,14 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
       result,
       (journals) {
         final memoryCards = journals.map(_mapJournalToMemoryCard).toList();
+        final groupedMemories = _groupMemoriesByMonthYear(memoryCards);
+        final sortedKeys = _getSortedGroupKeys(groupedMemories);
+
         emit(
           state.copyWith(
             memories: memoryCards,
+            groupedMemories: groupedMemories,
+            sortedGroupKeys: sortedKeys,
             isLoading: false,
             errorMessage: null,
           ),
@@ -93,9 +99,14 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
       result,
       (journals) {
         final memoryCards = journals.map(_mapJournalToMemoryCard).toList();
+        final groupedMemories = _groupMemoriesByMonthYear(memoryCards);
+        final sortedKeys = _getSortedGroupKeys(groupedMemories);
+
         emit(
           state.copyWith(
             memories: memoryCards,
+            groupedMemories: groupedMemories,
+            sortedGroupKeys: sortedKeys,
             isLoading: false,
             errorMessage: null,
           ),
@@ -117,17 +128,118 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
     MemoryFilterByTagRequested event,
     Emitter<MemoryState> emit,
   ) {
-    emit(state.copyWith(filterTag: event.tag));
+    final filteredMemories = _filterMemories(
+      state.memories,
+      event.tag,
+      state.searchQuery,
+    );
+    final groupedMemories = _groupMemoriesByMonthYear(filteredMemories);
+    final sortedKeys = _getSortedGroupKeys(groupedMemories);
+
+    emit(
+      state.copyWith(
+        filterTag: event.tag,
+        groupedMemories: groupedMemories,
+        sortedGroupKeys: sortedKeys,
+      ),
+    );
   }
 
   void _onFilterCleared(MemoryFilterCleared event, Emitter<MemoryState> emit) {
-    emit(state.copyWith(filterTag: null));
+    final filteredMemories = _filterMemories(
+      state.memories,
+      null,
+      state.searchQuery,
+    );
+    final groupedMemories = _groupMemoriesByMonthYear(filteredMemories);
+    final sortedKeys = _getSortedGroupKeys(groupedMemories);
+
+    emit(
+      state.copyWith(
+        filterTag: null,
+        groupedMemories: groupedMemories,
+        sortedGroupKeys: sortedKeys,
+      ),
+    );
   }
 
   void _onSearchRequested(
     MemorySearchRequested event,
     Emitter<MemoryState> emit,
   ) {
-    emit(state.copyWith(searchQuery: event.query));
+    final filteredMemories = _filterMemories(
+      state.memories,
+      state.filterTag,
+      event.query,
+    );
+    final groupedMemories = _groupMemoriesByMonthYear(filteredMemories);
+    final sortedKeys = _getSortedGroupKeys(groupedMemories);
+
+    emit(
+      state.copyWith(
+        searchQuery: event.query,
+        groupedMemories: groupedMemories,
+        sortedGroupKeys: sortedKeys,
+      ),
+    );
+  }
+
+  // Helper methods for filtering, grouping and sorting
+  List<MemoryCardModel> _filterMemories(
+    List<MemoryCardModel> memories,
+    String? filterTag,
+    String? searchQuery,
+  ) {
+    if (filterTag == null && (searchQuery == null || searchQuery.isEmpty)) {
+      return memories;
+    }
+
+    return memories
+        .where((memory) => _matchesFilters(memory, filterTag, searchQuery))
+        .toList();
+  }
+
+  bool _matchesFilters(
+    MemoryCardModel memory,
+    String? filterTag,
+    String? searchQuery,
+  ) {
+    // Apply tag filter
+    if (filterTag != null && filterTag.isNotEmpty) {
+      if (!memory.tags.contains(filterTag)) {
+        return false;
+      }
+    }
+
+    // Apply search query
+    if (searchQuery != null && searchQuery.isNotEmpty) {
+      final query = searchQuery.toLowerCase();
+      final matchesDescription = memory.description.toLowerCase().contains(
+        query,
+      );
+      final matchesLocation =
+          memory.location?.toLowerCase().contains(query) ?? false;
+      final matchesTags = memory.tags.any(
+        (tag) => tag.toLowerCase().contains(query),
+      );
+
+      if (!matchesDescription && !matchesLocation && !matchesTags) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  Map<MonthYearKey, List<MemoryCardModel>> _groupMemoriesByMonthYear(
+    List<MemoryCardModel> memories,
+  ) {
+    return MemoryGroupingUtils.groupMemoriesByMonthYear(memories);
+  }
+
+  List<MonthYearKey> _getSortedGroupKeys(
+    Map<MonthYearKey, List<MemoryCardModel>> groupedMemories,
+  ) {
+    return MemoryGroupingUtils.getSortedMonthYearKeys(groupedMemories);
   }
 }

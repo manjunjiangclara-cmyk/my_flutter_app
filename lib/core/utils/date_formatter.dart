@@ -120,6 +120,14 @@ class DateFormatter {
     return keys;
   }
 
+  /// Formats month and year for display (e.g., "August, 2024")
+  static String formatMonthYear(int month, int year) {
+    final monthName = (month >= 1 && month <= 12)
+        ? _months[month - 1]
+        : 'Unknown';
+    return '$monthName, $year';
+  }
+
   // Private helper method for sorting month-year keys
   static int _compareMonthYearKeys(String a, String b) {
     final aParts = a.split(', ');
