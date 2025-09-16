@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
+import 'package:my_flutter_app/core/widgets/action_button.dart';
 
 class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onPost;
@@ -22,12 +23,11 @@ class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: AppTypography.bodyLarge.copyWith(fontWeight: FontWeight.bold),
       ),
       actions: [
-        IconButton(
-          icon: const Icon(Icons.save_alt_outlined),
+        ActionButton(
+          icon: Icons.save_alt_outlined,
           onPressed: canPost ? onPost : null,
-          color: canPost
-              ? Theme.of(context).colorScheme.onSurface
-              : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
+          enabled: canPost,
+          tooltip: 'Save',
         ),
       ],
     );

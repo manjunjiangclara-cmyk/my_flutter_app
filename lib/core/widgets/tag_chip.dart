@@ -96,7 +96,7 @@ class _TagChipsState extends State<TagChips> {
     // Add padding and border width based on TagChip's actual padding
     return textPainter.width +
         (Spacing.xs * 2) +
-        16; // horizontal padding + some margin
+        UIConstants.tagChipWidthPadding; // horizontal padding + some margin
   }
 
   void _toggleExpanded() {
@@ -146,7 +146,7 @@ class _TagChipsState extends State<TagChips> {
           borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
           border: Border.all(
             color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
-            width: 1,
+            width: UIConstants.tagChipBorderWidth,
           ),
         ),
         child: Row(
@@ -159,10 +159,10 @@ class _TagChipsState extends State<TagChips> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(width: 2),
+            const SizedBox(width: UIConstants.tagChipMoreButtonIconSpacing),
             Icon(
               Icons.keyboard_arrow_down,
-              size: 16,
+              size: UIConstants.tagChipMoreButtonIconSize,
               color: Theme.of(context).colorScheme.primary,
             ),
           ],
@@ -186,10 +186,10 @@ class _TagChipsState extends State<TagChips> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: UIConstants.tagChipCollapseButtonIconSpacing),
             Icon(
               Icons.keyboard_arrow_up,
-              size: 16,
+              size: UIConstants.tagChipCollapseButtonIconSize,
               color: Theme.of(context).colorScheme.primary,
             ),
           ],

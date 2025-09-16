@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/core/utils/date_formatter.dart';
+import 'package:my_flutter_app/core/widgets/tag_chip.dart';
 import 'package:my_flutter_app/features/journal/presentation/router/journal_router.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/image_card.dart';
-import 'package:my_flutter_app/features/journal/presentation/widgets/tag_chip.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
 
 class MemoryCard extends StatelessWidget {
@@ -88,10 +90,25 @@ class MemoryCard extends StatelessWidget {
   Widget _buildHeaderRow() {
     return Row(
       children: <Widget>[
-        Text("📅${memoryCardModel.date}", style: AppTypography.labelMedium),
+        Text(
+          DateFormatter.formatDate(
+            memoryCardModel.date,
+            format: AppStrings.memoryCardDateFormat,
+          ),
+          style: AppTypography.labelMedium,
+        ),
         const Spacer(),
         SizedBox(width: Spacing.xs),
-        Text("📍${memoryCardModel.location}", style: AppTypography.labelSmall),
+        SizedBox(
+          child:
+              memoryCardModel.location != null &&
+                  memoryCardModel.location!.isNotEmpty
+              ? Text(
+                  "📍${memoryCardModel.location}",
+                  style: AppTypography.labelSmall,
+                )
+              : const SizedBox.shrink(),
+        ),
       ],
     );
   }

@@ -3,13 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
-import 'package:my_flutter_app/features/journal/presentation/widgets/timeline_indicator.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_event.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_state.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
 import 'package:my_flutter_app/features/memory/presentation/strings/memory_strings.dart';
 import 'package:my_flutter_app/features/memory/presentation/widgets/memory_card.dart';
+import 'package:my_flutter_app/features/memory/presentation/widgets/month_year_header.dart';
+import 'package:my_flutter_app/features/memory/presentation/widgets/timeline_indicator.dart';
 
 class MemoryScreen extends StatelessWidget {
   const MemoryScreen({super.key});
@@ -34,7 +35,7 @@ class _MemoryScreenView extends StatelessWidget {
         centerTitle: false,
         actions: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(right: UIConstants.defaultPadding),
+            padding: const EdgeInsets.only(right: UIConstants.smallPadding),
             child: IconButton(
               icon: const Icon(Icons.add_box_rounded),
               iconSize: UIConstants.iconButtonSize,
@@ -46,41 +47,38 @@ class _MemoryScreenView extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.only(
-          left: UIConstants.defaultPadding,
-          right: UIConstants.defaultPadding,
-          top: UIConstants.defaultPadding,
-          bottom: UIConstants.defaultPadding,
+        padding: EdgeInsets.symmetric(
+          horizontal: UIConstants.defaultPadding,
+          vertical: UIConstants.defaultPadding,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const _MemoryHeader(),
-            const SizedBox(height: Spacing.md),
-            const Expanded(child: _MemoryList()),
-          ],
-        ),
+        child: const Expanded(child: _MemoryList()),
       ),
     );
   }
 }
 
-/// Displays the header for the memory list, showing the current month and year.
-class _MemoryHeader extends StatelessWidget {
-  const _MemoryHeader();
+/// Renders a list of memories with a vertical timeline indicator.
+class _MemoryList extends StatefulWidget {
+  const _MemoryList();
 
   @override
-  Widget build(BuildContext context) {
-    return Text(
-      MemoryStrings.currentMonthYear,
-      style: AppTypography.labelLarge.copyWith(fontWeight: FontWeight.bold),
-    );
-  }
+  State<_MemoryList> createState() => _MemoryListState();
 }
 
-/// Renders a list of memories with a vertical timeline indicator.
-class _MemoryList extends StatelessWidget {
-  const _MemoryList();
+class _MemoryListState extends State<_MemoryList> {
+  // Track which month-year groups are expanded (all expanded by default)
+  final Set<MonthYearKey> _expandedGroups = <MonthYearKey>{};
+
+  /// Toggles the expanded state of a month-year group
+  void _toggleGroup(MonthYearKey monthYearKey) {
+    setState(() {
+      if (_expandedGroups.contains(monthYearKey)) {
+        _expandedGroups.remove(monthYearKey);
+      } else {
+        _expandedGroups.add(monthYearKey);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +106,7 @@ class _MemoryList extends StatelessWidget {
           );
         }
 
-        final memories = state.filteredMemories;
+        final memories = state.memories;
 
         if (memories.isEmpty) {
           return RefreshIndicator(
@@ -125,31 +123,105 @@ class _MemoryList extends StatelessWidget {
           );
         }
 
+        // Use grouped memories from state
+        final groupedMemories = state.groupedMemories;
+        final sortedKeys = state.sortedGroupKeys;
+
+        // Expand all groups by default if they haven't been toggled yet
+        if (_expandedGroups.isEmpty && sortedKeys.isNotEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              _expandedGroups.addAll(sortedKeys);
+            });
+          });
+        }
+
         return RefreshIndicator(
           onRefresh: () async {
             context.read<MemoryBloc>().add(const MemoryRefreshRequested());
           },
           child: ListView.builder(
-            itemCount: memories.length,
+            itemCount: _calculateTotalItemCount(groupedMemories, sortedKeys),
             itemBuilder: (BuildContext context, int index) {
-              final MemoryCardModel memory = memories[index];
-              final bool isFirst = index == 0;
-              final bool isLast = index == memories.length - 1;
-
-              return IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    TimelineIndicator(isFirst: isFirst, isLast: isLast),
-                    const SizedBox(width: Spacing.lg),
-                    Expanded(child: MemoryCard(memoryCardModel: memory)),
-                  ],
-                ),
+              return _buildGroupedMemoryItem(
+                context,
+                groupedMemories,
+                sortedKeys,
+                index,
               );
             },
           ),
         );
       },
     );
+  }
+
+  /// Calculates the total number of items including headers and memories
+  int _calculateTotalItemCount(
+    Map<MonthYearKey, List<MemoryCardModel>> groupedMemories,
+    List<MonthYearKey> sortedKeys,
+  ) {
+    int totalCount = 0;
+    for (final key in sortedKeys) {
+      totalCount += 1; // Header
+      // Only count memories if the group is expanded
+      if (_expandedGroups.contains(key)) {
+        totalCount += groupedMemories[key]!.length; // Memories
+      }
+    }
+    return totalCount;
+  }
+
+  /// Builds a single item in the grouped memory list (either header or memory)
+  Widget _buildGroupedMemoryItem(
+    BuildContext context,
+    Map<MonthYearKey, List<MemoryCardModel>> groupedMemories,
+    List<MonthYearKey> sortedKeys,
+    int index,
+  ) {
+    int currentIndex = 0;
+
+    for (final key in sortedKeys) {
+      final memories = groupedMemories[key]!;
+      final isExpanded = _expandedGroups.contains(key);
+
+      // Check if this index is the header for this group
+      if (currentIndex == index) {
+        return MonthYearHeader(
+          monthYear: key.displayString,
+          isExpanded: isExpanded,
+          onTap: () => _toggleGroup(key),
+        );
+      }
+      currentIndex++;
+
+      // Check if this index is within the memories for this group
+      // Only show memories if the group is expanded
+      if (isExpanded && index < currentIndex + memories.length) {
+        final memoryIndex = index - currentIndex;
+        final memory = memories[memoryIndex];
+        final isFirst = memoryIndex == 0;
+        final isLast = memoryIndex == memories.length - 1;
+
+        return IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              TimelineIndicator(isFirst: isFirst, isLast: isLast),
+              const SizedBox(width: Spacing.lg),
+              Expanded(child: MemoryCard(memoryCardModel: memory)),
+            ],
+          ),
+        );
+      }
+
+      // If group is collapsed, skip the memories
+      if (isExpanded) {
+        currentIndex += memories.length;
+      }
+    }
+
+    // Fallback (should not reach here)
+    return const SizedBox.shrink();
   }
 }

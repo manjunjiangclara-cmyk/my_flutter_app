@@ -1,7 +1,7 @@
 class MemoryCardModel {
   final String journalId;
-  final String date;
-  final String location;
+  final DateTime date;
+  final String? location;
   final List<String> tags;
   final String description;
   final String? imageUrl;
@@ -9,7 +9,7 @@ class MemoryCardModel {
   MemoryCardModel({
     required this.journalId,
     required this.date,
-    required this.location,
+    this.location,
     required this.tags,
     required this.description,
     this.imageUrl,

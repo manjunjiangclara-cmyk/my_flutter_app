@@ -1,3 +1,5 @@
+import 'package:my_flutter_app/core/utils/date_formatter.dart';
+
 /// Compose feature-specific strings
 class ComposeStrings {
   ComposeStrings._();
@@ -20,5 +22,5 @@ class ComposeStrings {
   static const String postFailed = 'Failed to post your memory';
 
   // ---------- Sample Data ----------
-  static const String sampleDate = 'August 28, 2025';
+  static String get sampleDate => DateFormatter.getTodayFormatted();
 }

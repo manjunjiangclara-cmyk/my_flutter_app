@@ -1,3 +1,5 @@
+import 'package:my_flutter_app/core/utils/date_formatter.dart';
+
 /// Centralized app string constants.
 ///
 /// Organize by feature/domain to keep usage clear and maintainable.
@@ -23,7 +25,7 @@ class AppStrings {
 
   // ---------- Screens: Compose ----------
   static const String composePrompt = 'Hey, What is on your mind today?';
-  static const String sampleDate = 'August 28, 2025';
+  static String get sampleDate => DateFormatter.getTodayFormatted();
   static const String post = 'Post';
   static const String addLocation = 'Add Location';
   static const String addTag = 'Add Tag';
@@ -58,4 +60,7 @@ class AppStrings {
   static const String followSystemTheme = 'Follow system setting';
   static const String alwaysLight = 'Always light';
   static const String alwaysDark = 'Always dark';
+
+  // ---------- Date Formatting ----------
+  static const String memoryCardDateFormat = 'EEE, MMMM d';
 }
