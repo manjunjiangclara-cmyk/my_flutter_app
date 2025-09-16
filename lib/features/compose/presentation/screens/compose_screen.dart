@@ -218,7 +218,7 @@ class _ComposeActionArea extends StatelessWidget {
   Widget build(BuildContext context) {
     return ComposeActionButtons(
       onAddPhoto: () =>
-          context.read<ComposeBloc>().add(const ComposePhotoAdded()),
+          context.read<ComposeBloc>().add(const ComposePhotoAddedFromGallery()),
       onAddLocation: () => _showLocationDialog(context),
       onAddTag: () => _showTagDialog(context),
     );

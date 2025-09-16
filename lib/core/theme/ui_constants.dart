@@ -69,6 +69,9 @@ class UIConstants {
   static const double photoAttachmentCloseButtonSize = 24.0;
   static const double photoAttachmentMargin = 8.0;
 
+  // Photo Grid Layout
+  static const double photoGridSpacing = 8.0;
+
   static const double locationIconSize = 16.0;
   static const double tagCloseIconSize = 14.0;
   static const double tagCloseIconSpacing = 4.0;

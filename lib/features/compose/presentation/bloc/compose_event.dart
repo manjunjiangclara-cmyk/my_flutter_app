@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 
 /// Base class for all compose events
@@ -18,9 +20,19 @@ class ComposeTextChanged extends ComposeEvent {
   List<Object?> get props => [text];
 }
 
-/// Event for adding a photo
-class ComposePhotoAdded extends ComposeEvent {
-  const ComposePhotoAdded();
+/// Event for adding photos from gallery
+class ComposePhotoAddedFromGallery extends ComposeEvent {
+  const ComposePhotoAddedFromGallery();
+}
+
+/// Event for adding multiple photos
+class ComposePhotosAdded extends ComposeEvent {
+  final List<File> photos;
+
+  const ComposePhotosAdded(this.photos);
+
+  @override
+  List<Object?> get props => [photos];
 }
 
 /// Event for removing a photo
