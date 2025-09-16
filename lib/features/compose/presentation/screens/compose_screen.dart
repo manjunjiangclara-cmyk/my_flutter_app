@@ -41,10 +41,13 @@ class _ComposeScreenView extends StatelessWidget {
           final content = _getContentFromState(state);
           final isPosting = state is ComposePosting;
 
-          return Scaffold(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            appBar: _buildAppBar(context, content, isPosting),
-            body: _buildBody(context, content, isPosting),
+          return PopScope(
+            canPop: false,
+            child: Scaffold(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              appBar: _buildAppBar(context, content, isPosting),
+              body: _buildBody(context, content, isPosting),
+            ),
           );
         },
       ),
