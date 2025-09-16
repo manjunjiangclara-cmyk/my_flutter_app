@@ -69,6 +69,31 @@ class UIConstants {
   static const double photoAttachmentCloseButtonSize = 24.0;
   static const double photoAttachmentMargin = 8.0;
 
+  // Photo Grid Layout
+  static const double photoGridSpacing = 8.0;
+  static const int photosPerRow = 3;
+  static const double photoMinSize = 80.0;
+  static const double photoMaxSize = 120.0;
+  static const double photoBorderWidth = 1.0;
+  static const double photoBorderOpacity = 0.2;
+  static const double photoErrorBackgroundOpacity = 0.1;
+
+  // Photo Viewer
+  static const double photoViewerMinScale = 0.5;
+  static const double photoViewerMaxScale = 3.0;
+  static const double photoViewerErrorIconSize = 64.0;
+  static const double photoViewerGradientOpacity = 0.7;
+  static const double photoViewerCounterFontSize = 16.0;
+  static const double photoViewerDotSize = 8.0;
+  static const double photoViewerDotSpacing = 4.0;
+  static const double photoViewerDotOpacity = 0.5;
+
+  // Image Picker
+  static const int imageQuality = 85;
+  static const int maxPhotos = 9;
+  static const int maxImageSizeMB = 10;
+  static const int maxImageSizeBytes = maxImageSizeMB * 1024 * 1024;
+
   static const double locationIconSize = 16.0;
   static const double tagCloseIconSize = 14.0;
   static const double tagCloseIconSpacing = 4.0;

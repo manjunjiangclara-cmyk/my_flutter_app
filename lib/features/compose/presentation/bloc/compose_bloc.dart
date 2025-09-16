@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
+import 'package:my_flutter_app/core/di/injection.dart';
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/core/utils/image_picker_service.dart';
 import 'package:my_flutter_app/shared/domain/entities/journal.dart';
 import 'package:my_flutter_app/shared/domain/usecases/create_journal.dart';
 
@@ -11,6 +16,7 @@ import 'compose_state.dart';
 @injectable
 class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   final CreateJournal _createJournal;
+  final ImagePickerService _imagePickerService;
   final TextEditingController textController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController tagController = TextEditingController();
@@ -19,9 +25,12 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   final FocusNode locationFocusNode = FocusNode();
   final FocusNode tagFocusNode = FocusNode();
 
-  ComposeBloc(this._createJournal) : super(const ComposeInitial()) {
+  ComposeBloc(this._createJournal)
+    : _imagePickerService = getIt<ImagePickerService>(),
+      super(const ComposeInitial()) {
     on<ComposeTextChanged>(_onTextChanged);
-    on<ComposePhotoAdded>(_onPhotoAdded);
+    on<ComposePhotoAddedFromGallery>(_onPhotoAddedFromGallery);
+    on<ComposePhotosAdded>(_onPhotosAdded);
     on<ComposePhotoRemoved>(_onPhotoRemoved);
     on<ComposeLocationAdded>(_onLocationAdded);
     on<ComposeLocationRemoved>(_onLocationRemoved);
@@ -43,14 +52,61 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     }
   }
 
-  void _onPhotoAdded(ComposePhotoAdded event, Emitter<ComposeState> emit) {
-    if (state is ComposeContent) {
-      final currentState = state as ComposeContent;
-      final newPhotos = List<String>.from(currentState.attachedPhotos)
-        ..add('photo_${currentState.attachedPhotos.length + 1}');
+  Future<void> _onPhotoAddedFromGallery(
+    ComposePhotoAddedFromGallery event,
+    Emitter<ComposeState> emit,
+  ) async {
+    final currentState = state is ComposeContent
+        ? state as ComposeContent
+        : const ComposeContent();
+
+    // Check if we can add more photos
+    if (!_imagePickerService.canAddMorePhotos(
+      currentState.attachedPhotos.length,
+    )) {
+      return;
+    }
+
+    try {
+      final files = await _imagePickerService.pickMultipleImages(
+        imageQuality: UIConstants.imageQuality,
+      );
+
+      if (files.isNotEmpty) {
+        // Calculate how many photos we can actually add
+        final remainingSlots = _imagePickerService.getRemainingPhotoSlots(
+          currentState.attachedPhotos.length,
+        );
+        final photosToAdd = files.take(remainingSlots).toList();
+
+        if (photosToAdd.isNotEmpty) {
+          final newPhotos = List<File>.from(currentState.attachedPhotos)
+            ..addAll(photosToAdd);
+          emit(currentState.copyWith(attachedPhotos: newPhotos));
+        }
+      }
+    } catch (e) {
+      // Handle error silently or show user-friendly message
+    }
+  }
+
+  void _onPhotosAdded(ComposePhotosAdded event, Emitter<ComposeState> emit) {
+    final currentState = state is ComposeContent
+        ? state as ComposeContent
+        : const ComposeContent();
+
+    if (event.photos.isEmpty) return;
+
+    // Calculate how many photos we can actually add
+    final remainingSlots = _imagePickerService.getRemainingPhotoSlots(
+      currentState.attachedPhotos.length,
+    );
+    final photosToAdd = event.photos.take(remainingSlots).toList();
+
+    if (photosToAdd.isNotEmpty) {
+      final newPhotos = List<File>.from(currentState.attachedPhotos)
+        ..addAll(photosToAdd);
       emit(currentState.copyWith(attachedPhotos: newPhotos));
-    } else {
-      emit(const ComposeContent(attachedPhotos: ['photo_1']));
     }
   }
 
@@ -59,7 +115,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
       final currentState = state as ComposeContent;
       if (event.index >= 0 &&
           event.index < currentState.attachedPhotos.length) {
-        final newPhotos = List<String>.from(currentState.attachedPhotos)
+        final newPhotos = List<File>.from(currentState.attachedPhotos)
           ..removeAt(event.index);
         emit(currentState.copyWith(attachedPhotos: newPhotos));
       }
@@ -146,7 +202,9 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         createdAt: now,
         updatedAt: now,
         tags: currentState.selectedTags,
-        imageUrls: currentState.attachedPhotos,
+        imageUrls: currentState.attachedPhotos
+            .map((file) => file.path)
+            .toList(),
         location: currentState.selectedLocation,
       );
 

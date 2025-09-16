@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 
 /// Base class for all compose states
@@ -16,7 +18,7 @@ class ComposeInitial extends ComposeState {
 /// State representing the current compose content
 class ComposeContent extends ComposeState {
   final String text;
-  final List<String> attachedPhotos;
+  final List<File> attachedPhotos;
   final List<String> selectedTags;
   final String? selectedLocation;
   final bool isPosting;
@@ -39,7 +41,7 @@ class ComposeContent extends ComposeState {
   /// Copy with method for immutable state updates
   ComposeContent copyWith({
     String? text,
-    List<String>? attachedPhotos,
+    List<File>? attachedPhotos,
     List<String>? selectedTags,
     String? selectedLocation,
     bool? isPosting,
@@ -66,7 +68,7 @@ class ComposeContent extends ComposeState {
 /// State when posting is in progress
 class ComposePosting extends ComposeState {
   final String text;
-  final List<String> attachedPhotos;
+  final List<File> attachedPhotos;
   final List<String> selectedTags;
   final String? selectedLocation;
 

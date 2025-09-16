@@ -5,10 +5,10 @@ import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/date_formatter.dart';
-import 'package:my_flutter_app/core/widgets/tag_chip.dart';
 import 'package:my_flutter_app/features/journal/presentation/router/journal_router.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/image_card.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/tag_chip.dart';
 
 class MemoryCard extends StatelessWidget {
   final MemoryCardModel memoryCardModel;

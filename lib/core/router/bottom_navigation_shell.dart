@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/router/tab_controller.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/widgets/bottom_nav_item.dart';
 import 'package:my_flutter_app/features/compose/presentation/screens/compose_home_screen.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:my_flutter_app/features/memory/presentation/screens/memory_screen.dart';
@@ -11,6 +10,7 @@ import 'package:my_flutter_app/features/settings/presentation/screens/settings_s
 import 'package:my_flutter_app/shared/data/datasources/journal_local_datasource.dart';
 import 'package:my_flutter_app/shared/data/repositories_impl/journal_repository_impl.dart';
 import 'package:my_flutter_app/shared/domain/usecases/get_journals.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/bottom_nav_item.dart';
 import 'package:provider/provider.dart';
 
 /// Bottom navigation shell that wraps the main tab content

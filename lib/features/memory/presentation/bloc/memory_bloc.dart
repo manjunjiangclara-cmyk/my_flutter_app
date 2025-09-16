@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:my_flutter_app/core/bloc/base_bloc.dart';
-import 'package:my_flutter_app/core/usecase/usecase.dart';
+import 'package:my_flutter_app/core/utils/base_bloc.dart';
+import 'package:my_flutter_app/core/utils/usecase.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
 import 'package:my_flutter_app/features/memory/presentation/utils/memory_grouping_utils.dart';
 import 'package:my_flutter_app/shared/domain/entities/journal.dart';
