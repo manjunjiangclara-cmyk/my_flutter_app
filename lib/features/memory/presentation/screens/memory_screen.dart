@@ -48,7 +48,7 @@ class _MemoryScreenView extends StatelessWidget {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: UIConstants.defaultPadding),
-        child: const Expanded(child: _MemoryList()),
+        child: const Column(children: [Expanded(child: _MemoryList())]),
       ),
     );
   }
