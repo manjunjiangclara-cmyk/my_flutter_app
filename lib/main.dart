@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/router/router_exports.dart';
 import 'package:my_flutter_app/core/strings.dart';
@@ -8,7 +9,10 @@ import 'package:my_flutter_app/core/theme/theme_provider.dart';
 import 'package:my_flutter_app/core/utils/error_handler.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  // Load environment variables
+  await dotenv.load(fileName: ".env");
+
   // Setup global error handling
   GlobalErrorHandler.setup();
 

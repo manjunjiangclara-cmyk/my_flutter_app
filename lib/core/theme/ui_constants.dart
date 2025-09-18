@@ -126,4 +126,20 @@ class UIConstants {
   static const double tagChipMoreButtonIconSize = 16.0;
   static const double tagChipCollapseButtonIconSpacing = 4.0;
   static const double tagChipCollapseButtonIconSize = 16.0;
+
+  // Location Picker Bottom Sheet
+  static const double locationPickerHeight = 0.8;
+  static const double locationPickerHandleWidth = 40.0;
+  static const double locationPickerHandleHeight = 4.0;
+  static const double locationResultItemPadding = 16.0;
+  static const double locationResultIconPadding = 8.0;
+  static const double locationResultIconSize = 24.0;
+  static const double locationSearchDebounceMs = 500.0;
+  static const double locationSearchMinQueryLength = 2.0;
+  static const double locationSearchMaxResults = 20.0;
+  static const double locationRatingIconSize = 16.0;
+  static const double locationTypeChipHeight = 24.0;
+  static const double locationTypeChipPadding = 8.0;
+  static const double locationErrorIconSize = 48.0;
+  static const double locationLoadingIndicatorSize = 24.0;
 }

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
-import 'package:my_flutter_app/features/compose/presentation/widgets/photo_viewer.dart';
+import 'package:my_flutter_app/features/compose/presentation/widgets/photo/photo_viewer.dart';
 
 class PhotoAttachments extends StatelessWidget {
   final List<File> photos;

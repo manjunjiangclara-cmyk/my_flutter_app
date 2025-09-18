@@ -1,7 +1,7 @@
 class DatabaseConstants {
   // Database Configuration
   static const String databaseName = 'journal_app.db';
-  static const int databaseVersion = 1;
+  static const int databaseVersion = 2;
 
   // Table Names
   static const String journalsTable = 'journals';
@@ -17,6 +17,11 @@ class DatabaseConstants {
   static const String journalTags = 'tags';
   static const String journalImageUrls = 'image_urls';
   static const String journalLocation = 'location';
+  static const String journalLocationName = 'location_name';
+  static const String journalLocationAddress = 'location_address';
+  static const String journalLocationPlaceId = 'location_place_id';
+  static const String journalLocationLatitude = 'location_latitude';
+  static const String journalLocationLongitude = 'location_longitude';
 
   // Tags Table Columns
   static const String tagId = 'id';
@@ -32,6 +37,13 @@ class DatabaseConstants {
   static const int defaultIsFavorite = 0;
   static const String defaultTags = '';
   static const String defaultImageUrls = '';
+  static const String defaultLocation = '';
+  static const String defaultLocationName = '';
+  static const String defaultLocationAddress = '';
+  static const String defaultLocationPlaceId = '';
+  static const double defaultLocationLatitude = 0.0;
+  static const double defaultLocationLongitude = 0.0;
+  static const String defaultLocationTypes = '';
 
   // Query Limits
   static const int defaultQueryLimit = 50;

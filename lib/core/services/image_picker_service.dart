@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:injectable/injectable.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 /// Service for handling image selection from camera and gallery
+@injectable
 class ImagePickerService {
   static const int maxPhotos = UIConstants.maxPhotos;
   static const int maxImageSizeBytes = UIConstants.maxImageSizeBytes;
