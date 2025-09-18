@@ -23,6 +23,16 @@ class JournalDao {
   static const String columnTags = DatabaseConstants.journalTags;
   static const String columnImageUrls = DatabaseConstants.journalImageUrls;
   static const String columnLocation = DatabaseConstants.journalLocation;
+  static const String columnLocationName =
+      DatabaseConstants.journalLocationName;
+  static const String columnLocationAddress =
+      DatabaseConstants.journalLocationAddress;
+  static const String columnLocationPlaceId =
+      DatabaseConstants.journalLocationPlaceId;
+  static const String columnLocationLatitude =
+      DatabaseConstants.journalLocationLatitude;
+  static const String columnLocationLongitude =
+      DatabaseConstants.journalLocationLongitude;
 
   // Create table SQL
   static const String createTableSQL =
@@ -35,8 +45,23 @@ class JournalDao {
         $columnIsFavorite INTEGER DEFAULT ${DatabaseConstants.defaultIsFavorite},
         $columnTags TEXT,
         $columnImageUrls TEXT,
-        $columnLocation TEXT
+        $columnLocation TEXT,
+        $columnLocationName TEXT,
+        $columnLocationAddress TEXT,
+        $columnLocationPlaceId TEXT,
+        $columnLocationLatitude REAL,
+        $columnLocationLongitude REAL
       )
+    ''';
+
+  // Add location columns SQL for database migration
+  static const String addLocationColumnsSQL =
+      '''
+      ALTER TABLE $tableName ADD COLUMN $columnLocationName TEXT;
+      ALTER TABLE $tableName ADD COLUMN $columnLocationAddress TEXT;
+      ALTER TABLE $tableName ADD COLUMN $columnLocationPlaceId TEXT;
+      ALTER TABLE $tableName ADD COLUMN $columnLocationLatitude REAL;
+      ALTER TABLE $tableName ADD COLUMN $columnLocationLongitude REAL;
     ''';
 
   // Common query helper to reduce duplication

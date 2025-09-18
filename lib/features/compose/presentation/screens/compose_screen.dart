@@ -8,13 +8,13 @@ import 'package:my_flutter_app/features/compose/presentation/bloc/compose_event.
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_state.dart';
 import 'package:my_flutter_app/features/compose/presentation/constants/compose_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/strings/compose_strings.dart';
-import 'package:my_flutter_app/features/compose/presentation/utils/compose_dialogs.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_action_buttons.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_app_bar.dart';
+import 'package:my_flutter_app/features/compose/presentation/widgets/compose_dialogs.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_text_input.dart';
-import 'package:my_flutter_app/features/compose/presentation/widgets/location_display.dart';
-import 'package:my_flutter_app/features/compose/presentation/widgets/photo_attachments.dart';
-import 'package:my_flutter_app/features/compose/presentation/widgets/tags_display.dart';
+import 'package:my_flutter_app/features/compose/presentation/widgets/location/location_display.dart';
+import 'package:my_flutter_app/features/compose/presentation/widgets/photo/photo_attachments.dart';
+import 'package:my_flutter_app/features/compose/presentation/widgets/tags/tags_display.dart';
 
 /// Main compose screen with improved organization and tap-to-edit functionality
 class ComposeScreen extends StatelessWidget {
@@ -230,7 +230,7 @@ class _ComposeActionArea extends StatelessWidget {
       context: context,
       controller: bloc.locationController,
       focusNode: bloc.locationFocusNode,
-      onAdd: (location) => bloc.add(ComposeLocationAdded(location)),
+      onAdd: (location) => bloc.add(ComposeLocationAdded(location.name)),
     );
   }
 
