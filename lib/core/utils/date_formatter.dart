@@ -1,15 +1,15 @@
 import 'package:intl/intl.dart';
 
 class DateFormatter {
-  // Private constants to avoid duplication
-  static const List<String> _weekdays = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
+  // Abbreviated weekdays for compact display
+  static const List<String> _weekdaysAbbr = [
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+    'Sun',
   ];
 
   // Single source of truth for month data
@@ -26,6 +26,22 @@ class DateFormatter {
     'October',
     'November',
     'December',
+  ];
+
+  // Abbreviated months for compact display
+  static const List<String> _monthsAbbr = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
   // Helper method to get month number (1-based)
@@ -90,10 +106,10 @@ class DateFormatter {
     return DateFormat('MMMM d, yyyy').format(today);
   }
 
-  /// Formats a date in the journal view style (e.g., "Thursday, August 28")
+  /// Formats a date in the journal view style (e.g., "Thu, Sep 18")
   static String formatJournalDate(DateTime date) {
-    final weekday = _weekdays[date.weekday - 1];
-    final month = _getMonthName(date.month);
+    final weekday = _weekdaysAbbr[date.weekday - 1];
+    final month = _monthsAbbr[date.month - 1];
     final day = date.day;
 
     return '$weekday, $month $day';

@@ -13,11 +13,17 @@ class AppStrings {
   static const String ok = 'OK';
   static const String cancel = 'Cancel';
   static const String confirm = 'Confirm';
+  static const String delete = 'Delete';
   static const String settings = 'Settings';
   static const String memory = 'Memory';
   static const String compose = 'Compose';
   static const String helpAndSupport = 'Help & Support';
   static const String appVersion = 'App Version';
+
+  // ---------- Delete Dialog ----------
+  static const String deleteConfirmTitle = 'Delete Content?';
+  static const String deleteConfirmMessage =
+      'This action cannot be undone. Are you sure you want to delete?';
 
   // ---------- Screens: Memory ----------
   static const String myMemories = 'My Memories';
@@ -62,5 +68,5 @@ class AppStrings {
   static const String alwaysDark = 'Always dark';
 
   // ---------- Date Formatting ----------
-  static const String memoryCardDateFormat = 'EEE, MMMM d';
+  static const String memoryCardDateFormat = 'EEE, MMM d';
 }

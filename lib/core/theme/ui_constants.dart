@@ -104,6 +104,8 @@ class UIConstants {
   static const double dialogBorderWidth = 1.0;
   static const double dialogOpacity = 0.3;
   static const double dialogCloseOpacity = 0.54;
+  static const double dialogPadding = 16.0;
+  static const double dialogFontSize = 13.0;
 
   static const double postingIndicatorSize = 16.0;
   static const double postingIndicatorStrokeWidth = 2.0;

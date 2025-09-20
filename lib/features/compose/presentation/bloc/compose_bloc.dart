@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
@@ -37,7 +38,6 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     on<ComposeTagAdded>(_onTagAdded);
     on<ComposeTagRemoved>(_onTagRemoved);
     on<ComposePostSubmitted>(_onPostSubmitted);
-    on<ComposeCleared>(_onCleared);
 
     // Initialize with empty content state
     add(const ComposeTextChanged(''));
@@ -218,6 +218,9 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
           );
         },
         (savedJournal) {
+          // Trigger haptic feedback for successful save
+          HapticFeedback.mediumImpact();
+
           // Emit success state
           emit(const ComposePostSuccess());
 
@@ -228,13 +231,6 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     } catch (e) {
       emit(ComposePostFailure('Failed to post: $e'));
     }
-  }
-
-  void _onCleared(ComposeCleared event, Emitter<ComposeState> emit) {
-    textController.clear();
-    locationController.clear();
-    tagController.clear();
-    emit(const ComposeInitial());
   }
 
   @override

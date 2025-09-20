@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/router/tab_controller.dart';
 import 'package:my_flutter_app/core/strings.dart';
@@ -58,6 +59,7 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: tabController.currentIndex,
             onTap: (int index) {
+              HapticFeedback.lightImpact();
               tabController.setIndex(index);
             },
             items: <BottomNavigationBarItem>[

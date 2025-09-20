@@ -3,6 +3,7 @@ class JournalStrings {
   JournalStrings._();
 
   // ---------- Journal View Screen ----------
+  static const String journal = 'Journal';
   static const String retry = 'Retry';
   static const String showLess = 'Show less';
   static const String editJournal = 'Edit Journal';

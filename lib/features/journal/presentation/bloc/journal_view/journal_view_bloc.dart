@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../../shared/domain/usecases/delete_journal.dart'
@@ -40,9 +41,10 @@ class JournalViewBloc extends Bloc<JournalViewEvent, JournalViewState> {
     final result = await deleteJournal(
       delete_use_case.DeleteJournalParams(event.id),
     );
-    result.fold(
-      (failure) => emit(JournalError(failure.message)),
-      (success) => emit(const JournalDeleted()),
-    );
+    result.fold((failure) => emit(JournalError(failure.message)), (success) {
+      // Trigger haptic feedback for successful deletion
+      HapticFeedback.heavyImpact();
+      emit(const JournalDeleted());
+    });
   }
 }
