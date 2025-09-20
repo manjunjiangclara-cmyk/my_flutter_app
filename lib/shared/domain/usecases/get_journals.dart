@@ -14,10 +14,10 @@ class GetJournals implements UseCase<List<Journal>, NoParams> {
 
   @override
   Future<Either<Failure, List<Journal>>> call(NoParams params) async {
-    // return await repository.getJournals();
+    return await repository.getJournals();
     // Mock data with entries from different months for testing memory grouping
-    final mockJournals = _generateMockJournals();
-    return Right(mockJournals);
+    // final mockJournals = _generateMockJournals();
+    // return Right(mockJournals);
   }
 
   /// Generates mock journal data with entries from different months

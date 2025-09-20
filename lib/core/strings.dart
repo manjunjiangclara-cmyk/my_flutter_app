@@ -62,5 +62,5 @@ class AppStrings {
   static const String alwaysDark = 'Always dark';
 
   // ---------- Date Formatting ----------
-  static const String memoryCardDateFormat = 'EEE, MMMM d';
+  static const String memoryCardDateFormat = 'EEE, MMM d';
 }

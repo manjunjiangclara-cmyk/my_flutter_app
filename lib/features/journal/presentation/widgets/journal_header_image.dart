@@ -31,7 +31,7 @@ class JournalHeaderImage extends StatelessWidget {
                 },
               ),
             )
-          : _buildPlaceholder(context),
+          : SizedBox.shrink(),
     );
   }
 

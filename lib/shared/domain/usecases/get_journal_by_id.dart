@@ -38,8 +38,8 @@ class GetJournalById implements UseCase<Journal, GetJournalByIdParams> {
 
   @override
   Future<Either<Failure, Journal>> call(GetJournalByIdParams params) async {
-    return Right(mockJournal);
-    //return await repository.getJournalById(params.id);
+    //return Right(mockJournal);
+    return await repository.getJournalById(params.id);
   }
 }
 

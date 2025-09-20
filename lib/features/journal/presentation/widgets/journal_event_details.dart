@@ -38,16 +38,13 @@ class JournalEventDetails extends StatelessWidget {
         Icon(
           Icons.location_on,
           size: UIConstants.smallIconSize,
-          color: Theme.of(context).colorScheme.primary,
           semanticLabel: JournalStrings.journalLocationLabel,
         ),
         const SizedBox(width: Spacing.xs),
         Flexible(
           child: Text(
             location,
-            style: AppTypography.labelSmall.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            style: AppTypography.labelSmall,
             overflow: TextOverflow.ellipsis,
             semanticsLabel: JournalStrings.journalLocationLabel,
           ),
