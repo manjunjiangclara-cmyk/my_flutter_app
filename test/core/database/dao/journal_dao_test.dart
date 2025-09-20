@@ -33,7 +33,7 @@ void main() {
           updatedAt: DateTime.parse('2024-01-01T11:00:00.000Z'),
           isFavorite: true,
           tags: ['personal', 'reflection'],
-          imageUrls: ['image1.jpg'],
+          imagePaths: ['image1.jpg'],
           location: 'Test Location',
         );
 
@@ -59,7 +59,7 @@ void main() {
           updatedAt: DateTime.parse('2024-01-01T12:00:00.000Z'),
           isFavorite: false,
           tags: ['updated'],
-          imageUrls: [],
+          imagePaths: [],
           location: 'Updated Location',
         );
 
@@ -456,7 +456,7 @@ void main() {
             updatedAt: DateTime.parse('2024-01-01T11:00:00.000Z'),
             isFavorite: false,
             tags: [],
-            imageUrls: [],
+            imagePaths: [],
             location: 'Location 1',
           ),
           Journal(
@@ -466,7 +466,7 @@ void main() {
             updatedAt: DateTime.parse('2024-01-01T13:00:00.000Z'),
             isFavorite: true,
             tags: ['favorite'],
-            imageUrls: ['image.jpg'],
+            imagePaths: ['image.jpg'],
             location: 'Location 2',
           ),
         ];
@@ -532,7 +532,7 @@ void main() {
         expect(JournalDao.columnUpdatedAt, 'updated_at');
         expect(JournalDao.columnIsFavorite, 'is_favorite');
         expect(JournalDao.columnTags, 'tags');
-        expect(JournalDao.columnImageUrls, 'image_urls');
+        expect(JournalDao.columnImagePaths, 'image_paths');
         expect(JournalDao.columnLocation, 'location');
       });
 

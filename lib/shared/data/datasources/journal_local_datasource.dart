@@ -14,7 +14,7 @@ abstract class JournalLocalDataSource {
   Future<List<Journal>> getFavoriteJournals();
 }
 
-@injectable
+@Injectable(as: JournalLocalDataSource)
 class JournalLocalDataSourceImpl implements JournalLocalDataSource {
   final JournalDao _journalDao = JournalDao();
 

@@ -11,7 +11,7 @@ class DatabaseTestHelpers {
     DateTime? updatedAt,
     bool isFavorite = false,
     List<String> tags = const ['test', 'sample'],
-    List<String> imageUrls = const ['image1.jpg'],
+    List<String> imagePaths = const ['image1.jpg'],
     String? location,
   }) {
     return Journal(
@@ -21,7 +21,7 @@ class DatabaseTestHelpers {
       updatedAt: updatedAt ?? DateTime.parse('2024-01-01T11:00:00.000Z'),
       isFavorite: isFavorite,
       tags: tags,
-      imageUrls: imageUrls,
+      imagePaths: imagePaths,
       location: location,
     );
   }
@@ -36,7 +36,7 @@ class DatabaseTestHelpers {
         updatedAt: DateTime.parse('2024-01-0${index + 1}T11:00:00.000Z'),
         isFavorite: index % 2 == 0, // Alternate favorites
         tags: ['tag${index + 1}', 'sample'],
-        imageUrls: ['image${index + 1}.jpg'],
+        imagePaths: ['image${index + 1}.jpg'],
         location: 'Location ${index + 1}',
       );
     });
@@ -50,7 +50,7 @@ class DatabaseTestHelpers {
     String updatedAt = '2024-01-01T11:00:00.000Z',
     int isFavorite = 0,
     String tags = 'test,sample',
-    String imageUrls = 'image1.jpg',
+    String imagePaths = 'image1.jpg',
     String? location,
   }) {
     return {
@@ -60,7 +60,7 @@ class DatabaseTestHelpers {
       'updated_at': updatedAt,
       'is_favorite': isFavorite,
       'tags': tags,
-      'image_urls': imageUrls,
+      'image_paths': imagePaths,
       'location': location,
     };
   }
@@ -75,7 +75,7 @@ class DatabaseTestHelpers {
         updatedAt: '2024-01-0${index + 1}T11:00:00.000Z',
         isFavorite: index % 2,
         tags: 'tag${index + 1},sample',
-        imageUrls: 'image${index + 1}.jpg',
+        imagePaths: 'image${index + 1}.jpg',
         location: 'Location ${index + 1}',
       );
     });
@@ -95,7 +95,7 @@ class DatabaseTestHelpers {
     expect(actual.updatedAt, expected.updatedAt);
     expect(actual.isFavorite, expected.isFavorite);
     expect(actual.tags, expected.tags);
-    expect(actual.imageUrls, expected.imageUrls);
+    expect(actual.imagePaths, expected.imagePaths);
     expect(actual.location, expected.location);
   }
 
@@ -114,8 +114,11 @@ class DatabaseTestHelpers {
       dbRow['tags']?.split(',').where((tag) => tag.isNotEmpty).toList() ?? [],
     );
     expect(
-      journal.imageUrls,
-      dbRow['image_urls']?.split(',').where((url) => url.isNotEmpty).toList() ??
+      journal.imagePaths,
+      dbRow['image_paths']
+              ?.split(',')
+              .where((path) => path.isNotEmpty)
+              .toList() ??
           [],
     );
   }

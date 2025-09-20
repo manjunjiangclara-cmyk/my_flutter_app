@@ -5,18 +5,18 @@ import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/photo_viewer.dart';
 
 class PhotoAttachments extends StatelessWidget {
-  final List<File> photos;
+  final List<String> photoPaths;
   final Function(int) onRemovePhoto;
 
   const PhotoAttachments({
     super.key,
-    required this.photos,
+    required this.photoPaths,
     required this.onRemovePhoto,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (photos.isEmpty) return const SizedBox.shrink();
+    if (photoPaths.isEmpty) return const SizedBox.shrink();
 
     return _buildSimpleGrid(context);
   }
@@ -27,13 +27,13 @@ class PhotoAttachments extends StatelessWidget {
     return Wrap(
       spacing: UIConstants.photoGridSpacing,
       runSpacing: UIConstants.photoGridSpacing,
-      children: photos.asMap().entries.map((entry) {
+      children: photoPaths.asMap().entries.map((entry) {
         final index = entry.key;
-        final photo = entry.value;
+        final photoPath = entry.value;
         return SizedBox(
           width: photoSize,
           height: photoSize,
-          child: _buildPhotoItem(context, photo, index),
+          child: _buildPhotoItem(context, photoPath, index),
         );
       }).toList(),
     );
@@ -51,7 +51,7 @@ class PhotoAttachments extends StatelessWidget {
     return photoSize.clamp(UIConstants.photoMinSize, UIConstants.photoMaxSize);
   }
 
-  Widget _buildPhotoItem(BuildContext context, File photo, int index) {
+  Widget _buildPhotoItem(BuildContext context, String photoPath, int index) {
     return GestureDetector(
       onTap: () => _openPhotoViewer(context, index),
       child: Container(
@@ -70,7 +70,7 @@ class PhotoAttachments extends StatelessWidget {
             children: [
               Positioned.fill(
                 child: Image.file(
-                  photo,
+                  File(photoPath),
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
@@ -120,7 +120,7 @@ class PhotoAttachments extends StatelessWidget {
   void _openPhotoViewer(BuildContext context, int initialIndex) {
     PhotoViewer.show(
       context: context,
-      photos: photos,
+      photoPaths: photoPaths,
       initialIndex: initialIndex,
     );
   }

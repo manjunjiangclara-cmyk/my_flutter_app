@@ -11,7 +11,7 @@ class JournalEntityMapper {
       updatedAt: DateTime.parse(map['updated_at']),
       isFavorite: map['is_favorite'] == 1,
       tags: parseCommaSeparatedString(map['tags']),
-      imageUrls: parseCommaSeparatedString(map['image_urls']),
+      imagePaths: parseCommaSeparatedString(map['image_paths']),
       location: map['location'],
     );
   }
@@ -31,7 +31,7 @@ class JournalEntityMapper {
       'updated_at': journal.updatedAt.toIso8601String(),
       'is_favorite': journal.isFavorite ? 1 : 0,
       'tags': journal.tags.join(','),
-      'image_urls': journal.imageUrls.join(','),
+      'image_paths': journal.imagePaths.join(','),
       'location': journal.location,
     };
   }
@@ -43,7 +43,7 @@ class JournalEntityMapper {
       'updated_at': journal.updatedAt.toIso8601String(),
       'is_favorite': journal.isFavorite ? 1 : 0,
       'tags': journal.tags.join(','),
-      'image_urls': journal.imageUrls.join(','),
+      'image_paths': journal.imagePaths.join(','),
       'location': journal.location,
     };
   }

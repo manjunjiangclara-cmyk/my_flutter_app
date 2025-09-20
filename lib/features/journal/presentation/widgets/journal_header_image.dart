@@ -1,4 +1,4 @@
-import 'dart:io' show Platform;
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +7,9 @@ import 'package:my_flutter_app/features/journal/presentation/strings/journal_str
 
 /// Header image widget for journal view
 class JournalHeaderImage extends StatelessWidget {
-  final List<String> imageUrls;
+  final List<String> imagePaths;
 
-  const JournalHeaderImage({super.key, required this.imageUrls});
+  const JournalHeaderImage({super.key, required this.imagePaths});
 
   @override
   Widget build(BuildContext context) {
@@ -20,18 +20,14 @@ class JournalHeaderImage extends StatelessWidget {
         color: Theme.of(context).colorScheme.outline,
         borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
       ),
-      child: imageUrls.isNotEmpty
+      child: imagePaths.isNotEmpty
           ? ClipRRect(
               borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
-              child: Image.network(
-                imageUrls.first,
+              child: Image.file(
+                File(imagePaths.first),
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) =>
                     _buildPlaceholder(context),
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return _buildLoadingPlaceholder(context);
-                },
               ),
             )
           : SizedBox.shrink(),
@@ -45,26 +41,6 @@ class JournalHeaderImage extends StatelessWidget {
         size: UIConstants.largeIconSize,
         color: Theme.of(context).colorScheme.onSurfaceVariant,
         semanticLabel: JournalStrings.journalImageLabel,
-      ),
-    );
-  }
-
-  Widget _buildLoadingPlaceholder(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          const SizedBox(height: UIConstants.smallPadding),
-          Text(
-            'Loading image...',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
       ),
     );
   }

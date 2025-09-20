@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/core/utils/file_storage_service.dart';
 import 'package:my_flutter_app/core/utils/image_picker_service.dart';
 import 'package:my_flutter_app/shared/domain/entities/journal.dart';
 import 'package:my_flutter_app/shared/domain/usecases/create_journal.dart';
@@ -18,6 +17,7 @@ import 'compose_state.dart';
 class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   final CreateJournal _createJournal;
   final ImagePickerService _imagePickerService;
+  final FileStorageService _fileStorageService;
   final TextEditingController textController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController tagController = TextEditingController();
@@ -28,6 +28,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
   ComposeBloc(this._createJournal)
     : _imagePickerService = getIt<ImagePickerService>(),
+      _fileStorageService = getIt<FileStorageService>(),
       super(const ComposeInitial()) {
     on<ComposeTextChanged>(_onTextChanged);
     on<ComposePhotoAddedFromGallery>(_onPhotoAddedFromGallery);
@@ -62,7 +63,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
     // Check if we can add more photos
     if (!_imagePickerService.canAddMorePhotos(
-      currentState.attachedPhotos.length,
+      currentState.attachedPhotoPaths.length,
     )) {
       return;
     }
@@ -75,14 +76,20 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
       if (files.isNotEmpty) {
         // Calculate how many photos we can actually add
         final remainingSlots = _imagePickerService.getRemainingPhotoSlots(
-          currentState.attachedPhotos.length,
+          currentState.attachedPhotoPaths.length,
         );
         final photosToAdd = files.take(remainingSlots).toList();
 
         if (photosToAdd.isNotEmpty) {
-          final newPhotos = List<File>.from(currentState.attachedPhotos)
-            ..addAll(photosToAdd);
-          emit(currentState.copyWith(attachedPhotos: newPhotos));
+          // Save images to local storage and get their paths
+          final savedPaths = await _fileStorageService.saveImages(photosToAdd);
+
+          if (savedPaths.isNotEmpty) {
+            final newPhotoPaths = List<String>.from(
+              currentState.attachedPhotoPaths,
+            )..addAll(savedPaths);
+            emit(currentState.copyWith(attachedPhotoPaths: newPhotoPaths));
+          }
         }
       }
     } catch (e) {
@@ -95,18 +102,18 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         ? state as ComposeContent
         : const ComposeContent();
 
-    if (event.photos.isEmpty) return;
+    if (event.photoPaths.isEmpty) return;
 
     // Calculate how many photos we can actually add
     final remainingSlots = _imagePickerService.getRemainingPhotoSlots(
-      currentState.attachedPhotos.length,
+      currentState.attachedPhotoPaths.length,
     );
-    final photosToAdd = event.photos.take(remainingSlots).toList();
+    final photoPathsToAdd = event.photoPaths.take(remainingSlots).toList();
 
-    if (photosToAdd.isNotEmpty) {
-      final newPhotos = List<File>.from(currentState.attachedPhotos)
-        ..addAll(photosToAdd);
-      emit(currentState.copyWith(attachedPhotos: newPhotos));
+    if (photoPathsToAdd.isNotEmpty) {
+      final newPhotoPaths = List<String>.from(currentState.attachedPhotoPaths)
+        ..addAll(photoPathsToAdd);
+      emit(currentState.copyWith(attachedPhotoPaths: newPhotoPaths));
     }
   }
 
@@ -114,10 +121,14 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     if (state is ComposeContent) {
       final currentState = state as ComposeContent;
       if (event.index >= 0 &&
-          event.index < currentState.attachedPhotos.length) {
-        final newPhotos = List<File>.from(currentState.attachedPhotos)
+          event.index < currentState.attachedPhotoPaths.length) {
+        // Delete the file from local storage
+        final filePathToDelete = currentState.attachedPhotoPaths[event.index];
+        _fileStorageService.deleteFile(filePathToDelete);
+
+        final newPhotoPaths = List<String>.from(currentState.attachedPhotoPaths)
           ..removeAt(event.index);
-        emit(currentState.copyWith(attachedPhotos: newPhotos));
+        emit(currentState.copyWith(attachedPhotoPaths: newPhotoPaths));
       }
     }
   }
@@ -187,7 +198,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     emit(
       ComposePosting(
         text: currentState.text,
-        attachedPhotos: currentState.attachedPhotos,
+        attachedPhotoPaths: currentState.attachedPhotoPaths,
         selectedTags: currentState.selectedTags,
         selectedLocation: currentState.selectedLocation,
       ),
@@ -202,9 +213,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         createdAt: now,
         updatedAt: now,
         tags: currentState.selectedTags,
-        imageUrls: currentState.attachedPhotos
-            .map((file) => file.path)
-            .toList(),
+        imagePaths: currentState.attachedPhotoPaths,
         location: currentState.selectedLocation,
       );
 

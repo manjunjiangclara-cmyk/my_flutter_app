@@ -4,23 +4,27 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
 class PhotoViewer extends StatefulWidget {
-  final List<File> photos;
+  final List<String> photoPaths;
   final int initialIndex;
 
-  const PhotoViewer({super.key, required this.photos, this.initialIndex = 0});
+  const PhotoViewer({
+    super.key,
+    required this.photoPaths,
+    this.initialIndex = 0,
+  });
 
   @override
   State<PhotoViewer> createState() => _PhotoViewerState();
 
   static void show({
     required BuildContext context,
-    required List<File> photos,
+    required List<String> photoPaths,
     int initialIndex = 0,
   }) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) =>
-            PhotoViewer(photos: photos, initialIndex: initialIndex),
+            PhotoViewer(photoPaths: photoPaths, initialIndex: initialIndex),
         fullscreenDialog: true,
       ),
     );
@@ -58,7 +62,7 @@ class _PhotoViewerState extends State<PhotoViewer> {
                 _currentIndex = index;
               });
             },
-            itemCount: widget.photos.length,
+            itemCount: widget.photoPaths.length,
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () => Navigator.of(context).pop(),
@@ -67,7 +71,7 @@ class _PhotoViewerState extends State<PhotoViewer> {
                     minScale: UIConstants.photoViewerMinScale,
                     maxScale: UIConstants.photoViewerMaxScale,
                     child: Image.file(
-                      widget.photos[index],
+                      File(widget.photoPaths[index]),
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
@@ -127,7 +131,7 @@ class _PhotoViewerState extends State<PhotoViewer> {
                     ),
                     const Spacer(),
                     Text(
-                      '${_currentIndex + 1} / ${widget.photos.length}',
+                      '${_currentIndex + 1} / ${widget.photoPaths.length}',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface,
                         fontSize: UIConstants.photoViewerCounterFontSize,
@@ -141,7 +145,7 @@ class _PhotoViewerState extends State<PhotoViewer> {
           ),
 
           // Bottom controls (optional - for future features like delete, share, etc.)
-          if (widget.photos.length > 1)
+          if (widget.photoPaths.length > 1)
             Positioned(
               bottom: 0,
               left: 0,
@@ -169,7 +173,7 @@ class _PhotoViewerState extends State<PhotoViewer> {
                     children: [
                       // Page indicator dots
                       ...List.generate(
-                        widget.photos.length,
+                        widget.photoPaths.length,
                         (index) => Container(
                           margin: const EdgeInsets.symmetric(
                             horizontal: UIConstants.photoViewerDotSpacing,
