@@ -1,3 +1,6 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/router/navigation_helper.dart';
 import 'package:my_flutter_app/features/journal/presentation/strings/journal_strings.dart';
@@ -15,23 +18,23 @@ class JournalAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverAppBar(
       leading: IconButton(
-        icon: const Icon(Icons.close),
+        icon: Icon(Platform.isIOS ? CupertinoIcons.xmark : Icons.close),
         onPressed: () => NavigationHelper.goBack(context),
         tooltip: JournalStrings.closeJournal,
       ),
       actions: [
         ActionButton(
-          icon: Icons.edit_outlined,
+          icon: Platform.isIOS ? CupertinoIcons.pencil : Icons.edit_outlined,
           onPressed: onEdit,
           tooltip: JournalStrings.editJournal,
         ),
         ActionButton(
-          icon: Icons.delete_outline,
+          icon: Platform.isIOS ? CupertinoIcons.trash : Icons.delete_outline,
           onPressed: onDelete,
           tooltip: JournalStrings.deleteJournal,
         ),
         ActionButton(
-          icon: Icons.ios_share,
+          icon: Platform.isIOS ? CupertinoIcons.share : Icons.ios_share,
           onPressed: onShare,
           tooltip: JournalStrings.shareJournal,
         ),

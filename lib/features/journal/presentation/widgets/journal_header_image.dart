@@ -1,3 +1,6 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/journal/presentation/strings/journal_strings.dart';
@@ -38,7 +41,7 @@ class JournalHeaderImage extends StatelessWidget {
   Widget _buildPlaceholder(BuildContext context) {
     return Center(
       child: Icon(
-        Icons.image,
+        Platform.isIOS ? CupertinoIcons.photo : Icons.image,
         size: UIConstants.largeIconSize,
         color: Theme.of(context).colorScheme.onSurfaceVariant,
         semanticLabel: JournalStrings.journalImageLabel,

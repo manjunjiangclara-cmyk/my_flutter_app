@@ -1,3 +1,6 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
@@ -36,7 +39,7 @@ class JournalEventDetails extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
-          Icons.location_on,
+          Platform.isIOS ? CupertinoIcons.location : Icons.location_on,
           size: UIConstants.smallIconSize,
           semanticLabel: JournalStrings.journalLocationLabel,
         ),

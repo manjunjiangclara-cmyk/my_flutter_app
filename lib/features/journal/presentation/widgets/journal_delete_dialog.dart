@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/core/utils/delete_dialog.dart';
 import 'package:my_flutter_app/features/journal/presentation/strings/journal_strings.dart';
 
 /// Delete confirmation dialog for journal
@@ -8,28 +9,13 @@ class JournalDeleteDialog {
     required String journalId,
     required VoidCallback onConfirm,
   }) {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(JournalStrings.deleteJournalTitle),
-          content: const Text(JournalStrings.deleteJournalMessage),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text(JournalStrings.cancel),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-                onConfirm();
-              },
-              style: TextButton.styleFrom(foregroundColor: Colors.red),
-              child: const Text(JournalStrings.deleteJournal),
-            ),
-          ],
-        );
-      },
-    );
+    return showDeleteDialog(context, itemName: JournalStrings.journal).then((
+      confirmed,
+    ) {
+      if (confirmed == true) {
+        onConfirm();
+      }
+      return confirmed;
+    });
   }
 }

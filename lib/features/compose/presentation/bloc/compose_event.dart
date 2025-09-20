@@ -84,8 +84,3 @@ class ComposeTagRemoved extends ComposeEvent {
 class ComposePostSubmitted extends ComposeEvent {
   const ComposePostSubmitted();
 }
-
-/// Event for clearing all compose content
-class ComposeCleared extends ComposeEvent {
-  const ComposeCleared();
-}
