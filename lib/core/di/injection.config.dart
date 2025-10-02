@@ -12,7 +12,14 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:my_flutter_app/core/database/database_helper.dart' as _i607;
+import 'package:my_flutter_app/core/database/migration_service.dart' as _i273;
 import 'package:my_flutter_app/core/router/tab_controller.dart' as _i1002;
+import 'package:my_flutter_app/core/utils/app_initialization_service.dart'
+    as _i616;
+import 'package:my_flutter_app/core/utils/file_storage_service.dart' as _i658;
+import 'package:my_flutter_app/core/utils/image_path_migration_service.dart'
+    as _i261;
+import 'package:my_flutter_app/core/utils/image_picker_service.dart' as _i772;
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart'
     as _i1036;
 import 'package:my_flutter_app/features/journal/presentation/bloc/journal_view/journal_view_bloc.dart'
@@ -25,10 +32,14 @@ import 'package:my_flutter_app/shared/data/repositories_impl/journal_repository_
     as _i705;
 import 'package:my_flutter_app/shared/domain/repositories/journal_repository.dart'
     as _i690;
+import 'package:my_flutter_app/shared/domain/usecases/cleanup_orphaned_files.dart'
+    as _i600;
 import 'package:my_flutter_app/shared/domain/usecases/create_journal.dart'
     as _i808;
 import 'package:my_flutter_app/shared/domain/usecases/delete_journal.dart'
     as _i682;
+import 'package:my_flutter_app/shared/domain/usecases/delete_journal_with_files.dart'
+    as _i308;
 import 'package:my_flutter_app/shared/domain/usecases/get_journal_by_id.dart'
     as _i368;
 import 'package:my_flutter_app/shared/domain/usecases/get_journals.dart'
@@ -45,14 +56,38 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
+    gh.factory<_i658.FileStorageService>(() => _i658.FileStorageService());
+    gh.factory<_i261.ImagePathMigrationService>(
+      () => _i261.ImagePathMigrationService(),
+    );
+    gh.factory<_i772.ImagePickerService>(() => _i772.ImagePickerService());
     gh.factory<_i1002.AppTabController>(() => _i1002.AppTabController());
-    gh.factory<_i424.JournalLocalDataSourceImpl>(
+    gh.singleton<_i607.DatabaseHelper>(() => _i607.DatabaseHelper.new());
+    gh.factory<_i424.JournalLocalDataSource>(
       () => _i424.JournalLocalDataSourceImpl(),
     );
-    gh.singleton<_i607.DatabaseHelper>(() => _i607.DatabaseHelper.new());
-    gh.factory<_i705.JournalRepositoryImpl>(
+    gh.factory<_i273.MigrationService>(
+      () => _i273.MigrationService(
+        gh<_i607.DatabaseHelper>(),
+        gh<_i261.ImagePathMigrationService>(),
+      ),
+    );
+    gh.factory<_i690.JournalRepository>(
       () => _i705.JournalRepositoryImpl(
         localDataSource: gh<_i424.JournalLocalDataSource>(),
+        fileStorageService: gh<_i658.FileStorageService>(),
+      ),
+    );
+    gh.factory<_i308.DeleteJournalWithFiles>(
+      () => _i308.DeleteJournalWithFiles(
+        gh<_i690.JournalRepository>(),
+        gh<_i658.FileStorageService>(),
+      ),
+    );
+    gh.factory<_i600.CleanupOrphanedFiles>(
+      () => _i600.CleanupOrphanedFiles(
+        gh<_i690.JournalRepository>(),
+        gh<_i658.FileStorageService>(),
       ),
     );
     gh.factory<_i1017.SearchJournals>(
@@ -72,6 +107,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i368.GetJournalById>(
       () => _i368.GetJournalById(gh<_i690.JournalRepository>()),
+    );
+    gh.factory<_i616.AppInitializationService>(
+      () => _i616.AppInitializationService(gh<_i273.MigrationService>()),
     );
     gh.factory<_i160.MemoryBloc>(
       () => _i160.MemoryBloc(getJournals: gh<_i654.GetJournals>()),

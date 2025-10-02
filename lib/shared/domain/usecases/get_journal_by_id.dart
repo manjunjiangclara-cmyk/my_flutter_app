@@ -29,7 +29,7 @@ class GetJournalById implements UseCase<Journal, GetJournalByIdParams> {
     updatedAt: DateTime.now().subtract(const Duration(days: 1)),
     tags: ['hiking', 'nature', 'adventure', 'reflection', 'mindfulness'],
     isFavorite: true,
-    imageUrls: [
+    imagePaths: [
       'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
       'https://images.unsplash.com/photo-1464822759844-d150baec0b8b?w=800',
       'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',

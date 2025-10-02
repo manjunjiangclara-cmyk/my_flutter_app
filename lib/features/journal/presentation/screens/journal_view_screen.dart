@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
+import 'package:my_flutter_app/core/strings/app_strings.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/date_formatter.dart';
@@ -17,6 +18,7 @@ import '../widgets/journal_delete_dialog.dart';
 import '../widgets/journal_error_state.dart';
 import '../widgets/journal_event_details.dart';
 import '../widgets/journal_header_image.dart';
+import '../widgets/journal_image_gallery.dart';
 import '../widgets/journal_loading_state.dart';
 
 class JournalViewScreen extends StatelessWidget {
@@ -92,7 +94,7 @@ class _JournalViewScreenView extends StatelessWidget {
   void _handleEdit(BuildContext context) {
     // TODO: Implement edit functionality
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Edit functionality coming soon')),
+      const SnackBar(content: Text(AppStrings.editFunctionalityComingSoon)),
     );
   }
 
@@ -109,7 +111,7 @@ class _JournalViewScreenView extends StatelessWidget {
   void _handleShare(BuildContext context) {
     // TODO: Implement share functionality
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Share functionality coming soon')),
+      const SnackBar(content: Text(AppStrings.shareFunctionalityComingSoon)),
     );
   }
 }
@@ -140,7 +142,7 @@ class _JournalViewContent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  JournalHeaderImage(imageUrls: journal.imageUrls),
+                  JournalHeaderImage(imagePaths: journal.imagePaths),
                   const SizedBox(height: Spacing.lg),
                   JournalEventDetails(
                     date: DateFormatter.formatJournalDate(journal.createdAt),
@@ -152,6 +154,8 @@ class _JournalViewContent extends StatelessWidget {
                     const SizedBox(height: Spacing.lg),
                   ],
                   JournalContentSection(content: journal.content),
+                  const SizedBox(height: Spacing.lg),
+                  JournalImageGallery(imagePaths: journal.imagePaths),
                   const SizedBox(height: Spacing.lg),
                 ],
               ),

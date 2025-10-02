@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/router/tab_controller.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
+import 'package:my_flutter_app/core/utils/file_storage_service.dart';
 import 'package:my_flutter_app/features/compose/presentation/screens/compose_home_screen.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:my_flutter_app/features/memory/presentation/screens/memory_screen.dart';
@@ -29,8 +30,10 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
     if (_pages == null) {
       // Create the dependency chain for GetJournals
       final localDataSource = JournalLocalDataSourceImpl();
+      final fileStorageService = FileStorageService();
       final repository = JournalRepositoryImpl(
         localDataSource: localDataSource,
+        fileStorageService: fileStorageService,
       );
       final getJournals = GetJournals(repository);
 

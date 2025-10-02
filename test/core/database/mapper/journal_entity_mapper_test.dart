@@ -14,7 +14,7 @@ void main() {
           'updated_at': '2024-01-01T11:00:00.000Z',
           'is_favorite': 1,
           'tags': 'personal,reflection',
-          'image_urls': 'image1.jpg,image2.jpg',
+          'image_paths': 'image1.jpg,image2.jpg',
           'location': 'Test Location',
         };
 
@@ -28,11 +28,11 @@ void main() {
         expect(result.updatedAt, DateTime.parse('2024-01-01T11:00:00.000Z'));
         expect(result.isFavorite, true);
         expect(result.tags, ['personal', 'reflection']);
-        expect(result.imageUrls, ['image1.jpg', 'image2.jpg']);
+        expect(result.imagePaths, ['image1.jpg', 'image2.jpg']);
         expect(result.location, 'Test Location');
       });
 
-      test('should handle null tags and imageUrls', () {
+      test('should handle null tags and imagePaths', () {
         // Arrange
         final dbRow = {
           'id': 2,
@@ -41,7 +41,7 @@ void main() {
           'updated_at': '2024-01-01T11:00:00.000Z',
           'is_favorite': 0,
           'tags': null,
-          'image_urls': null,
+          'image_paths': null,
           'location': null,
         };
 
@@ -50,12 +50,12 @@ void main() {
 
         // Assert
         expect(result.tags, isEmpty);
-        expect(result.imageUrls, isEmpty);
+        expect(result.imagePaths, isEmpty);
         expect(result.isFavorite, false);
         expect(result.location, null);
       });
 
-      test('should handle empty tags and imageUrls strings', () {
+      test('should handle empty tags and imagePaths strings', () {
         // Arrange
         final dbRow = {
           'id': 3,
@@ -64,7 +64,7 @@ void main() {
           'updated_at': '2024-01-01T11:00:00.000Z',
           'is_favorite': 0,
           'tags': '',
-          'image_urls': '',
+          'image_paths': '',
           'location': null,
         };
 
@@ -73,10 +73,10 @@ void main() {
 
         // Assert
         expect(result.tags, isEmpty);
-        expect(result.imageUrls, isEmpty);
+        expect(result.imagePaths, isEmpty);
       });
 
-      test('should handle tags and imageUrls with empty items', () {
+      test('should handle tags and imagePaths with empty items', () {
         // Arrange
         final dbRow = {
           'id': 4,
@@ -85,7 +85,7 @@ void main() {
           'updated_at': '2024-01-01T11:00:00.000Z',
           'is_favorite': 0,
           'tags': 'tag1,,tag2,',
-          'image_urls': ',image1.jpg,,image2.jpg,',
+          'image_paths': ',image1.jpg,,image2.jpg,',
           'location': null,
         };
 
@@ -94,10 +94,10 @@ void main() {
 
         // Assert
         expect(result.tags, ['tag1', 'tag2']);
-        expect(result.imageUrls, ['image1.jpg', 'image2.jpg']);
+        expect(result.imagePaths, ['image1.jpg', 'image2.jpg']);
       });
 
-      test('should handle tags and imageUrls with whitespace', () {
+      test('should handle tags and imagePaths with whitespace', () {
         // Arrange
         final dbRow = {
           'id': 5,
@@ -106,7 +106,7 @@ void main() {
           'updated_at': '2024-01-01T11:00:00.000Z',
           'is_favorite': 0,
           'tags': ' tag1 , tag2 ',
-          'image_urls': ' image1.jpg , image2.jpg ',
+          'image_paths': ' image1.jpg , image2.jpg ',
           'location': 'Location with spaces',
         };
 
@@ -115,7 +115,7 @@ void main() {
 
         // Assert
         expect(result.tags, ['tag1', 'tag2']);
-        expect(result.imageUrls, ['image1.jpg', 'image2.jpg']);
+        expect(result.imagePaths, ['image1.jpg', 'image2.jpg']);
       });
     });
 
@@ -180,7 +180,7 @@ void main() {
             updatedAt: DateTime.parse('2024-01-01T11:00:00.000Z'),
             isFavorite: true,
             tags: ['personal', 'reflection'],
-            imageUrls: ['image1.jpg', 'image2.jpg'],
+            imagePaths: ['image1.jpg', 'image2.jpg'],
             location: 'Test Location',
           );
 
@@ -193,7 +193,7 @@ void main() {
           expect(result['updated_at'], '2024-01-01T11:00:00.000Z');
           expect(result['is_favorite'], 1);
           expect(result['tags'], 'personal,reflection');
-          expect(result['image_urls'], 'image1.jpg,image2.jpg');
+          expect(result['image_paths'], 'image1.jpg,image2.jpg');
           expect(result['location'], 'Test Location');
           expect(
             result.containsKey('id'),
@@ -202,7 +202,7 @@ void main() {
         },
       );
 
-      test('should handle empty tags and imageUrls', () {
+      test('should handle empty tags and imagePaths', () {
         // Arrange
         final journal = Journal(
           id: '0',
@@ -211,7 +211,7 @@ void main() {
           updatedAt: DateTime.parse('2024-01-01T11:00:00.000Z'),
           isFavorite: false,
           tags: [],
-          imageUrls: [],
+          imagePaths: [],
           location: null,
         );
 
@@ -220,7 +220,7 @@ void main() {
 
         // Assert
         expect(result['tags'], '');
-        expect(result['image_urls'], '');
+        expect(result['image_paths'], '');
         expect(result['is_favorite'], 0);
       });
     });
@@ -235,7 +235,7 @@ void main() {
           updatedAt: DateTime.parse('2024-01-01T12:00:00.000Z'),
           isFavorite: true,
           tags: ['updated', 'tag'],
-          imageUrls: ['new-image.jpg'],
+          imagePaths: ['new-image.jpg'],
           location: 'Updated Location',
         );
 
@@ -271,13 +271,13 @@ void main() {
           'updated_at': '2024-01-01T11:00:00.000Z',
           'is_favorite': 0,
           'tags': 'tag1,tag2,tag3',
-          'image_urls': 'img1.jpg,img2.jpg',
+          'image_paths': 'img1.jpg,img2.jpg',
         };
 
         final result = JournalEntityMapper.mapToJournal(dbRow);
 
         expect(result.tags, ['tag1', 'tag2', 'tag3']);
-        expect(result.imageUrls, ['img1.jpg', 'img2.jpg']);
+        expect(result.imagePaths, ['img1.jpg', 'img2.jpg']);
       });
 
       test('should handle single item', () {
@@ -289,13 +289,13 @@ void main() {
           'updated_at': '2024-01-01T11:00:00.000Z',
           'is_favorite': 0,
           'tags': 'single-tag',
-          'image_urls': 'single-image.jpg',
+          'image_paths': 'single-image.jpg',
         };
 
         final result = JournalEntityMapper.mapToJournal(dbRow);
 
         expect(result.tags, ['single-tag']);
-        expect(result.imageUrls, ['single-image.jpg']);
+        expect(result.imagePaths, ['single-image.jpg']);
       });
     });
   });

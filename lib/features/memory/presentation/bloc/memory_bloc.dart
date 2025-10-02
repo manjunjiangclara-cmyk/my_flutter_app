@@ -30,11 +30,6 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
 
   /// Maps a Journal entity to MemoryCardModel for UI display
   MemoryCardModel _mapJournalToMemoryCard(Journal journal) {
-    // Use first image URL if available, otherwise use default
-    final imageUrl = journal.imageUrls.isNotEmpty
-        ? journal.imageUrls.first
-        : null;
-
     // Truncate content if too long for description
     final description = journal.content.length > 100
         ? '${journal.content.substring(0, 100)}...'
@@ -46,7 +41,7 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
       location: journal.location,
       tags: journal.tags,
       description: description,
-      imageUrl: imageUrl,
+      imagePaths: journal.imagePaths.isNotEmpty ? journal.imagePaths : const [],
     );
   }
 

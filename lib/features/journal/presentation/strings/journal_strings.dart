@@ -22,6 +22,9 @@ class JournalStrings {
   static const String loadJournalError = 'Failed to load journal';
   static const String deleteJournalError = 'Failed to delete journal';
 
+  // ---------- UI Constants ----------
+  static const String locationEmoji = '📍';
+
   // ---------- Accessibility Labels ----------
   static const String journalImageLabel = 'Journal image';
   static const String journalLocationLabel = 'Journal location';

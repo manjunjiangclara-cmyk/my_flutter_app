@@ -1,7 +1,7 @@
 class DatabaseConstants {
   // Database Configuration
   static const String databaseName = 'journal_app.db';
-  static const int databaseVersion = 1;
+  static const int databaseVersion = 2;
 
   // Table Names
   static const String journalsTable = 'journals';
@@ -15,7 +15,7 @@ class DatabaseConstants {
   static const String journalUpdatedAt = 'updated_at';
   static const String journalIsFavorite = 'is_favorite';
   static const String journalTags = 'tags';
-  static const String journalImageUrls = 'image_urls';
+  static const String journalImagePaths = 'image_paths';
   static const String journalLocation = 'location';
 
   // Tags Table Columns
@@ -31,7 +31,7 @@ class DatabaseConstants {
   // Default Values
   static const int defaultIsFavorite = 0;
   static const String defaultTags = '';
-  static const String defaultImageUrls = '';
+  static const String defaultImagePaths = '';
 
   // Query Limits
   static const int defaultQueryLimit = 50;

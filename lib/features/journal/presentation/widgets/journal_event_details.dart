@@ -1,10 +1,6 @@
-import 'dart:io' show Platform;
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
-import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/journal/presentation/strings/journal_strings.dart';
 
 /// Event details header widget for journal view
@@ -38,11 +34,7 @@ class JournalEventDetails extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          Platform.isIOS ? CupertinoIcons.location : Icons.location_on,
-          size: UIConstants.smallIconSize,
-          semanticLabel: JournalStrings.journalLocationLabel,
-        ),
+        Text(JournalStrings.locationEmoji, style: AppTypography.labelSmall),
         const SizedBox(width: Spacing.xs),
         Flexible(
           child: Text(

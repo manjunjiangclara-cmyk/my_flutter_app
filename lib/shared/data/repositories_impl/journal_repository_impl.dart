@@ -2,15 +2,20 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/error/failures.dart';
+import '../../../core/utils/file_storage_service.dart';
 import '../../domain/entities/journal.dart';
 import '../../domain/repositories/journal_repository.dart';
 import '../datasources/journal_local_datasource.dart';
 
-@injectable
+@Injectable(as: JournalRepository)
 class JournalRepositoryImpl implements JournalRepository {
   final JournalLocalDataSource localDataSource;
+  final FileStorageService _fileStorageService;
 
-  JournalRepositoryImpl({required this.localDataSource});
+  JournalRepositoryImpl({
+    required this.localDataSource,
+    required FileStorageService fileStorageService,
+  }) : _fileStorageService = fileStorageService;
 
   @override
   Future<Either<Failure, List<Journal>>> getJournals() async {
@@ -92,6 +97,29 @@ class JournalRepositoryImpl implements JournalRepository {
       return Right(journals);
     } catch (e) {
       return Left(CacheFailure('Failed to get favorite journals: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> deleteJournalWithFiles(String id) async {
+    try {
+      // First get the journal to access its image paths
+      final journalResult = await getJournalById(id);
+
+      return journalResult.fold((failure) => Left(failure), (journal) async {
+        // Delete the journal from database
+        final deleteResult = await deleteJournal(id);
+
+        return deleteResult.fold((failure) => Left(failure), (success) async {
+          if (success && journal.imagePaths.isNotEmpty) {
+            // Delete associated image files
+            await _fileStorageService.deleteFiles(journal.imagePaths);
+          }
+          return Right(success);
+        });
+      });
+    } catch (e) {
+      return Left(CacheFailure('Failed to delete journal with files: $e'));
     }
   }
 }

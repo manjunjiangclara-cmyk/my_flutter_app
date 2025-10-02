@@ -21,7 +21,7 @@ class JournalDao {
   static const String columnUpdatedAt = DatabaseConstants.journalUpdatedAt;
   static const String columnIsFavorite = DatabaseConstants.journalIsFavorite;
   static const String columnTags = DatabaseConstants.journalTags;
-  static const String columnImageUrls = DatabaseConstants.journalImageUrls;
+  static const String columnImagePaths = DatabaseConstants.journalImagePaths;
   static const String columnLocation = DatabaseConstants.journalLocation;
 
   // Create table SQL
@@ -34,7 +34,7 @@ class JournalDao {
         $columnUpdatedAt TEXT NOT NULL,
         $columnIsFavorite INTEGER DEFAULT ${DatabaseConstants.defaultIsFavorite},
         $columnTags TEXT,
-        $columnImageUrls TEXT,
+        $columnImagePaths TEXT,
         $columnLocation TEXT
       )
     ''';

@@ -8,7 +8,7 @@ class JournalModel extends Journal {
     required super.updatedAt,
     super.tags,
     super.isFavorite,
-    super.imageUrls,
+    super.imagePaths,
   });
 
   factory JournalModel.fromJson(Map<String, dynamic> json) {
@@ -19,7 +19,7 @@ class JournalModel extends Journal {
       updatedAt: DateTime.parse(json['updated_at'] as String),
       tags: List<String>.from(json['tags'] ?? []),
       isFavorite: json['is_favorite'] as bool? ?? false,
-      imageUrls: List<String>.from(json['image_urls'] ?? []),
+      imagePaths: List<String>.from(json['image_paths'] ?? []),
     );
   }
 
@@ -31,7 +31,7 @@ class JournalModel extends Journal {
       'updated_at': updatedAt.toIso8601String(),
       'tags': tags,
       'is_favorite': isFavorite,
-      'image_urls': imageUrls,
+      'image_paths': imagePaths,
     };
   }
 
@@ -43,7 +43,7 @@ class JournalModel extends Journal {
       updatedAt: journal.updatedAt,
       tags: journal.tags,
       isFavorite: journal.isFavorite,
-      imageUrls: journal.imageUrls,
+      imagePaths: journal.imagePaths,
     );
   }
 }

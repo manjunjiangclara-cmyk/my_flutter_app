@@ -12,4 +12,7 @@ abstract class JournalRepository {
   Future<Either<Failure, List<Journal>>> searchJournals(String query);
   Future<Either<Failure, List<Journal>>> getJournalsByTag(String tag);
   Future<Either<Failure, List<Journal>>> getFavoriteJournals();
+
+  /// Delete a journal and its associated image files
+  Future<Either<Failure, bool>> deleteJournalWithFiles(String id);
 }

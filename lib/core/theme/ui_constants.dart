@@ -128,4 +128,9 @@ class UIConstants {
   static const double tagChipMoreButtonIconSize = 16.0;
   static const double tagChipCollapseButtonIconSpacing = 4.0;
   static const double tagChipCollapseButtonIconSize = 16.0;
+
+  // Journal Image Gallery
+  static const int journalImageGalleryColumns = 3;
+  static const double journalImageGallerySpacing = 8.0;
+  static const double journalImageGalleryItemHeight = 120.0;
 }

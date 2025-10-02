@@ -68,9 +68,9 @@ class MemoryCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              if (memoryCardModel.imageUrl != null) ...[
+              if (memoryCardModel.imagePaths.isNotEmpty) ...[
                 ImageCard(
-                  imageUrl: memoryCardModel.imageUrl!,
+                  imagePath: memoryCardModel.imagePaths.first,
                   imageHeight: imageHeight,
                 ),
                 SizedBox(height: sectionSpacingLarge),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
+import 'package:my_flutter_app/core/strings/app_strings.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart';
@@ -8,7 +9,6 @@ import 'package:my_flutter_app/features/compose/presentation/bloc/compose_event.
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_state.dart';
 import 'package:my_flutter_app/features/compose/presentation/constants/compose_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/strings/compose_strings.dart';
-import 'package:my_flutter_app/features/compose/presentation/utils/compose_dialogs.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_action_buttons.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_app_bar.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_text_input.dart';
@@ -155,10 +155,10 @@ class _AttachmentsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (content.attachedPhotos.isEmpty) return const SizedBox.shrink();
+    if (content.attachedPhotoPaths.isEmpty) return const SizedBox.shrink();
 
     return PhotoAttachments(
-      photos: content.attachedPhotos,
+      photoPaths: content.attachedPhotoPaths,
       onRemovePhoto: (index) =>
           context.read<ComposeBloc>().add(ComposePhotoRemoved(index)),
     );
@@ -225,29 +225,41 @@ class _ComposeActionArea extends StatelessWidget {
   }
 
   void _showLocationDialog(BuildContext context) {
-    final bloc = context.read<ComposeBloc>();
-    ComposeDialogs.showLocationDialog(
-      context: context,
-      controller: bloc.locationController,
-      focusNode: bloc.locationFocusNode,
-      onAdd: (location) => bloc.add(ComposeLocationAdded(location)),
+    // TODO: Implement location functionality
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text(AppStrings.locationFunctionalityComingSoon)),
     );
+
+    // Commented out for future implementation
+    // final bloc = context.read<ComposeBloc>();
+    // ComposeDialogs.showLocationDialog(
+    //   context: context,
+    //   controller: bloc.locationController,
+    //   focusNode: bloc.locationFocusNode,
+    //   onAdd: (location) => bloc.add(ComposeLocationAdded(location)),
+    // );
   }
 
   void _showTagDialog(BuildContext context) {
-    final bloc = context.read<ComposeBloc>();
-    final currentState = bloc.state;
-    final existingTags = currentState is ComposeContent
-        ? currentState.selectedTags
-        : <String>[];
-
-    ComposeDialogs.showTagDialog(
-      context: context,
-      controller: bloc.tagController,
-      focusNode: bloc.tagFocusNode,
-      onAdd: (tag) => bloc.add(ComposeTagAdded(tag)),
-      existingTags: existingTags,
+    // TODO: Implement tag functionality
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text(AppStrings.tagFunctionalityComingSoon)),
     );
+
+    // Commented out for future implementation
+    // final bloc = context.read<ComposeBloc>();
+    // final currentState = bloc.state;
+    // final existingTags = currentState is ComposeContent
+    //     ? currentState.selectedTags
+    //     : <String>[];
+
+    // ComposeDialogs.showTagDialog(
+    //   context: context,
+    //   controller: bloc.tagController,
+    //   focusNode: bloc.tagFocusNode,
+    //   onAdd: (tag) => bloc.add(ComposeTagAdded(tag)),
+    //   existingTags: existingTags,
+    // );
   }
 }
 

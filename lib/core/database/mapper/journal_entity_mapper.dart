@@ -4,6 +4,12 @@ import '../../utils/string_list_parser.dart';
 class JournalEntityMapper {
   /// Maps a database row map to a Journal entity
   static Journal mapToJournal(Map<String, dynamic> map) {
+    final imagePaths = parseCommaSeparatedString(map['image_paths']);
+
+    // Debug: Print image paths from database
+    print('📊 Journal ${map['id']} - Raw image_paths: "${map['image_paths']}"');
+    print('📊 Journal ${map['id']} - Parsed imagePaths: $imagePaths');
+
     return Journal(
       id: map['id'].toString(),
       content: map['content'],
@@ -11,7 +17,7 @@ class JournalEntityMapper {
       updatedAt: DateTime.parse(map['updated_at']),
       isFavorite: map['is_favorite'] == 1,
       tags: parseCommaSeparatedString(map['tags']),
-      imageUrls: parseCommaSeparatedString(map['image_urls']),
+      imagePaths: imagePaths,
       location: map['location'],
     );
   }
@@ -31,7 +37,7 @@ class JournalEntityMapper {
       'updated_at': journal.updatedAt.toIso8601String(),
       'is_favorite': journal.isFavorite ? 1 : 0,
       'tags': journal.tags.join(','),
-      'image_urls': journal.imageUrls.join(','),
+      'image_paths': journal.imagePaths.join(','),
       'location': journal.location,
     };
   }
@@ -43,7 +49,7 @@ class JournalEntityMapper {
       'updated_at': journal.updatedAt.toIso8601String(),
       'is_favorite': journal.isFavorite ? 1 : 0,
       'tags': journal.tags.join(','),
-      'image_urls': journal.imageUrls.join(','),
+      'image_paths': journal.imagePaths.join(','),
       'location': journal.location,
     };
   }

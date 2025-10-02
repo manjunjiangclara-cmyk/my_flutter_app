@@ -11,6 +11,7 @@ class MemoryData extends ChangeNotifier {
       tags: <String>['Life', 'Travel'],
       description:
           'Praeterea, ex culpa non invenies unum aut non accusatis unum. Et nihil inuitam. Nemo nocere tibi erit, et non inimicos, et ne illa',
+      imagePaths: const [],
     ),
     MemoryCardModel(
       journalId: 'journal_2',
@@ -19,6 +20,7 @@ class MemoryData extends ChangeNotifier {
       tags: <String>['Life', 'Travel'],
       description:
           'Praeterea, ex culpa non invenies unum aut non accusatis unum. Et nihil inuitam. Nemo nocere tibi erit, et non inimicos, et ne illa',
+      imagePaths: const [],
     ),
     MemoryCardModel(
       journalId: 'journal_3',
@@ -27,6 +29,7 @@ class MemoryData extends ChangeNotifier {
       tags: <String>['Work', 'Conference'],
       description:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      imagePaths: const [],
     ),
     MemoryCardModel(
       journalId: 'journal_4',
@@ -35,6 +38,7 @@ class MemoryData extends ChangeNotifier {
       tags: <String>['Friends', 'Adventure'],
       description:
           'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+      imagePaths: const [],
     ),
   ];
 

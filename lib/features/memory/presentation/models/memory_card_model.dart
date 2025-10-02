@@ -4,7 +4,7 @@ class MemoryCardModel {
   final String? location;
   final List<String> tags;
   final String description;
-  final String? imageUrl;
+  final List<String> imagePaths;
 
   MemoryCardModel({
     required this.journalId,
@@ -12,6 +12,6 @@ class MemoryCardModel {
     this.location,
     required this.tags,
     required this.description,
-    this.imageUrl,
-  });
+    List<String>? imagePaths,
+  }) : imagePaths = imagePaths ?? const [];
 }
