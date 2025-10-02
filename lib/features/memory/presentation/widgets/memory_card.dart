@@ -70,7 +70,7 @@ class MemoryCard extends StatelessWidget {
             children: <Widget>[
               if (memoryCardModel.imagePaths.isNotEmpty) ...[
                 ImageCard(
-                  imageUrl: memoryCardModel.imagePaths.first,
+                  imagePath: memoryCardModel.imagePaths.first,
                   imageHeight: imageHeight,
                 ),
                 SizedBox(height: sectionSpacingLarge),

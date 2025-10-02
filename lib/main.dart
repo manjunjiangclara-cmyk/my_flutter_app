@@ -5,6 +5,7 @@ import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/theme_provider.dart';
+import 'package:my_flutter_app/core/utils/app_initialization_service.dart';
 import 'package:my_flutter_app/core/utils/error_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -15,10 +16,23 @@ void main() {
   // Initialize dependency injection
   configureDependencies();
 
+  // Initialize app services
+  _initializeApp();
+
   // Run app with error handling zone
   GlobalErrorHandler.runAppWithErrorHandling(() {
     runApp(const MyApp());
   });
+}
+
+/// Initialize app services
+void _initializeApp() {
+  try {
+    final appInitService = getIt<AppInitializationService>();
+    appInitService.initializeApp();
+  } catch (e) {
+    print('❌ Failed to initialize app services: $e');
+  }
 }
 
 class MyApp extends StatelessWidget {

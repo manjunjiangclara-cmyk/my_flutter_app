@@ -32,7 +32,7 @@ void main() {
         expect(result.location, 'Test Location');
       });
 
-      test('should handle null tags and imageUrls', () {
+      test('should handle null tags and imagePaths', () {
         // Arrange
         final dbRow = {
           'id': 2,
@@ -55,7 +55,7 @@ void main() {
         expect(result.location, null);
       });
 
-      test('should handle empty tags and imageUrls strings', () {
+      test('should handle empty tags and imagePaths strings', () {
         // Arrange
         final dbRow = {
           'id': 3,
@@ -76,7 +76,7 @@ void main() {
         expect(result.imagePaths, isEmpty);
       });
 
-      test('should handle tags and imageUrls with empty items', () {
+      test('should handle tags and imagePaths with empty items', () {
         // Arrange
         final dbRow = {
           'id': 4,
@@ -97,7 +97,7 @@ void main() {
         expect(result.imagePaths, ['image1.jpg', 'image2.jpg']);
       });
 
-      test('should handle tags and imageUrls with whitespace', () {
+      test('should handle tags and imagePaths with whitespace', () {
         // Arrange
         final dbRow = {
           'id': 5,
@@ -202,7 +202,7 @@ void main() {
         },
       );
 
-      test('should handle empty tags and imageUrls', () {
+      test('should handle empty tags and imagePaths', () {
         // Arrange
         final journal = Journal(
           id: '0',

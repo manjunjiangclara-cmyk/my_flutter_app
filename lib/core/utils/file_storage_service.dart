@@ -56,9 +56,15 @@ class FileStorageService {
       // Copy the file to the local storage
       final localFile = await imageFile.copy(localPath);
 
+      // Debug: Print the saved path
+      print('✅ Image saved to: ${localFile.path}');
+      print('📁 Images directory: ${imagesDir.path}');
+      print('📄 File exists: ${await localFile.exists()}');
+      print('📏 File size: ${await localFile.length()} bytes');
+
       return localFile.path;
     } catch (e) {
-      print('Error saving image: $e');
+      print('❌ Error saving image: $e');
       return null;
     }
   }

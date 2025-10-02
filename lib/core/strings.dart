@@ -69,4 +69,9 @@ class AppStrings {
 
   // ---------- Date Formatting ----------
   static const String memoryCardDateFormat = 'EEE, MMM d';
+
+  // ---------- Image Error Messages ----------
+  static const String imageUnavailable = 'Image unavailable';
+  static const String imageNotFound = 'Image not found';
+  static const String imageLoading = 'Loading image...';
 }

@@ -48,7 +48,7 @@ class JournalImageGallery extends StatelessWidget {
       child: Hero(
         tag: 'journal_image_$index',
         child: ImageCard(
-          imageUrl: imagePath,
+          imagePath: imagePath,
           imageHeight: UIConstants.journalImageGalleryItemHeight,
         ),
       ),
@@ -128,7 +128,7 @@ class _ImageFullscreenViewState extends State<_ImageFullscreenView> {
             child: Hero(
               tag: 'journal_image_$index',
               child: ImageCard(
-                imageUrl: widget.imagePaths[index],
+                imagePath: widget.imagePaths[index],
                 imageHeight: MediaQuery.of(context).size.height * 0.7,
               ),
             ),
