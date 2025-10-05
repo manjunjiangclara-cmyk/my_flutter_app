@@ -70,7 +70,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
     try {
       final files = await _imagePickerService.pickMultipleImages(
-        imageQuality: UIConstants.imageQuality,
+        imageQuality: (UIConstants.imageQuality * 100).round(),
       );
 
       if (files.isNotEmpty) {

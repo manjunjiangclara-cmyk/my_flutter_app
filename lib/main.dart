@@ -16,23 +16,27 @@ void main() {
   // Initialize dependency injection
   configureDependencies();
 
-  // Initialize app services
-  _initializeApp();
-
-  // Run app with error handling zone
+  // Run app immediately - don't wait for initialization
   GlobalErrorHandler.runAppWithErrorHandling(() {
     runApp(const MyApp());
   });
+
+  // Initialize app services in background
+  _initializeAppInBackground();
 }
 
-/// Initialize app services
-void _initializeApp() {
-  try {
-    final appInitService = getIt<AppInitializationService>();
-    appInitService.initializeApp();
-  } catch (e) {
-    print('❌ Failed to initialize app services: $e');
-  }
+/// Initialize app services in background
+void _initializeAppInBackground() {
+  Future.microtask(() async {
+    try {
+      print('🚀 Starting background app initialization...');
+      final appInitService = getIt<AppInitializationService>();
+      await appInitService.initializeApp();
+      print('✅ Background initialization completed');
+    } catch (e) {
+      print('❌ Background initialization failed: $e');
+    }
+  });
 }
 
 class MyApp extends StatelessWidget {

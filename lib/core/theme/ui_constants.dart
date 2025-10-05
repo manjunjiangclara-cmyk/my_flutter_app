@@ -133,4 +133,30 @@ class UIConstants {
   static const int journalImageGalleryColumns = 3;
   static const double journalImageGallerySpacing = 8.0;
   static const double journalImageGalleryItemHeight = 120.0;
+
+  // ========== SPLASH SCREEN ==========
+
+  /// Splash screen animation duration
+  static const Duration splashFadeInDuration = Duration(milliseconds: 800);
+
+  /// Splash screen display duration (minimum time to show)
+  static const Duration splashMinDisplayDuration = Duration(seconds: 1);
+
+  /// Splash screen logo size
+  static const double splashLogoSize = 120.0;
+
+  /// Splash screen title font size
+  static const double splashTitleFontSize = 48.0;
+
+  /// Splash screen subtitle font size
+  static const double splashSubtitleFontSize = 16.0;
+
+  /// Splash screen loading indicator size
+  static const double splashLoadingIndicatorSize = 24.0;
+
+  /// Splash screen vertical spacing between elements
+  static const double splashVerticalSpacing = 24.0;
+
+  /// Splash screen horizontal padding
+  static const double splashHorizontalPadding = 32.0;
 }
