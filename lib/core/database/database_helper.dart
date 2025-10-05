@@ -2,6 +2,7 @@ import 'package:injectable/injectable.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../utils/performance_monitor.dart';
 import 'dao/journal_dao.dart';
 import 'database_constants.dart';
 
@@ -16,7 +17,11 @@ class DatabaseHelper {
 
   Future<Database> get database async {
     if (_database != null) return _database!;
+
+    PerformanceMonitor.startTiming('Database Initialization');
     _database = await _initDatabase();
+    PerformanceMonitor.endTiming('Database Initialization');
+
     return _database!;
   }
 

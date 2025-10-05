@@ -4,7 +4,10 @@ import 'package:my_flutter_app/core/theme/theme_service.dart';
 /// Provider for managing theme state across the app
 class ThemeProvider extends ChangeNotifier {
   ThemeProvider() {
-    _initializeTheme();
+    // Initialize theme asynchronously without blocking startup
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeTheme();
+    });
   }
 
   ThemeMode _themeMode = ThemeMode.system;
@@ -18,10 +21,17 @@ class ThemeProvider extends ChangeNotifier {
 
   /// Initialize theme from storage
   Future<void> _initializeTheme() async {
-    await ThemeService.instance.init();
-    _themeMode = ThemeService.instance.themeMode;
-    _isInitialized = true;
-    notifyListeners();
+    try {
+      await ThemeService.instance.init();
+      _themeMode = ThemeService.instance.themeMode;
+      _isInitialized = true;
+      notifyListeners();
+    } catch (e) {
+      // Fallback to system theme if initialization fails
+      _themeMode = ThemeMode.system;
+      _isInitialized = true;
+      notifyListeners();
+    }
   }
 
   /// Set theme mode and persist to storage
