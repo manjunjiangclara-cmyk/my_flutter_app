@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:my_flutter_app/core/utils/base_bloc.dart';
+import 'package:my_flutter_app/core/utils/performance_monitor.dart';
 import 'package:my_flutter_app/core/utils/usecase.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
 import 'package:my_flutter_app/features/memory/presentation/utils/memory_grouping_utils.dart';
@@ -24,8 +25,7 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
     on<MemoryFilterCleared>(_onFilterCleared);
     on<MemorySearchRequested>(_onSearchRequested);
 
-    // Load initial data
-    add(const MemoryLoadRequested());
+    // Don't load data automatically - let the UI trigger it when needed
   }
 
   /// Maps a Journal entity to MemoryCardModel for UI display
@@ -51,7 +51,9 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
   ) async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
 
+    PerformanceMonitor.startTiming('Get Journals Query');
     final result = await _getJournals(NoParams());
+    PerformanceMonitor.endTiming('Get Journals Query');
 
     handleUseCaseResult(
       result,
