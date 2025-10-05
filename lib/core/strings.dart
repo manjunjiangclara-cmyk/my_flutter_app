@@ -74,4 +74,9 @@ class AppStrings {
   static const String imageUnavailable = 'Image unavailable';
   static const String imageNotFound = 'Image not found';
   static const String imageLoading = 'Loading image...';
+
+  // ---------- Splash Screen ----------
+  static const String splashTitle = 'Hibi';
+  static const String splashSubtitle = 'Capture your memories';
+  static const String splashLoading = 'Loading...';
 }
