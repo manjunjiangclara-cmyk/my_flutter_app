@@ -57,29 +57,21 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     ComposePhotoAddedFromGallery event,
     Emitter<ComposeState> emit,
   ) async {
-    print('📸 Photo button clicked - starting photo selection...');
-    
     final currentState = state is ComposeContent
         ? state as ComposeContent
         : const ComposeContent();
-
-    print('📸 Current photo count: ${currentState.attachedPhotoPaths.length}');
 
     // Check if we can add more photos
     if (!_imagePickerService.canAddMorePhotos(
       currentState.attachedPhotoPaths.length,
     )) {
-      print('📸 Cannot add more photos - limit reached');
       return;
     }
 
     try {
-      print('📸 Calling image picker service...');
       final files = await _imagePickerService.pickMultipleImages(
-        imageQuality: (UIConstants.imageQuality * 100).round(),
+        imageQuality: UIConstants.imageQuality,
       );
-
-      print('📸 Image picker returned ${files.length} files');
 
       if (files.isNotEmpty) {
         // Calculate how many photos we can actually add
@@ -88,28 +80,19 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         );
         final photosToAdd = files.take(remainingSlots).toList();
 
-        print('📸 Can add ${photosToAdd.length} photos (${remainingSlots} slots remaining)');
-
         if (photosToAdd.isNotEmpty) {
-          print('📸 Saving images to local storage...');
           // Save images to local storage and get their paths
           final savedPaths = await _fileStorageService.saveImages(photosToAdd);
-
-          print('📸 Saved ${savedPaths.length} images successfully');
 
           if (savedPaths.isNotEmpty) {
             final newPhotoPaths = List<String>.from(
               currentState.attachedPhotoPaths,
             )..addAll(savedPaths);
-            print('📸 Updated photo paths: $newPhotoPaths');
             emit(currentState.copyWith(attachedPhotoPaths: newPhotoPaths));
           }
         }
-      } else {
-        print('📸 No files selected or permission denied');
       }
     } catch (e) {
-      print('❌ Error in photo selection: $e');
       // Handle error silently or show user-friendly message
     }
   }
