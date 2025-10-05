@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
-import 'package:my_flutter_app/core/utils/app_initialization_service.dart';
 
 /// Splash screen widget that displays app branding and loading indicator
 class SplashScreen extends StatefulWidget {
@@ -55,13 +53,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _navigateToMainApp() async {
     try {
-      // Wait for background initialization to complete
-      print('⏳ Waiting for background initialization...');
-      final appInitService = getIt<AppInitializationService>();
-      await appInitService.initializeApp();
-      print('✅ Background initialization completed');
-
-      // Then wait for minimum display duration
+      // Wait for minimum display duration to show splash screen
       await Future.delayed(UIConstants.splashMinDisplayDuration);
 
       // Navigate to main app
@@ -69,8 +61,8 @@ class _SplashScreenState extends State<SplashScreen>
         context.go('/');
       }
     } catch (e) {
-      print('❌ Error during splash screen initialization: $e');
-      // Still navigate even if initialization fails
+      print('❌ Error during splash screen navigation: $e');
+      // Still navigate even if there's an error
       if (mounted) {
         context.go('/');
       }

@@ -12,13 +12,9 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:my_flutter_app/core/database/database_helper.dart' as _i607;
-import 'package:my_flutter_app/core/database/migration_service.dart' as _i273;
 import 'package:my_flutter_app/core/router/tab_controller.dart' as _i1002;
-import 'package:my_flutter_app/core/utils/app_initialization_service.dart'
-    as _i616;
 import 'package:my_flutter_app/core/utils/file_storage_service.dart' as _i658;
-import 'package:my_flutter_app/core/utils/image_path_migration_service.dart'
-    as _i261;
+import 'package:my_flutter_app/core/utils/image_path_service.dart' as _i1035;
 import 'package:my_flutter_app/core/utils/image_picker_service.dart' as _i772;
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart'
     as _i1036;
@@ -57,20 +53,12 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     gh.factory<_i658.FileStorageService>(() => _i658.FileStorageService());
-    gh.factory<_i261.ImagePathMigrationService>(
-      () => _i261.ImagePathMigrationService(),
-    );
     gh.factory<_i772.ImagePickerService>(() => _i772.ImagePickerService());
     gh.factory<_i1002.AppTabController>(() => _i1002.AppTabController());
+    gh.factory<_i1035.ImagePathService>(() => _i1035.ImagePathService());
     gh.singleton<_i607.DatabaseHelper>(() => _i607.DatabaseHelper.new());
     gh.factory<_i424.JournalLocalDataSource>(
       () => _i424.JournalLocalDataSourceImpl(),
-    );
-    gh.factory<_i273.MigrationService>(
-      () => _i273.MigrationService(
-        gh<_i607.DatabaseHelper>(),
-        gh<_i261.ImagePathMigrationService>(),
-      ),
     );
     gh.factory<_i690.JournalRepository>(
       () => _i705.JournalRepositoryImpl(
@@ -107,9 +95,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i368.GetJournalById>(
       () => _i368.GetJournalById(gh<_i690.JournalRepository>()),
-    );
-    gh.factory<_i616.AppInitializationService>(
-      () => _i616.AppInitializationService(gh<_i273.MigrationService>()),
     );
     gh.factory<_i160.MemoryBloc>(
       () => _i160.MemoryBloc(getJournals: gh<_i654.GetJournals>()),

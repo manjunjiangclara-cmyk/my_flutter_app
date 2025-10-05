@@ -43,7 +43,7 @@ class FileStorageService {
   }
 
   /// Save an image file to local storage
-  /// Returns the local file path if successful, null otherwise
+  /// Returns the relative file path if successful, null otherwise
   Future<String?> saveImage(File imageFile) async {
     try {
       // Ensure the images directory exists
@@ -56,13 +56,21 @@ class FileStorageService {
       // Copy the file to the local storage
       final localFile = await imageFile.copy(localPath);
 
+      // Convert to relative path for storage
+      final documentsDir = await getApplicationDocumentsDirectory();
+      final relativePath = path.relative(
+        localFile.path,
+        from: documentsDir.path,
+      );
+
       // Debug: Print the saved path
       print('✅ Image saved to: ${localFile.path}');
+      print('📁 Relative path: $relativePath');
       print('📁 Images directory: ${imagesDir.path}');
       print('📄 File exists: ${await localFile.exists()}');
       print('📏 File size: ${await localFile.length()} bytes');
 
-      return localFile.path;
+      return relativePath; // Return relative path instead of absolute
     } catch (e) {
       print('❌ Error saving image: $e');
       return null;

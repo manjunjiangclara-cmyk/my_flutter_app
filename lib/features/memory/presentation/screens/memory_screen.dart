@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/core/utils/performance_monitor.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_event.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_state.dart';
@@ -65,6 +66,20 @@ class _MemoryList extends StatefulWidget {
 class _MemoryListState extends State<_MemoryList> {
   // Track which month-year groups are expanded (all expanded by default)
   final Set<MonthYearKey> _expandedGroups = <MonthYearKey>{};
+  bool _hasLoadedData = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Load data when the widget is first created
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_hasLoadedData) {
+        PerformanceMonitor.startTiming('Memory Data Loading');
+        context.read<MemoryBloc>().add(const MemoryLoadRequested());
+        _hasLoadedData = true;
+      }
+    });
+  }
 
   /// Toggles the expanded state of a month-year group
   void _toggleGroup(MonthYearKey monthYearKey) {

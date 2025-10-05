@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
-import 'package:my_flutter_app/core/utils/image_path_migration_service.dart';
+import 'package:my_flutter_app/core/utils/image_path_service.dart';
 
 class ImageCard extends StatefulWidget {
   final String imagePath;
@@ -20,41 +20,27 @@ class ImageCard extends StatefulWidget {
 }
 
 class _ImageCardState extends State<ImageCard> {
-  String? _validImagePath;
-  bool _isLoading = true;
-  final ImagePathMigrationService _migrationService =
-      ImagePathMigrationService();
+  String? _absoluteImagePath;
+  final ImagePathService _imagePathService = ImagePathService();
 
   @override
   void initState() {
     super.initState();
-    _validateAndMigrateImagePath();
+    _convertToAbsolutePath();
   }
 
-  Future<void> _validateAndMigrateImagePath() async {
+  Future<void> _convertToAbsolutePath() async {
     try {
-      // Check if the original path is valid
-      if (await _migrationService.isImagePathValid(widget.imagePath)) {
-        setState(() {
-          _validImagePath = widget.imagePath;
-          _isLoading = false;
-        });
-        return;
-      }
-
-      // Try to migrate the path
-      final migratedPath = await _migrationService.migrateImagePath(
+      final absolutePath = await _imagePathService.getAbsolutePath(
         widget.imagePath,
       );
       setState(() {
-        _validImagePath = migratedPath;
-        _isLoading = false;
+        _absoluteImagePath = absolutePath;
       });
     } catch (e) {
-      print('❌ Error validating image path: $e');
+      print('❌ Error converting image path: $e');
       setState(() {
-        _validImagePath = null;
-        _isLoading = false;
+        _absoluteImagePath = null;
       });
     }
   }
@@ -68,26 +54,11 @@ class _ImageCardState extends State<ImageCard> {
   }
 
   Widget _buildImage() {
-    if (_isLoading) {
-      return _buildLoadingWidget();
-    }
-
-    if (_validImagePath == null) {
+    if (_absoluteImagePath == null) {
       return _buildErrorWidget(context, AppStrings.imageNotFound, null);
     }
 
-    final file = File(_validImagePath!);
-
-    // Debug logging
-    file.exists().then((exists) {
-      print('🖼️ ImageCard - Path: $_validImagePath');
-      print('🖼️ ImageCard - File exists: $exists');
-      if (exists) {
-        file.length().then((size) {
-          print('🖼️ ImageCard - File size: $size bytes');
-        });
-      }
-    });
+    final file = File(_absoluteImagePath!);
 
     return Image.file(
       file,
@@ -98,26 +69,13 @@ class _ImageCardState extends State<ImageCard> {
     );
   }
 
-  Widget _buildLoadingWidget() {
-    return Container(
-      height: widget.imageHeight,
-      color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
-      child: Center(
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          color: Theme.of(context).colorScheme.primary,
-        ),
-      ),
-    );
-  }
-
   Widget _buildErrorWidget(
     BuildContext context,
     Object error,
     StackTrace? stackTrace,
   ) {
-    // Log the error for debugging
-    print('ImageCard Error - Path: ${widget.imagePath}, Error: $error');
+    // Keep logs lightweight to avoid UI jank from excessive printing
+    debugPrint('ImageCard error: ${error.runtimeType} for ${widget.imagePath}');
 
     return Container(
       height: widget.imageHeight,
