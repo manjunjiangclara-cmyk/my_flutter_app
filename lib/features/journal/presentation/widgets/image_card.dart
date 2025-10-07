@@ -21,7 +21,8 @@ class ImageCard extends StatefulWidget {
 
 class _ImageCardState extends State<ImageCard> {
   String? _absoluteImagePath;
-  final ImagePathService _imagePathService = ImagePathService();
+  bool _isConvertingPath = true;
+  static final ImagePathService _imagePathService = ImagePathService();
 
   @override
   void initState() {
@@ -36,11 +37,12 @@ class _ImageCardState extends State<ImageCard> {
       );
       setState(() {
         _absoluteImagePath = absolutePath;
+        _isConvertingPath = false;
       });
     } catch (e) {
-      print('❌ Error converting image path: $e');
       setState(() {
         _absoluteImagePath = null;
+        _isConvertingPath = false;
       });
     }
   }
@@ -54,6 +56,16 @@ class _ImageCardState extends State<ImageCard> {
   }
 
   Widget _buildImage() {
+    // Show loading indicator while converting path
+    if (_isConvertingPath) {
+      return Container(
+        height: widget.imageHeight,
+        color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+        child: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    // Show error if path conversion failed
     if (_absoluteImagePath == null) {
       return _buildErrorWidget(context, AppStrings.imageNotFound, null);
     }
@@ -74,9 +86,6 @@ class _ImageCardState extends State<ImageCard> {
     Object error,
     StackTrace? stackTrace,
   ) {
-    // Keep logs lightweight to avoid UI jank from excessive printing
-    debugPrint('ImageCard error: ${error.runtimeType} for ${widget.imagePath}');
-
     return Container(
       height: widget.imageHeight,
       color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
