@@ -70,25 +70,31 @@ class _PhotoViewerState extends State<PhotoViewer> {
                   child: InteractiveViewer(
                     minScale: UIConstants.photoViewerMinScale,
                     maxScale: UIConstants.photoViewerMaxScale,
-                    child: Image.file(
-                      File(widget.photoPaths[index]),
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.surfaceContainerHighest,
-                          child: Center(
-                            child: Icon(
-                              Icons.broken_image,
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Image.file(
+                          File(widget.photoPaths[index]),
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
                               color: Theme.of(
                                 context,
-                              ).colorScheme.onSurfaceVariant,
-                              size: UIConstants.photoViewerErrorIconSize,
-                            ),
-                          ),
-                        );
-                      },
+                              ).colorScheme.surfaceContainerHighest,
+                              child: Center(
+                                child: Icon(
+                                  Icons.broken_image,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                  size: UIConstants.photoViewerErrorIconSize,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -96,7 +102,7 @@ class _PhotoViewerState extends State<PhotoViewer> {
             },
           ),
 
-          // Top controls
+          // Top controls - only show image counter
           Positioned(
             top: 0,
             left: 0,
@@ -121,14 +127,6 @@ class _PhotoViewerState extends State<PhotoViewer> {
                 ),
                 child: Row(
                   children: [
-                    IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: Icon(
-                        Icons.close,
-                        color: Theme.of(context).colorScheme.onSurface,
-                        size: UIConstants.defaultIconSize,
-                      ),
-                    ),
                     const Spacer(),
                     Text(
                       '${_currentIndex + 1} / ${widget.photoPaths.length}',
@@ -138,65 +136,12 @@ class _PhotoViewerState extends State<PhotoViewer> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
+                    const Spacer(),
                   ],
                 ),
               ),
             ),
           ),
-
-          // Bottom controls (optional - for future features like delete, share, etc.)
-          if (widget.photoPaths.length > 1)
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: SafeArea(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: UIConstants.defaultPadding,
-                    vertical: UIConstants.smallPadding,
-                  ),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: [
-                        Theme.of(context).colorScheme.surface.withValues(
-                          alpha: UIConstants.photoViewerGradientOpacity,
-                        ),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Page indicator dots
-                      ...List.generate(
-                        widget.photoPaths.length,
-                        (index) => Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: UIConstants.photoViewerDotSpacing,
-                          ),
-                          width: UIConstants.photoViewerDotSize,
-                          height: UIConstants.photoViewerDotSize,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: index == _currentIndex
-                                ? Theme.of(context).colorScheme.onSurface
-                                : Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface.withValues(
-                                    alpha: UIConstants.photoViewerDotOpacity,
-                                  ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
         ],
       ),
     );
