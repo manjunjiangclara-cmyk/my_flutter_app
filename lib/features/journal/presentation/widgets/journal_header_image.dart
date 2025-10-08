@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
-import 'package:my_flutter_app/core/utils/image_path_service.dart';
+import 'package:my_flutter_app/core/utils/image_widget_utils.dart';
 import 'package:my_flutter_app/features/journal/presentation/strings/journal_strings.dart';
 
 /// Header image widget for journal view
@@ -18,7 +18,6 @@ class JournalHeaderImage extends StatefulWidget {
 
 class _JournalHeaderImageState extends State<JournalHeaderImage> {
   String? _absoluteImagePath;
-  static final ImagePathService _imagePathService = ImagePathService();
 
   @override
   void initState() {
@@ -29,19 +28,14 @@ class _JournalHeaderImageState extends State<JournalHeaderImage> {
   }
 
   Future<void> _convertToAbsolutePath() async {
-    try {
-      final absolutePath = await _imagePathService.getAbsolutePath(
-        widget.imagePaths.first,
-      );
-      setState(() {
-        _absoluteImagePath = absolutePath;
-      });
-    } catch (e) {
-      print('❌ Error converting journal header image path: $e');
-      setState(() {
-        _absoluteImagePath = null;
-      });
-    }
+    await ImageWidgetUtils.convertToAbsolutePath(
+      imagePath: widget.imagePaths.first,
+      onPathConverted: (absolutePath) {
+        setState(() {
+          _absoluteImagePath = absolutePath;
+        });
+      },
+    );
   }
 
   @override
