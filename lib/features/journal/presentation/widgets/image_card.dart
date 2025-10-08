@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
-import 'package:my_flutter_app/core/utils/image_path_service.dart';
+import 'package:my_flutter_app/core/utils/image_widget_utils.dart';
 
 class ImageCard extends StatefulWidget {
   final String imagePath;
@@ -21,7 +21,7 @@ class ImageCard extends StatefulWidget {
 
 class _ImageCardState extends State<ImageCard> {
   String? _absoluteImagePath;
-  final ImagePathService _imagePathService = ImagePathService();
+  bool _isConvertingPath = true;
 
   @override
   void initState() {
@@ -30,19 +30,15 @@ class _ImageCardState extends State<ImageCard> {
   }
 
   Future<void> _convertToAbsolutePath() async {
-    try {
-      final absolutePath = await _imagePathService.getAbsolutePath(
-        widget.imagePath,
-      );
-      setState(() {
-        _absoluteImagePath = absolutePath;
-      });
-    } catch (e) {
-      print('❌ Error converting image path: $e');
-      setState(() {
-        _absoluteImagePath = null;
-      });
-    }
+    await ImageWidgetUtils.convertToAbsolutePath(
+      imagePath: widget.imagePath,
+      onPathConverted: (absolutePath) {
+        setState(() {
+          _absoluteImagePath = absolutePath;
+          _isConvertingPath = false;
+        });
+      },
+    );
   }
 
   @override
@@ -54,6 +50,16 @@ class _ImageCardState extends State<ImageCard> {
   }
 
   Widget _buildImage() {
+    // Show modal placeholder while converting path
+    if (_isConvertingPath) {
+      return ImageWidgetUtils.buildLoadingPlaceholder(
+        context: context,
+        height: widget.imageHeight,
+        width: double.infinity,
+      );
+    }
+
+    // Show error if path conversion failed
     if (_absoluteImagePath == null) {
       return _buildErrorWidget(context, AppStrings.imageNotFound, null);
     }
@@ -74,9 +80,6 @@ class _ImageCardState extends State<ImageCard> {
     Object error,
     StackTrace? stackTrace,
   ) {
-    // Keep logs lightweight to avoid UI jank from excessive printing
-    debugPrint('ImageCard error: ${error.runtimeType} for ${widget.imagePath}');
-
     return Container(
       height: widget.imageHeight,
       color: Theme.of(context).colorScheme.outline.withOpacity(0.1),

@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 @injectable
 class ImagePathService {
   String? _cachedDocumentsDirPath;
+  final Map<String, String> _pathCache = {};
 
   /// Prewarm and cache the documents directory path to avoid repeated platform calls
   Future<void> prewarmDocumentsDirectory() async {
@@ -27,9 +28,19 @@ class ImagePathService {
         return imagePath;
       }
 
+      // Check cache first
+      if (_pathCache.containsKey(imagePath)) {
+        return _pathCache[imagePath]!;
+      }
+
       // Convert relative path to absolute
       final documentsPath = await getDocumentsDirectoryPath();
-      return path.join(documentsPath, imagePath);
+      final absolutePath = path.join(documentsPath, imagePath);
+
+      // Cache the result
+      _pathCache[imagePath] = absolutePath;
+
+      return absolutePath;
     } catch (e) {
       print('❌ Error converting image path: $e');
       return imagePath; // Return original path as fallback
@@ -41,15 +52,10 @@ class ImagePathService {
     final Map<String, String> absolutePaths = {};
 
     try {
-      // Resolve documents directory once to avoid many platform calls
-      final documentsPath = await getDocumentsDirectoryPath();
-
+      // Use individual getAbsolutePath calls to leverage caching
       for (final imagePath in imagePaths) {
-        if (path.isAbsolute(imagePath)) {
-          absolutePaths[imagePath] = imagePath;
-        } else {
-          absolutePaths[imagePath] = path.join(documentsPath, imagePath);
-        }
+        final absolutePath = await getAbsolutePath(imagePath);
+        absolutePaths[imagePath] = absolutePath;
       }
       return absolutePaths;
     } catch (e) {
@@ -79,5 +85,22 @@ class ImagePathService {
     final documentsDir = await getApplicationDocumentsDirectory();
     _cachedDocumentsDirPath = documentsDir.path;
     return _cachedDocumentsDirPath!;
+  }
+
+  /// Clear the path cache (useful for testing or when paths might change)
+  void clearCache() {
+    _pathCache.clear();
+  }
+
+  /// Get cache size for monitoring
+  int getCacheSize() {
+    return _pathCache.length;
+  }
+
+  /// Preload common paths into cache
+  Future<void> preloadPaths(List<String> imagePaths) async {
+    for (final path in imagePaths) {
+      await getAbsolutePath(path);
+    }
   }
 }

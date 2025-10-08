@@ -17,7 +17,6 @@ import '../widgets/journal_content_section.dart';
 import '../widgets/journal_delete_dialog.dart';
 import '../widgets/journal_error_state.dart';
 import '../widgets/journal_event_details.dart';
-import '../widgets/journal_header_image.dart';
 import '../widgets/journal_image_gallery.dart';
 import '../widgets/journal_loading_state.dart';
 
@@ -142,8 +141,8 @@ class _JournalViewContent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  JournalHeaderImage(imagePaths: journal.imagePaths),
-                  const SizedBox(height: Spacing.lg),
+                  // JournalHeaderImage(imagePaths: journal.imagePaths),
+                  // const SizedBox(height: Spacing.lg),
                   JournalEventDetails(
                     date: DateFormatter.formatJournalDate(journal.createdAt),
                     location: journal.location,

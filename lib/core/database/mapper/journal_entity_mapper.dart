@@ -6,10 +6,6 @@ class JournalEntityMapper {
   static Journal mapToJournal(Map<String, dynamic> map) {
     final imagePaths = parseCommaSeparatedString(map['image_paths']);
 
-    // Debug: Print image paths from database
-    print('📊 Journal ${map['id']} - Raw image_paths: "${map['image_paths']}"');
-    print('📊 Journal ${map['id']} - Parsed imagePaths: $imagePaths');
-
     return Journal(
       id: map['id'].toString(),
       content: map['content'],
