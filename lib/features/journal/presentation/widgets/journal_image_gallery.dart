@@ -11,7 +11,7 @@ class JournalImageGallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (imagePaths.length <= 1) {
+    if (imagePaths.isEmpty) {
       return const SizedBox.shrink();
     }
 
