@@ -16,8 +16,6 @@ import 'compose_state.dart';
 @injectable
 class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   final CreateJournal _createJournal;
-  final ImagePickerService _imagePickerService;
-  final FileStorageService _fileStorageService;
   final TextEditingController textController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController tagController = TextEditingController();
@@ -26,10 +24,11 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   final FocusNode locationFocusNode = FocusNode();
   final FocusNode tagFocusNode = FocusNode();
 
-  ComposeBloc(this._createJournal)
-    : _imagePickerService = getIt<ImagePickerService>(),
-      _fileStorageService = getIt<FileStorageService>(),
-      super(const ComposeInitial()) {
+  // Lazy-loaded services to avoid blocking UI during initialization
+  ImagePickerService? _imagePickerService;
+  FileStorageService? _fileStorageService;
+
+  ComposeBloc(this._createJournal) : super(const ComposeInitial()) {
     on<ComposeTextChanged>(_onTextChanged);
     on<ComposePhotoAddedFromGallery>(_onPhotoAddedFromGallery);
     on<ComposePhotosAdded>(_onPhotosAdded);
@@ -42,6 +41,17 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
     // Initialize with empty content state
     add(const ComposeTextChanged(''));
+  }
+
+  // Lazy getters for services to avoid blocking UI during initialization
+  ImagePickerService get _imagePickerServiceInstance {
+    _imagePickerService ??= getIt<ImagePickerService>();
+    return _imagePickerService!;
+  }
+
+  FileStorageService get _fileStorageServiceInstance {
+    _fileStorageService ??= getIt<FileStorageService>();
+    return _fileStorageService!;
   }
 
   void _onTextChanged(ComposeTextChanged event, Emitter<ComposeState> emit) {
@@ -62,27 +72,28 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         : const ComposeContent();
 
     // Check if we can add more photos
-    if (!_imagePickerService.canAddMorePhotos(
+    if (!_imagePickerServiceInstance.canAddMorePhotos(
       currentState.attachedPhotoPaths.length,
     )) {
       return;
     }
 
     try {
-      final files = await _imagePickerService.pickMultipleImages(
+      final files = await _imagePickerServiceInstance.pickMultipleImages(
         imageQuality: UIConstants.imageQuality,
       );
 
       if (files.isNotEmpty) {
         // Calculate how many photos we can actually add
-        final remainingSlots = _imagePickerService.getRemainingPhotoSlots(
-          currentState.attachedPhotoPaths.length,
-        );
+        final remainingSlots = _imagePickerServiceInstance
+            .getRemainingPhotoSlots(currentState.attachedPhotoPaths.length);
         final photosToAdd = files.take(remainingSlots).toList();
 
         if (photosToAdd.isNotEmpty) {
           // Save images to local storage and get their paths
-          final savedPaths = await _fileStorageService.saveImages(photosToAdd);
+          final savedPaths = await _fileStorageServiceInstance.saveImages(
+            photosToAdd,
+          );
 
           if (savedPaths.isNotEmpty) {
             final newPhotoPaths = List<String>.from(
@@ -105,7 +116,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     if (event.photoPaths.isEmpty) return;
 
     // Calculate how many photos we can actually add
-    final remainingSlots = _imagePickerService.getRemainingPhotoSlots(
+    final remainingSlots = _imagePickerServiceInstance.getRemainingPhotoSlots(
       currentState.attachedPhotoPaths.length,
     );
     final photoPathsToAdd = event.photoPaths.take(remainingSlots).toList();
@@ -124,7 +135,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
           event.index < currentState.attachedPhotoPaths.length) {
         // Delete the file from local storage
         final filePathToDelete = currentState.attachedPhotoPaths[event.index];
-        _fileStorageService.deleteFile(filePathToDelete);
+        _fileStorageServiceInstance.deleteFile(filePathToDelete);
 
         final newPhotoPaths = List<String>.from(currentState.attachedPhotoPaths)
           ..removeAt(event.index);

@@ -52,11 +52,29 @@ class ImagePathService {
     final Map<String, String> absolutePaths = {};
 
     try {
-      // Use individual getAbsolutePath calls to leverage caching
+      // Batch process paths for better performance
+      final documentsPath = await getDocumentsDirectoryPath();
+
       for (final imagePath in imagePaths) {
-        final absolutePath = await getAbsolutePath(imagePath);
+        // Check cache first
+        if (_pathCache.containsKey(imagePath)) {
+          absolutePaths[imagePath] = _pathCache[imagePath]!;
+          continue;
+        }
+
+        // If already absolute, return as is
+        if (path.isAbsolute(imagePath)) {
+          absolutePaths[imagePath] = imagePath;
+          _pathCache[imagePath] = imagePath;
+          continue;
+        }
+
+        // Convert relative path to absolute
+        final absolutePath = path.join(documentsPath, imagePath);
         absolutePaths[imagePath] = absolutePath;
+        _pathCache[imagePath] = absolutePath;
       }
+
       return absolutePaths;
     } catch (e) {
       // Fallback: best-effort per item
