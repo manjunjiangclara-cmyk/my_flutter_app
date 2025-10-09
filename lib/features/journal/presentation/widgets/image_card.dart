@@ -44,7 +44,7 @@ class _ImageCardState extends State<ImageCard> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(UIConstants.defaultCardRadius),
+      borderRadius: BorderRadius.circular(UIConstants.largeRadius),
       child: _buildImage(),
     );
   }

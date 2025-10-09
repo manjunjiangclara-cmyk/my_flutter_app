@@ -53,10 +53,10 @@ class _JournalHeaderImageState extends State<JournalHeaderImage> {
         width: double.infinity,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.outline,
-          borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+          borderRadius: BorderRadius.circular(UIConstants.largeRadius),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+          borderRadius: BorderRadius.circular(UIConstants.largeRadius),
           child: Image.file(
             File(_absoluteImagePath!),
             fit: BoxFit.cover,

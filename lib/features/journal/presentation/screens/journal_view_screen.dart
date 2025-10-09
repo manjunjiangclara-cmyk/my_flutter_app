@@ -5,6 +5,8 @@ import 'package:my_flutter_app/core/strings/app_strings.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/date_formatter.dart';
+import 'package:my_flutter_app/core/utils/ui_calculations.dart';
+import 'package:my_flutter_app/features/journal/presentation/widgets/journal_header_image.dart';
 
 import '../../../../shared/domain/entities/journal.dart';
 import '../../../../shared/presentation/widgets/tag_chip.dart';
@@ -116,7 +118,7 @@ class _JournalViewScreenView extends StatelessWidget {
 }
 
 /// A widget to display the journal content with rich UI
-class _JournalViewContent extends StatelessWidget {
+class _JournalViewContent extends StatefulWidget {
   final Journal journal;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
@@ -130,37 +132,69 @@ class _JournalViewContent extends StatelessWidget {
   });
 
   @override
+  State<_JournalViewContent> createState() => _JournalViewContentState();
+}
+
+class _JournalViewContentState extends State<_JournalViewContent> {
+  bool _isAppBarVisible = false;
+
+  void _toggleAppBar() {
+    setState(() {
+      _isAppBarVisible = !_isAppBarVisible;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final topBarArea = UICalculations.getTopBarArea(context, _isAppBarVisible);
+
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          JournalAppBar(onEdit: onEdit, onDelete: onDelete, onShare: onShare),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(UIConstants.journalContentPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  // JournalHeaderImage(imagePaths: journal.imagePaths),
-                  // const SizedBox(height: Spacing.lg),
-                  JournalEventDetails(
-                    date: DateFormatter.formatJournalDate(journal.createdAt),
-                    location: journal.location,
-                  ),
-                  const SizedBox(height: Spacing.sm),
-                  if (journal.tags.isNotEmpty) ...[
-                    TagChips(tags: journal.tags),
+      body: GestureDetector(
+        onTap: _toggleAppBar,
+        child: CustomScrollView(
+          slivers: <Widget>[
+            if (_isAppBarVisible)
+              JournalAppBar(
+                onEdit: widget.onEdit,
+                onDelete: widget.onDelete,
+                onShare: widget.onShare,
+              ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: _isAppBarVisible
+                      ? UIConstants.journalContentPadding
+                      : topBarArea + UIConstants.journalContentPadding,
+                  left: UIConstants.journalContentPadding,
+                  right: UIConstants.journalContentPadding,
+                  bottom: UIConstants.journalContentPadding,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    JournalHeaderImage(imagePaths: widget.journal.imagePaths),
+                    const SizedBox(height: Spacing.lg),
+                    JournalEventDetails(
+                      date: DateFormatter.formatJournalDate(
+                        widget.journal.createdAt,
+                      ),
+                      location: widget.journal.location,
+                    ),
+                    const SizedBox(height: Spacing.sm),
+                    if (widget.journal.tags.isNotEmpty) ...[
+                      TagChips(tags: widget.journal.tags),
+                      const SizedBox(height: Spacing.lg),
+                    ],
+                    JournalContentSection(content: widget.journal.content),
+                    const SizedBox(height: Spacing.lg),
+                    JournalImageGallery(imagePaths: widget.journal.imagePaths),
                     const SizedBox(height: Spacing.lg),
                   ],
-                  JournalContentSection(content: journal.content),
-                  const SizedBox(height: Spacing.lg),
-                  JournalImageGallery(imagePaths: journal.imagePaths),
-                  const SizedBox(height: Spacing.lg),
-                ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

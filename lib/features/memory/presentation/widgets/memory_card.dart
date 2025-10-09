@@ -30,7 +30,7 @@ class MemoryCard extends StatelessWidget {
     super.key,
     required this.memoryCardModel,
     this.imageHeight = UIConstants.defaultImageSize * 1.5,
-    this.borderRadius = UIConstants.defaultCardRadius,
+    this.borderRadius = UIConstants.largeRadius,
     this.borderWidth = 1.0,
     this.cardPadding = UIConstants.defaultCardPadding,
     this.sectionSpacingLarge = Spacing.lg,
@@ -44,17 +44,30 @@ class MemoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
       margin: EdgeInsets.symmetric(vertical: Spacing.sm),
-      shape: RoundedRectangleBorder(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        side: BorderSide(
+        color: Theme.of(context).colorScheme.surface,
+        border: Border.all(
           color: Theme.of(context).colorScheme.outline,
           width: borderWidth,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.shadow.withOpacity(0.08),
+            blurRadius: 12.0,
+            spreadRadius: 0.0,
+            offset: const Offset(0, 4),
+          ),
+          BoxShadow(
+            color: Theme.of(context).colorScheme.shadow.withOpacity(0.08),
+            blurRadius: 8.0,
+            spreadRadius: 0.0,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      elevation: 0,
-      color: Theme.of(context).colorScheme.surface,
       child: InkWell(
         onTap: () => context.push(
           JournalRouter.journalViewPath.replaceAll(

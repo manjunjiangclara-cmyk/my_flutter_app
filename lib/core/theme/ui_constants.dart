@@ -41,7 +41,7 @@ class UIConstants {
 
   // Card Dimensions
   static const double defaultCardPadding = 16.0;
-  static const double defaultCardRadius = 12.0;
+  static const double defaultCardRadius = 16.0;
 
   // Image Gallery
   static const double defaultImageSize = 100.0;
@@ -118,7 +118,7 @@ class UIConstants {
   // Journal View Screen
   static const double journalHeaderImageHeight = 180.0;
   static const double journalAppBarIconSize = 24.0;
-  static const double journalAppBarIconPadding = 8.0;
+  static const double journalAppBarIconPadding = 12.0;
   static const double journalContentPadding = 16.0;
 
   // Tag Chip Specific

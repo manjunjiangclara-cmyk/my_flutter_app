@@ -15,6 +15,7 @@ class ImageGalleryConfig {
   final double? itemWidth;
   final bool showRemoveButton;
   final bool enableFullscreenViewer;
+  final bool skipFirstPhoto;
   final EdgeInsets? padding;
   final Widget? emptyWidget;
 
@@ -27,6 +28,7 @@ class ImageGalleryConfig {
     this.itemWidth,
     this.showRemoveButton = false,
     this.enableFullscreenViewer = true,
+    this.skipFirstPhoto = false,
     this.padding,
     this.emptyWidget,
   });
@@ -50,6 +52,7 @@ class ImageGalleryConfig {
     itemHeight: UIConstants.journalImageGalleryItemHeight,
     showRemoveButton: false,
     enableFullscreenViewer: true,
+    skipFirstPhoto: true,
   );
 }
 
@@ -78,6 +81,19 @@ class _ImageGalleryState extends State<ImageGallery> {
   final ImagePathService _imagePathService = ImagePathService();
   Map<String, String> _absolutePaths = {};
   bool _isLoadingPaths = false;
+
+  /// Get the filtered image paths based on skipFirstPhoto configuration
+  List<String> get _filteredImagePaths {
+    if (widget.config.skipFirstPhoto) {
+      if (widget.imagePaths.length <= 1) {
+        // Show nothing if there's only 1 photo or no photos
+        return [];
+      }
+      // Skip the first photo and show the rest
+      return widget.imagePaths.skip(1).toList();
+    }
+    return widget.imagePaths;
+  }
 
   @override
   void initState() {
@@ -136,7 +152,8 @@ class _ImageGalleryState extends State<ImageGallery> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.imagePaths.isEmpty) {
+    final filteredPaths = _filteredImagePaths;
+    if (filteredPaths.isEmpty) {
       return widget.config.emptyWidget ?? const SizedBox.shrink();
     }
 
@@ -156,6 +173,7 @@ class _ImageGalleryState extends State<ImageGallery> {
   }
 
   Widget _buildLoadingGrid() {
+    final filteredPaths = _filteredImagePaths;
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -165,7 +183,7 @@ class _ImageGalleryState extends State<ImageGallery> {
         mainAxisSpacing: widget.config.mainAxisSpacing,
         childAspectRatio: widget.config.childAspectRatio,
       ),
-      itemCount: widget.imagePaths.length,
+      itemCount: filteredPaths.length,
       itemBuilder: (context, index) {
         return _buildLoadingItem();
       },
@@ -173,6 +191,7 @@ class _ImageGalleryState extends State<ImageGallery> {
   }
 
   Widget _buildImageGrid() {
+    final filteredPaths = _filteredImagePaths;
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -182,9 +201,9 @@ class _ImageGalleryState extends State<ImageGallery> {
         mainAxisSpacing: widget.config.mainAxisSpacing,
         childAspectRatio: widget.config.childAspectRatio,
       ),
-      itemCount: widget.imagePaths.length,
+      itemCount: filteredPaths.length,
       itemBuilder: (context, index) {
-        final imagePath = widget.imagePaths[index];
+        final imagePath = filteredPaths[index];
         return _buildImageItem(imagePath, index);
       },
     );
@@ -193,7 +212,7 @@ class _ImageGalleryState extends State<ImageGallery> {
   Widget _buildLoadingItem() {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+        borderRadius: BorderRadius.circular(UIConstants.largeRadius),
         border: Border.all(
           color: Theme.of(context).colorScheme.outline.withValues(
             alpha: UIConstants.photoBorderOpacity,
@@ -202,7 +221,7 @@ class _ImageGalleryState extends State<ImageGallery> {
         ),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+        borderRadius: BorderRadius.circular(UIConstants.largeRadius),
         child: Container(
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
           child: const Center(
@@ -224,7 +243,7 @@ class _ImageGalleryState extends State<ImageGallery> {
       onTap: () => _handleImageTap(index),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+          borderRadius: BorderRadius.circular(UIConstants.largeRadius),
           border: Border.all(
             color: Theme.of(context).colorScheme.outline.withValues(
               alpha: UIConstants.photoBorderOpacity,
@@ -233,7 +252,7 @@ class _ImageGalleryState extends State<ImageGallery> {
           ),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+          borderRadius: BorderRadius.circular(UIConstants.largeRadius),
           child: Stack(
             children: [
               Positioned.fill(child: _buildImage(absolutePath)),
@@ -302,7 +321,9 @@ class _ImageGalleryState extends State<ImageGallery> {
 
   void _handleImageTap(int index) {
     if (widget.onImageTap != null) {
-      widget.onImageTap!(index);
+      // Convert the filtered index back to the original index
+      final originalIndex = _getOriginalIndex(index);
+      widget.onImageTap!(originalIndex);
     } else if (widget.config.enableFullscreenViewer) {
       _openFullscreenViewer(index);
     }
@@ -314,10 +335,21 @@ class _ImageGalleryState extends State<ImageGallery> {
         .map((path) => _absolutePaths[path] ?? path)
         .toList();
 
+    // Convert the filtered index back to the original index for the viewer
+    final originalIndex = _getOriginalIndex(initialIndex);
+
     PhotoViewer.show(
       context: context,
       photoPaths: absoluteImagePaths,
-      initialIndex: initialIndex,
+      initialIndex: originalIndex,
     );
+  }
+
+  /// Convert filtered index back to original index
+  int _getOriginalIndex(int filteredIndex) {
+    if (widget.config.skipFirstPhoto && widget.imagePaths.length > 1) {
+      return filteredIndex + 1;
+    }
+    return filteredIndex;
   }
 }

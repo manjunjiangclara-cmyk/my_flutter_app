@@ -80,7 +80,7 @@ class ThemeSelectionScreen extends StatelessWidget {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+      borderRadius: BorderRadius.circular(UIConstants.largeRadius),
       child: Container(
         padding: const EdgeInsets.all(UIConstants.defaultPadding),
         decoration: BoxDecoration(
@@ -90,7 +90,7 @@ class ThemeSelectionScreen extends StatelessWidget {
                 : Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
             width: isSelected ? 2 : 1,
           ),
-          borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+          borderRadius: BorderRadius.circular(UIConstants.largeRadius),
           color: isSelected
               ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
               : null,
