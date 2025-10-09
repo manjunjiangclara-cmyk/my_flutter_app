@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
+import 'package:my_flutter_app/core/router/navigation_helper.dart';
 import 'package:my_flutter_app/core/strings/app_strings.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/date_formatter.dart';
 import 'package:my_flutter_app/core/utils/ui_calculations.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/journal_header_image.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/action_button.dart';
 
 import '../../../../shared/domain/entities/journal.dart';
 import '../../../../shared/presentation/widgets/tag_chip.dart';
@@ -14,7 +16,7 @@ import '../bloc/journal_view/journal_view_bloc.dart';
 import '../bloc/journal_view/journal_view_event.dart';
 import '../bloc/journal_view/journal_view_state.dart';
 import '../strings/journal_strings.dart';
-import '../widgets/journal_app_bar.dart';
+// Removed Sliver-based JournalAppBar usage in favor of overlay app bar
 import '../widgets/journal_content_section.dart';
 import '../widgets/journal_delete_dialog.dart';
 import '../widgets/journal_error_state.dart';
@@ -146,55 +148,251 @@ class _JournalViewContentState extends State<_JournalViewContent> {
 
   @override
   Widget build(BuildContext context) {
-    final topBarArea = UICalculations.getTopBarArea(context, _isAppBarVisible);
+    // Always use only status bar height for content padding; overlay app bar should not push content
+    final statusBarHeight = UICalculations.getTopBarArea(context, false);
 
     return Scaffold(
-      body: GestureDetector(
-        onTap: _toggleAppBar,
-        child: CustomScrollView(
-          slivers: <Widget>[
-            if (_isAppBarVisible)
-              JournalAppBar(
-                onEdit: widget.onEdit,
-                onDelete: widget.onDelete,
-                onShare: widget.onShare,
-              ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  top: _isAppBarVisible
-                      ? UIConstants.journalContentPadding
-                      : topBarArea + UIConstants.journalContentPadding,
-                  left: UIConstants.journalContentPadding,
-                  right: UIConstants.journalContentPadding,
-                  bottom: UIConstants.journalContentPadding,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    JournalHeaderImage(imagePaths: widget.journal.imagePaths),
-                    const SizedBox(height: Spacing.lg),
-                    JournalEventDetails(
-                      date: DateFormatter.formatJournalDate(
-                        widget.journal.createdAt,
-                      ),
-                      location: widget.journal.location,
+      body: Stack(
+        children: [
+          // Main scrollable content
+          GestureDetector(
+            onTap: _toggleAppBar,
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      top: statusBarHeight + UIConstants.journalContentPadding,
+                      left: UIConstants.journalContentPadding,
+                      right: UIConstants.journalContentPadding,
+                      bottom: UIConstants.journalContentPadding,
                     ),
-                    const SizedBox(height: Spacing.sm),
-                    if (widget.journal.tags.isNotEmpty) ...[
-                      TagChips(tags: widget.journal.tags),
-                      const SizedBox(height: Spacing.lg),
-                    ],
-                    JournalContentSection(content: widget.journal.content),
-                    const SizedBox(height: Spacing.lg),
-                    JournalImageGallery(imagePaths: widget.journal.imagePaths),
-                    const SizedBox(height: Spacing.lg),
-                  ],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        JournalHeaderImage(
+                          imagePaths: widget.journal.imagePaths,
+                        ),
+                        const SizedBox(height: Spacing.lg),
+                        JournalEventDetails(
+                          date: DateFormatter.formatJournalDate(
+                            widget.journal.createdAt,
+                          ),
+                          location: widget.journal.location,
+                        ),
+                        const SizedBox(height: Spacing.sm),
+                        if (widget.journal.tags.isNotEmpty) ...[
+                          TagChips(tags: widget.journal.tags),
+                          const SizedBox(height: Spacing.lg),
+                        ],
+                        JournalContentSection(content: widget.journal.content),
+                        const SizedBox(height: Spacing.lg),
+                        JournalImageGallery(
+                          imagePaths: widget.journal.imagePaths,
+                        ),
+                        const SizedBox(height: Spacing.lg),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Overlay app bar (does not push content) with gradient across status bar + toolbar
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: IgnorePointer(
+              ignoring: !_isAppBarVisible,
+              child: AnimatedSlide(
+                offset: _isAppBarVisible
+                    ? Offset.zero
+                    : const Offset(
+                        0,
+                        UIConstants.journalAppBarSlideHiddenOffsetY,
+                      ),
+                duration: UIConstants.defaultAnimation,
+                curve: Curves.easeOut,
+                child: AnimatedOpacity(
+                  opacity: _isAppBarVisible ? 1.0 : 0.0,
+                  duration: UIConstants.defaultAnimation,
+                  curve: Curves.easeOut,
+                  child: Container(
+                    height: statusBarHeight + kToolbarHeight,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Theme.of(context).colorScheme.onSurface.withValues(
+                            alpha:
+                                UIConstants.journalAppBarGradientStartOpacity,
+                          ),
+                          Theme.of(context).colorScheme.onSurface.withValues(
+                            alpha: UIConstants.journalAppBarGradientEndOpacity,
+                          ),
+                        ],
+                      ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(top: statusBarHeight),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: UIConstants.journalContentPadding,
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Theme.of(context).colorScheme.shadow
+                                        .withValues(
+                                          alpha: UIConstants
+                                              .journalAppBarActionShadowOpacity,
+                                        ),
+                                    blurRadius: UIConstants
+                                        .journalAppBarActionShadowBlur,
+                                    offset: const Offset(
+                                      0,
+                                      UIConstants
+                                          .journalAppBarActionShadowOffsetY,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              child: ActionButton.circular(
+                                svgAssetPath: 'assets/icons/close.svg',
+                                onPressed: () =>
+                                    NavigationHelper.goBack(context),
+                                tooltip: JournalStrings.closeJournal,
+                                iconSize:
+                                    UIConstants.journalAppBarIconSizeSmall,
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  right: UIConstants.journalAppBarIconPadding,
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .shadow
+                                            .withValues(
+                                              alpha: UIConstants
+                                                  .journalAppBarActionShadowOpacity,
+                                            ),
+                                        blurRadius: UIConstants
+                                            .journalAppBarActionShadowBlur,
+                                        offset: const Offset(
+                                          0,
+                                          UIConstants
+                                              .journalAppBarActionShadowOffsetY,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ActionButton.circular(
+                                    svgAssetPath: 'assets/icons/edit.svg',
+                                    onPressed: widget.onEdit,
+                                    tooltip: JournalStrings.editJournal,
+                                    iconSize:
+                                        UIConstants.journalAppBarIconSizeSmall,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  right: UIConstants.journalAppBarIconPadding,
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .shadow
+                                            .withValues(
+                                              alpha: UIConstants
+                                                  .journalAppBarActionShadowOpacity,
+                                            ),
+                                        blurRadius: UIConstants
+                                            .journalAppBarActionShadowBlur,
+                                        offset: const Offset(
+                                          0,
+                                          UIConstants
+                                              .journalAppBarActionShadowOffsetY,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ActionButton.circular(
+                                    svgAssetPath: 'assets/icons/delete.svg',
+                                    onPressed: widget.onDelete,
+                                    tooltip: JournalStrings.deleteJournal,
+                                    iconSize:
+                                        UIConstants.journalAppBarIconSizeSmall,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  right: UIConstants.journalAppBarIconPadding,
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .shadow
+                                            .withValues(
+                                              alpha: UIConstants
+                                                  .journalAppBarActionShadowOpacity,
+                                            ),
+                                        blurRadius: UIConstants
+                                            .journalAppBarActionShadowBlur,
+                                        offset: const Offset(
+                                          0,
+                                          UIConstants
+                                              .journalAppBarActionShadowOffsetY,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ActionButton.circular(
+                                    svgAssetPath: 'assets/icons/share.svg',
+                                    onPressed: widget.onShare,
+                                    tooltip: JournalStrings.shareJournal,
+                                    iconSize:
+                                        UIConstants.journalAppBarIconSizeSmall,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

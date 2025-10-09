@@ -118,8 +118,16 @@ class UIConstants {
   // Journal View Screen
   static const double journalHeaderImageHeight = 180.0;
   static const double journalAppBarIconSize = 24.0;
+  static const double journalAppBarIconSizeSmall = 20.0;
   static const double journalAppBarIconPadding = 12.0;
   static const double journalContentPadding = 16.0;
+  static const double journalAppBarOverlayOpacity = 0.8;
+  static const double journalAppBarGradientStartOpacity = 0.5;
+  static const double journalAppBarGradientEndOpacity = 0.0;
+  static const double journalAppBarActionShadowOpacity = 0.25;
+  static const double journalAppBarActionShadowBlur = 8.0;
+  static const double journalAppBarActionShadowOffsetY = 2.0;
+  static const double journalAppBarSlideHiddenOffsetY = -1.0;
 
   // Tag Chip Specific
   static const double tagChipWidthPadding = 16.0;

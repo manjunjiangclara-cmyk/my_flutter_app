@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/router/router_exports.dart';
 import 'package:my_flutter_app/core/strings.dart';
@@ -12,6 +13,12 @@ import 'package:provider/provider.dart';
 
 void main() {
   PerformanceMonitor.startTiming('App Startup');
+
+  // Lock orientation to portrait only
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   // Setup global error handling
   GlobalErrorHandler.setup();
