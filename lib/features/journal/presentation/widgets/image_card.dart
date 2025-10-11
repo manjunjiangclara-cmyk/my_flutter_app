@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/strings.dart';
@@ -22,6 +23,7 @@ class ImageCard extends StatefulWidget {
 class _ImageCardState extends State<ImageCard> {
   String? _absoluteImagePath;
   bool _isConvertingPath = true;
+  double? _aspectRatio; // width / height
 
   @override
   void initState() {
@@ -33,18 +35,51 @@ class _ImageCardState extends State<ImageCard> {
     await ImageWidgetUtils.convertToAbsolutePath(
       imagePath: widget.imagePath,
       onPathConverted: (absolutePath) {
+        if (!mounted) return;
         setState(() {
           _absoluteImagePath = absolutePath;
           _isConvertingPath = false;
         });
+        _loadAspectRatio();
       },
     );
   }
 
+  Future<void> _loadAspectRatio() async {
+    final path = _absoluteImagePath;
+    if (path == null) return;
+    try {
+      final file = File(path);
+      final bytes = await file.readAsBytes();
+      final ui.Codec codec = await ui.instantiateImageCodec(bytes);
+      final ui.FrameInfo frame = await codec.getNextFrame();
+      final ui.Image image = frame.image;
+      final double ratio = image.width / image.height;
+      if (!mounted) return;
+      setState(() {
+        _aspectRatio = ratio;
+      });
+    } catch (_) {
+      // If decoding fails, keep aspect ratio null so we fall back to placeholder
+      if (!mounted) return;
+      setState(() {
+        _aspectRatio = null;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(UIConstants.defaultCardRadius),
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: UIConstants.enableImageShadows
+          ? UIConstants.memoryImageElevation
+          : 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(UIConstants.imageInnerRadius),
+      ),
+      surfaceTintColor: Colors.transparent,
+      clipBehavior: Clip.antiAlias,
       child: _buildImage(),
     );
   }
@@ -65,13 +100,23 @@ class _ImageCardState extends State<ImageCard> {
     }
 
     final file = File(_absoluteImagePath!);
+    // If we haven't decoded the aspect ratio yet, keep showing a stable placeholder
+    if (_aspectRatio == null) {
+      return ImageWidgetUtils.buildLoadingPlaceholder(
+        context: context,
+        height: widget.imageHeight,
+        width: double.infinity,
+      );
+    }
 
-    return Image.file(
-      file,
-      height: widget.imageHeight,
-      width: double.infinity,
-      fit: BoxFit.cover,
-      errorBuilder: _buildErrorWidget,
+    return AspectRatio(
+      aspectRatio: _aspectRatio!,
+      child: Image.file(
+        file,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: _buildErrorWidget,
+      ),
     );
   }
 

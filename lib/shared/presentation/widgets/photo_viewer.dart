@@ -113,18 +113,6 @@ class _PhotoViewerState extends State<PhotoViewer> {
                   horizontal: UIConstants.defaultPadding,
                   vertical: UIConstants.smallPadding,
                 ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Theme.of(context).colorScheme.surface.withValues(
-                        alpha: UIConstants.photoViewerGradientOpacity,
-                      ),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
                 child: Row(
                   children: [
                     const Spacer(),

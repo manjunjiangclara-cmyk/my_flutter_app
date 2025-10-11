@@ -28,7 +28,7 @@ class TagsDisplay extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+        borderRadius: BorderRadius.circular(UIConstants.largeRadius),
         border: Border.all(
           color: Theme.of(
             context,

@@ -9,19 +9,22 @@ class BottomNavItem {
   /// The text label to display below the icon.
   final String label;
 
-  /// Whether this item is currently selected.
-  final bool isSelected;
-
-  const BottomNavItem({
-    required this.emoji,
-    required this.label,
-    this.isSelected = false,
-  });
+  const BottomNavItem({required this.emoji, required this.label});
 
   /// Creates a BottomNavigationBarItem with the configured emoji and label.
   BottomNavigationBarItem build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return BottomNavigationBarItem(
-      icon: Text(emoji, style: AppTypography.titleMedium),
+      icon: Text(
+        emoji,
+        style: AppTypography.titleMedium.copyWith(
+          color: colorScheme.onSurfaceVariant,
+        ),
+      ),
+      activeIcon: Text(
+        emoji,
+        style: AppTypography.titleMedium.copyWith(color: colorScheme.secondary),
+      ),
       label: label,
     );
   }

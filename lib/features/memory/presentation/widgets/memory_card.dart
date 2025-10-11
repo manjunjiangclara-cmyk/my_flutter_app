@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
@@ -10,7 +11,7 @@ import 'package:my_flutter_app/features/journal/presentation/widgets/image_card.
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/tag_chip.dart';
 
-class MemoryCard extends StatelessWidget {
+class MemoryCard extends StatefulWidget {
   final MemoryCardModel memoryCardModel;
 
   // Configurable UI parameters with sensible defaults
@@ -30,7 +31,7 @@ class MemoryCard extends StatelessWidget {
     super.key,
     required this.memoryCardModel,
     this.imageHeight = UIConstants.defaultImageSize * 1.5,
-    this.borderRadius = UIConstants.defaultCardRadius,
+    this.borderRadius = UIConstants.imageCardRadius,
     this.borderWidth = 1.0,
     this.cardPadding = UIConstants.defaultCardPadding,
     this.sectionSpacingLarge = Spacing.lg,
@@ -43,44 +44,88 @@ class MemoryCard extends StatelessWidget {
   });
 
   @override
+  State<MemoryCard> createState() => _MemoryCardState();
+}
+
+class _MemoryCardState extends State<MemoryCard>
+    with AutomaticKeepAliveClientMixin {
+  bool _isPressed = false;
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: Spacing.sm),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(borderRadius),
-        side: BorderSide(
-          color: Theme.of(context).colorScheme.outline,
-          width: borderWidth,
-        ),
-      ),
-      elevation: 0,
-      color: Theme.of(context).colorScheme.surface,
-      child: InkWell(
-        onTap: () => context.push(
-          JournalRouter.journalViewPath.replaceAll(
-            ':journalId',
-            memoryCardModel.journalId,
+    super.build(context);
+    final double scale = _isPressed ? UIConstants.memoryCardPressScale : 1.0;
+
+    return AnimatedScale(
+      scale: scale,
+      duration: UIConstants.memoryCardPressDuration,
+      curve: Curves.easeOutCubic,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: Spacing.sm),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Color.lerp(
+                  Theme.of(context).colorScheme.surface,
+                  Colors.white,
+                  UIConstants.memoryCardDarkLightenAmount,
+                )!
+              : Theme.of(context).colorScheme.surface,
+          border: Border.all(
+            color: Theme.of(context).colorScheme.outline,
+            width: widget.borderWidth,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).colorScheme.shadow.withOpacity(0.08),
+              blurRadius: 12.0,
+              spreadRadius: 0.0,
+              offset: const Offset(0, 4),
+            ),
+            BoxShadow(
+              color: Theme.of(context).colorScheme.shadow.withOpacity(0.08),
+              blurRadius: 8.0,
+              spreadRadius: 0.0,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
-        borderRadius: BorderRadius.circular(borderRadius),
-        child: Padding(
-          padding: EdgeInsets.all(cardPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              if (memoryCardModel.imagePaths.isNotEmpty) ...[
-                ImageCard(
-                  imagePath: memoryCardModel.imagePaths.first,
-                  imageHeight: imageHeight,
-                ),
-                SizedBox(height: sectionSpacingLarge),
+        child: InkWell(
+          onTap: () {
+            HapticFeedback.lightImpact();
+            context.push(
+              JournalRouter.journalViewPath.replaceAll(
+                ':journalId',
+                widget.memoryCardModel.journalId,
+              ),
+            );
+          },
+          onTapDown: (_) => setState(() => _isPressed = true),
+          onTapCancel: () => setState(() => _isPressed = false),
+          onTapUp: (_) => setState(() => _isPressed = false),
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+          child: Padding(
+            padding: EdgeInsets.all(widget.cardPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                if (widget.memoryCardModel.imagePaths.isNotEmpty) ...[
+                  ImageCard(
+                    imagePath: widget.memoryCardModel.imagePaths.first,
+                    imageHeight: widget.imageHeight,
+                  ),
+                  SizedBox(height: widget.sectionSpacingLarge),
+                ],
+                _buildHeaderRow(),
+                SizedBox(height: widget.sectionSpacingSmall),
+                _buildTags(),
+                SizedBox(height: widget.sectionSpacingSmall),
+                _buildDescription(),
               ],
-              _buildHeaderRow(),
-              SizedBox(height: sectionSpacingSmall),
-              _buildTags(),
-              SizedBox(height: sectionSpacingSmall),
-              _buildDescription(),
-            ],
+            ),
           ),
         ),
       ),
@@ -92,7 +137,7 @@ class MemoryCard extends StatelessWidget {
       children: <Widget>[
         Text(
           DateFormatter.formatDate(
-            memoryCardModel.date,
+            widget.memoryCardModel.date,
             format: AppStrings.memoryCardDateFormat,
           ),
           style: AppTypography.labelMedium,
@@ -101,10 +146,10 @@ class MemoryCard extends StatelessWidget {
         SizedBox(width: Spacing.xs),
         SizedBox(
           child:
-              memoryCardModel.location != null &&
-                  memoryCardModel.location!.isNotEmpty
+              widget.memoryCardModel.location != null &&
+                  widget.memoryCardModel.location!.isNotEmpty
               ? Text(
-                  "📍${memoryCardModel.location}",
+                  "📍${widget.memoryCardModel.location}",
                   style: AppTypography.labelSmall,
                 )
               : const SizedBox.shrink(),
@@ -115,13 +160,16 @@ class MemoryCard extends StatelessWidget {
 
   Widget _buildTags() {
     return TagChips(
-      tags: memoryCardModel.tags,
-      spacing: tagSpacing,
-      runSpacing: tagRunSpacing,
+      tags: widget.memoryCardModel.tags,
+      spacing: widget.tagSpacing,
+      runSpacing: widget.tagRunSpacing,
     );
   }
 
   Widget _buildDescription() {
-    return Text(memoryCardModel.description, style: AppTypography.bodyLarge);
+    return Text(
+      widget.memoryCardModel.description,
+      style: AppTypography.bodyLarge,
+    );
   }
 }

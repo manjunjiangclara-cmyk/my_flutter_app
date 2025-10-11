@@ -149,7 +149,9 @@ class ImageGallery extends StatelessWidget {
         return Opacity(
           opacity: UIConstants.imageGalleryOpacity,
           child: Material(
-            elevation: UIConstants.imageGalleryElevation,
+            elevation: UIConstants.enableImageShadows
+                ? UIConstants.imageGalleryElevation
+                : 0,
             child: child,
           ),
         );

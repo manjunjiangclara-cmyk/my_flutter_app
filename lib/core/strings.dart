@@ -31,7 +31,7 @@ class AppStrings {
 
   // ---------- Screens: Compose ----------
   static const String composePrompt = 'Hey, What is on your mind today?';
-  static String get sampleDate => DateFormatter.getTodayFormatted();
+  static String get sampleDate => DateFormatter.getTodayFormattedCached();
   static const String post = 'Post';
   static const String addLocation = 'Add Location';
   static const String addTag = 'Add Tag';

@@ -21,7 +21,7 @@ class LocationDisplay extends StatelessWidget {
         color: Theme.of(
           context,
         ).colorScheme.outline.withValues(alpha: UIConstants.dialogOpacity),
-        borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+        borderRadius: BorderRadius.circular(UIConstants.largeRadius),
       ),
       child: Row(
         children: [
