@@ -86,13 +86,13 @@ class ThemeSelectionScreen extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(
             color: isSelected
-                ? Theme.of(context).colorScheme.primary
+                ? Theme.of(context).colorScheme.secondary
                 : Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(UIConstants.largeRadius),
           color: isSelected
-              ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
+              ? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1)
               : null,
         ),
         child: Row(
@@ -100,7 +100,7 @@ class ThemeSelectionScreen extends StatelessWidget {
             Icon(
               icon,
               color: isSelected
-                  ? Theme.of(context).colorScheme.primary
+                  ? Theme.of(context).colorScheme.secondary
                   : Theme.of(context).colorScheme.onSurfaceVariant,
               size: UIConstants.defaultIconSize,
             ),
@@ -113,7 +113,7 @@ class ThemeSelectionScreen extends StatelessWidget {
                     title,
                     style: AppTypography.titleMedium.copyWith(
                       color: isSelected
-                          ? Theme.of(context).colorScheme.primary
+                          ? Theme.of(context).colorScheme.secondary
                           : Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
@@ -130,7 +130,7 @@ class ThemeSelectionScreen extends StatelessWidget {
             if (isSelected)
               Icon(
                 Icons.check_circle,
-                color: Theme.of(context).colorScheme.primary,
+                color: Theme.of(context).colorScheme.secondary,
                 size: UIConstants.defaultIconSize,
               ),
           ],

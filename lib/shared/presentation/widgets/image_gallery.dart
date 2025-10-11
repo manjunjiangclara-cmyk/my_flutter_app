@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/image_path_service.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/photo_viewer.dart';
+import 'package:reorderables/reorderables.dart';
 
 /// Configuration for image gallery display options
 class ImageGalleryConfig {
@@ -63,6 +64,7 @@ class ImageGallery extends StatefulWidget {
   final ValueChanged<int>? onImageTap;
   final ValueChanged<int>? onRemoveImage;
   final VoidCallback? onEmptyStateTap;
+  final void Function(int oldIndex, int newIndex)? onReorder;
 
   const ImageGallery({
     super.key,
@@ -71,6 +73,7 @@ class ImageGallery extends StatefulWidget {
     this.onImageTap,
     this.onRemoveImage,
     this.onEmptyStateTap,
+    this.onReorder,
   });
 
   @override
@@ -81,6 +84,7 @@ class _ImageGalleryState extends State<ImageGallery> {
   final ImagePathService _imagePathService = ImagePathService();
   Map<String, String> _absolutePaths = {};
   bool _isLoadingPaths = false;
+  final ScrollController _reorderScrollController = ScrollController();
 
   /// Get the filtered image paths based on skipFirstPhoto configuration
   List<String> get _filteredImagePaths {
@@ -151,6 +155,12 @@ class _ImageGalleryState extends State<ImageGallery> {
   }
 
   @override
+  void dispose() {
+    _reorderScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final filteredPaths = _filteredImagePaths;
     if (filteredPaths.isEmpty) {
@@ -192,6 +202,57 @@ class _ImageGalleryState extends State<ImageGallery> {
 
   Widget _buildImageGrid() {
     final filteredPaths = _filteredImagePaths;
+    // When reordering is enabled, use a ReorderableWrap to allow drag-and-drop
+    if (widget.onReorder != null) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final totalSpacing =
+              (widget.config.crossAxisCount - 1) *
+              widget.config.crossAxisSpacing;
+          final availableWidth = constraints.maxWidth - totalSpacing;
+          final itemWidth =
+              widget.config.itemWidth ??
+              (availableWidth / widget.config.crossAxisCount);
+          final itemHeight =
+              widget.config.itemHeight ??
+              (itemWidth / widget.config.childAspectRatio);
+
+          final ScrollController? inheritedPrimary =
+              PrimaryScrollController.maybeOf(context);
+          return PrimaryScrollController(
+            controller: inheritedPrimary ?? _reorderScrollController,
+            child: ReorderableWrap(
+              spacing: widget.config.crossAxisSpacing,
+              runSpacing: widget.config.mainAxisSpacing,
+              onReorder: (oldIndex, newIndex) {
+                final oldOriginal = _getOriginalIndex(oldIndex);
+                final newOriginal = _getOriginalIndex(newIndex);
+                widget.onReorder?.call(oldOriginal, newOriginal);
+              },
+              buildDraggableFeedback: (context, constraints, child) {
+                return Opacity(
+                  opacity: UIConstants.imageGalleryOpacity,
+                  child: Material(
+                    elevation: UIConstants.imageGalleryElevation,
+                    child: child,
+                  ),
+                );
+              },
+              children: List.generate(filteredPaths.length, (index) {
+                final imagePath = filteredPaths[index];
+                return SizedBox(
+                  key: ValueKey(imagePath),
+                  width: itemWidth,
+                  height: itemHeight,
+                  child: _buildImageItem(imagePath, index),
+                );
+              }),
+            ),
+          );
+        },
+      );
+    }
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),

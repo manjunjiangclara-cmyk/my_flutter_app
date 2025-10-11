@@ -43,6 +43,17 @@ class ComposePhotoRemoved extends ComposeEvent {
   List<Object?> get props => [index];
 }
 
+/// Event for reordering photos
+class ComposePhotosReordered extends ComposeEvent {
+  final int oldIndex;
+  final int newIndex;
+
+  const ComposePhotosReordered(this.oldIndex, this.newIndex);
+
+  @override
+  List<Object?> get props => [oldIndex, newIndex];
+}
+
 /// Event for adding a location
 class ComposeLocationAdded extends ComposeEvent {
   final String location;

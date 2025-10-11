@@ -9,6 +9,7 @@ import 'package:my_flutter_app/core/utils/date_formatter.dart';
 import 'package:my_flutter_app/core/utils/ui_calculations.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/journal_header_image.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/action_button.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/image_gallery.dart';
 
 import '../../../../shared/domain/entities/journal.dart';
 import '../../../../shared/presentation/widgets/tag_chip.dart';
@@ -21,7 +22,7 @@ import '../widgets/journal_content_section.dart';
 import '../widgets/journal_delete_dialog.dart';
 import '../widgets/journal_error_state.dart';
 import '../widgets/journal_event_details.dart';
-import '../widgets/journal_image_gallery.dart';
+// import '../widgets/journal_image_gallery.dart';
 import '../widgets/journal_loading_state.dart';
 
 class JournalViewScreen extends StatelessWidget {
@@ -170,9 +171,13 @@ class _JournalViewContentState extends State<_JournalViewContent> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        JournalHeaderImage(
-                          imagePaths: widget.journal.imagePaths,
-                        ),
+                        // Conditionally show header image only when modulo equals 1 (hide when 0 or 2)
+                        if ((widget.journal.imagePaths.length %
+                                UIConstants.journalImageGalleryColumns) ==
+                            1)
+                          JournalHeaderImage(
+                            imagePaths: widget.journal.imagePaths,
+                          ),
                         const SizedBox(height: Spacing.lg),
                         JournalEventDetails(
                           date: DateFormatter.formatJournalDate(
@@ -187,8 +192,32 @@ class _JournalViewContentState extends State<_JournalViewContent> {
                         ],
                         JournalContentSection(content: widget.journal.content),
                         const SizedBox(height: Spacing.lg),
-                        JournalImageGallery(
-                          imagePaths: widget.journal.imagePaths,
+                        Builder(
+                          builder: (context) {
+                            final total = widget.journal.imagePaths.length;
+                            final modulo =
+                                total % UIConstants.journalImageGalleryColumns;
+                            final hideHeader = modulo == 0 || modulo == 2;
+                            return ImageGallery(
+                              imagePaths: widget.journal.imagePaths,
+                              config: hideHeader
+                                  ? const ImageGalleryConfig(
+                                      crossAxisCount: UIConstants
+                                          .journalImageGalleryColumns,
+                                      crossAxisSpacing: UIConstants
+                                          .journalImageGallerySpacing,
+                                      mainAxisSpacing: UIConstants
+                                          .journalImageGallerySpacing,
+                                      childAspectRatio: 1.0,
+                                      itemHeight: UIConstants
+                                          .journalImageGalleryItemHeight,
+                                      showRemoveButton: false,
+                                      enableFullscreenViewer: true,
+                                      skipFirstPhoto: false,
+                                    )
+                                  : ImageGalleryConfig.journalConfig,
+                            );
+                          },
                         ),
                         const SizedBox(height: Spacing.lg),
                       ],
@@ -272,6 +301,9 @@ class _JournalViewContentState extends State<_JournalViewContent> {
                                 tooltip: JournalStrings.closeJournal,
                                 iconSize:
                                     UIConstants.journalAppBarIconSizeSmall,
+                                iconColor: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface,
                               ),
                             ),
                           ),
@@ -309,6 +341,9 @@ class _JournalViewContentState extends State<_JournalViewContent> {
                                     tooltip: JournalStrings.editJournal,
                                     iconSize:
                                         UIConstants.journalAppBarIconSizeSmall,
+                                    iconColor: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
                                   ),
                                 ),
                               ),
@@ -344,6 +379,9 @@ class _JournalViewContentState extends State<_JournalViewContent> {
                                     tooltip: JournalStrings.deleteJournal,
                                     iconSize:
                                         UIConstants.journalAppBarIconSizeSmall,
+                                    iconColor: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
                                   ),
                                 ),
                               ),
@@ -379,6 +417,9 @@ class _JournalViewContentState extends State<_JournalViewContent> {
                                     tooltip: JournalStrings.shareJournal,
                                     iconSize:
                                         UIConstants.journalAppBarIconSizeSmall,
+                                    iconColor: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
                                   ),
                                 ),
                               ),

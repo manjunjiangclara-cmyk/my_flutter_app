@@ -1,9 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
-import 'package:my_flutter_app/core/utils/performance_monitor.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_event.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_state.dart';
@@ -34,18 +35,48 @@ class _MemoryScreenView extends StatelessWidget {
           style: AppTypography.displayLarge,
         ),
         centerTitle: false,
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: UIConstants.smallPadding),
-            child: IconButton(
-              icon: const Icon(Icons.add_box_rounded),
-              iconSize: UIConstants.iconButtonSize,
-              onPressed: () {
-                // Action for adding a new memory
-              },
-            ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: ClipRect(
+          child: Stack(
+            children: [
+              BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: UIConstants.barBlurSigma,
+                  sigmaY: UIConstants.barBlurSigma,
+                ),
+                child: Container(
+                  color: Theme.of(context).colorScheme.surface.withValues(
+                    alpha: UIConstants.barOverlayOpacity,
+                  ),
+                ),
+              ),
+              // bottom edge fade to avoid a hard cutoff
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: IgnorePointer(
+                  child: Container(
+                    height: UIConstants.barEdgeFadeHeight,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [
+                          Theme.of(context).colorScheme.surface.withValues(
+                            alpha: UIConstants.barEdgeFadeStartOpacity,
+                          ),
+                          Theme.of(
+                            context,
+                          ).colorScheme.surface.withValues(alpha: 0.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: UIConstants.defaultPadding),
@@ -74,7 +105,6 @@ class _MemoryListState extends State<_MemoryList> {
     // Load data when the widget is first created
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_hasLoadedData) {
-        PerformanceMonitor.startTiming('Memory Data Loading');
         context.read<MemoryBloc>().add(const MemoryLoadRequested());
         _hasLoadedData = true;
       }
@@ -122,6 +152,7 @@ class _MemoryListState extends State<_MemoryList> {
 
         if (memories.isEmpty) {
           return RefreshIndicator(
+            color: Theme.of(context).colorScheme.secondary,
             onRefresh: () async {
               context.read<MemoryBloc>().add(const MemoryRefreshRequested());
             },
@@ -149,6 +180,7 @@ class _MemoryListState extends State<_MemoryList> {
         }
 
         return RefreshIndicator(
+          color: Theme.of(context).colorScheme.secondary,
           onRefresh: () async {
             context.read<MemoryBloc>().add(const MemoryRefreshRequested());
           },

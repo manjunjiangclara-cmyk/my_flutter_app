@@ -1,11 +1,13 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/core/utils/image_path_service.dart';
 import 'package:my_flutter_app/core/utils/image_widget_utils.dart';
 import 'package:my_flutter_app/features/journal/presentation/strings/journal_strings.dart';
-import 'package:my_flutter_app/features/journal/presentation/widgets/fullscreen_image_card.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/photo_viewer.dart';
 
 /// Header image widget for journal view
 class JournalHeaderImage extends StatefulWidget {
@@ -18,13 +20,17 @@ class JournalHeaderImage extends StatefulWidget {
 }
 
 class _JournalHeaderImageState extends State<JournalHeaderImage> {
+  final ImagePathService _imagePathService = ImagePathService();
   String? _absoluteImagePath;
+  Map<String, String> _absolutePaths = {};
+  double? _aspectRatio; // width / height
 
   @override
   void initState() {
     super.initState();
     if (widget.imagePaths.isNotEmpty) {
       _convertToAbsolutePath();
+      _convertAllPathsToAbsolute();
     }
   }
 
@@ -32,11 +38,57 @@ class _JournalHeaderImageState extends State<JournalHeaderImage> {
     await ImageWidgetUtils.convertToAbsolutePath(
       imagePath: widget.imagePaths.first,
       onPathConverted: (absolutePath) {
+        if (!mounted) return;
         setState(() {
           _absoluteImagePath = absolutePath;
         });
+        _loadAspectRatio();
       },
     );
+  }
+
+  Future<void> _loadAspectRatio() async {
+    final path = _absoluteImagePath;
+    if (path == null) return;
+    try {
+      final file = File(path);
+      final bytes = await file.readAsBytes();
+      final ui.Codec codec = await ui.instantiateImageCodec(bytes);
+      final ui.FrameInfo frame = await codec.getNextFrame();
+      final ui.Image image = frame.image;
+      final double ratio = image.width / image.height;
+      if (!mounted) return;
+      setState(() {
+        _aspectRatio = ratio;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _aspectRatio = null;
+      });
+    }
+  }
+
+  Future<void> _convertAllPathsToAbsolute() async {
+    try {
+      final absolutePaths = await _imagePathService.getAbsolutePaths(
+        widget.imagePaths,
+      );
+      if (mounted) {
+        setState(() {
+          _absolutePaths = absolutePaths;
+        });
+      }
+    } catch (e) {
+      // Fallback to original paths if conversion fails
+      if (mounted) {
+        setState(() {
+          _absolutePaths = Map.fromEntries(
+            widget.imagePaths.map((path) => MapEntry(path, path)),
+          );
+        });
+      }
+    }
   }
 
   @override
@@ -46,42 +98,53 @@ class _JournalHeaderImageState extends State<JournalHeaderImage> {
       return const SizedBox.shrink();
     }
 
-    return GestureDetector(
-      onTap: () => _showImageFullscreen(context),
-      child: Container(
+    return Card(
+      elevation: UIConstants.enableImageShadows
+          ? UIConstants.journalHeaderImageElevation
+          : 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(UIConstants.largeRadius),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => _showImageFullscreen(context),
+        child: _buildImage(context),
+      ),
+    );
+  }
+
+  Widget _buildImage(BuildContext context) {
+    // While aspect ratio is unknown, keep a stable placeholder height
+    if (_aspectRatio == null) {
+      return SizedBox(
         height: UIConstants.journalHeaderImageHeight,
         width: double.infinity,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.outline,
-          borderRadius: BorderRadius.circular(UIConstants.largeRadius),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(UIConstants.largeRadius),
-          child: Image.file(
-            File(_absoluteImagePath!),
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) =>
-                _buildPlaceholder(context),
-          ),
-        ),
+        child: _buildPlaceholder(context),
+      );
+    }
+
+    return AspectRatio(
+      aspectRatio: _aspectRatio!,
+      child: Image.file(
+        File(_absoluteImagePath!),
+        width: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) =>
+            _buildPlaceholder(context),
       ),
     );
   }
 
   void _showImageFullscreen(BuildContext context) {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            _ImageFullscreenView(
-              imagePaths: widget.imagePaths,
-              initialIndex: 0,
-            ),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-        transitionDuration: const Duration(milliseconds: 200),
-        reverseTransitionDuration: const Duration(milliseconds: 200),
-      ),
+    // Convert all image paths to absolute paths for the viewer
+    final absoluteImagePaths = widget.imagePaths
+        .map((path) => _absolutePaths[path] ?? path)
+        .toList();
+
+    PhotoViewer.show(
+      context: context,
+      photoPaths: absoluteImagePaths,
+      initialIndex: 0,
     );
   }
 
@@ -92,54 +155,6 @@ class _JournalHeaderImageState extends State<JournalHeaderImage> {
         size: UIConstants.largeIconSize,
         color: Theme.of(context).colorScheme.onSurfaceVariant,
         semanticLabel: JournalStrings.journalImageLabel,
-      ),
-    );
-  }
-}
-
-/// Fullscreen image viewer for journal header images
-class _ImageFullscreenView extends StatefulWidget {
-  final List<String> imagePaths;
-  final int initialIndex;
-
-  const _ImageFullscreenView({
-    required this.imagePaths,
-    required this.initialIndex,
-  });
-
-  @override
-  State<_ImageFullscreenView> createState() => _ImageFullscreenViewState();
-}
-
-class _ImageFullscreenViewState extends State<_ImageFullscreenView> {
-  late PageController _pageController;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(initialPage: widget.initialIndex);
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      color: theme.colorScheme.surface,
-      child: PageView.builder(
-        controller: _pageController,
-        itemCount: widget.imagePaths.length,
-        itemBuilder: (context, index) {
-          return Center(
-            child: FullscreenImageCard(imagePath: widget.imagePaths[index]),
-          );
-        },
       ),
     );
   }

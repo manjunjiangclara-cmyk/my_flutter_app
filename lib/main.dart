@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/router/router_exports.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/theme_provider.dart';
+import 'package:my_flutter_app/core/utils/date_formatter.dart';
 import 'package:my_flutter_app/core/utils/error_handler.dart';
 import 'package:my_flutter_app/core/utils/image_path_service.dart';
-import 'package:my_flutter_app/core/utils/performance_monitor.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  PerformanceMonitor.startTiming('App Startup');
-
+  WidgetsFlutterBinding.ensureInitialized();
   // Lock orientation to portrait only
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -38,6 +38,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _isInitialized = false;
+  late final GoRouter _router = AppRouter.router;
 
   // Cache themes to avoid rebuilding them on every build
   static final ThemeData _lightTheme = _buildLightThemeStatic();
@@ -46,24 +47,18 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    PerformanceMonitor.startTiming('Widget Initialization');
     // Initialize dependency injection asynchronously
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      PerformanceMonitor.endTiming('Widget Initialization');
       _initializeApp();
     });
   }
 
   Future<void> _initializeApp() async {
     try {
-      PerformanceMonitor.startTiming('Dependency Injection');
-
       // Initialize dependency injection in a separate isolate to avoid blocking UI
       await Future.microtask(() {
         configureDependencies();
       });
-
-      PerformanceMonitor.endTiming('Dependency Injection');
 
       // Prewarm documents directory to avoid jank on first image decode
       try {
@@ -72,12 +67,17 @@ class _MyAppState extends State<MyApp> {
         // Ignore prewarm failures
       }
 
+      // Prewarm intl date formatting and cache today's formatted date
+      try {
+        await DateFormatter.prewarmTodayFormatted();
+      } catch (_) {
+        // Ignore prewarm failures; fallback getter will compute on demand
+      }
+
       if (mounted) {
         setState(() {
           _isInitialized = true;
         });
-        PerformanceMonitor.endTiming('App Startup');
-        PerformanceMonitor.printSummary();
       }
     } catch (e) {
       print('❌ Error initializing app: $e');
@@ -85,7 +85,6 @@ class _MyAppState extends State<MyApp> {
         setState(() {
           _isInitialized = true; // Still show the app even if DI fails
         });
-        PerformanceMonitor.endTiming('App Startup');
       }
     }
   }
@@ -114,7 +113,7 @@ class _MyAppState extends State<MyApp> {
             theme: _lightTheme,
             darkTheme: _darkTheme,
             themeMode: themeProvider.themeMode,
-            routerConfig: AppRouter.router,
+            routerConfig: _router,
           );
         },
       ),
@@ -123,7 +122,6 @@ class _MyAppState extends State<MyApp> {
 
   /// Build light theme (static version for caching)
   static ThemeData _buildLightThemeStatic() {
-    PerformanceMonitor.startTiming('Light Theme Building');
     final colorScheme = AppColors.lightColorScheme;
     final theme = ThemeData(
       useMaterial3: true,
@@ -138,13 +136,11 @@ class _MyAppState extends State<MyApp> {
         elevation: 0,
       ),
     );
-    PerformanceMonitor.endTiming('Light Theme Building');
     return theme;
   }
 
   /// Build dark theme (static version for caching)
   static ThemeData _buildDarkThemeStatic() {
-    PerformanceMonitor.startTiming('Dark Theme Building');
     final colorScheme = AppColors.darkColorScheme;
     final theme = ThemeData(
       useMaterial3: true,
@@ -159,7 +155,6 @@ class _MyAppState extends State<MyApp> {
         elevation: 0,
       ),
     );
-    PerformanceMonitor.endTiming('Dark Theme Building');
     return theme;
   }
 }

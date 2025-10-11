@@ -2,6 +2,9 @@
 class UIConstants {
   UIConstants._();
 
+  // Feature Toggles
+  static const bool enableImageShadows = false;
+
   // Spacing
   static const double defaultPadding = 16.0;
   static const double smallPadding = 8.0;
@@ -42,6 +45,16 @@ class UIConstants {
   // Card Dimensions
   static const double defaultCardPadding = 16.0;
   static const double defaultCardRadius = 16.0;
+  static const double memoryImageElevation = imageGalleryElevation;
+  static const double imageCardRadius = extraLargeRadius;
+  static const double imageInnerRadius = largeRadius;
+
+  // Memory Card Color Tuning
+  static const double memoryCardDarkLightenAmount = 0.06;
+
+  // Memory Card Press Feedback
+  static const double memoryCardPressScale = 0.96;
+  static const Duration memoryCardPressDuration = Duration(milliseconds: 120);
 
   // Image Gallery
   static const double defaultImageSize = 100.0;
@@ -107,16 +120,32 @@ class UIConstants {
   static const double dialogPadding = 16.0;
   static const double dialogFontSize = 13.0;
 
+  // Blur Dialog
+  static const double dialogBackdropBlurSigma = barBlurSigma;
+  static const double dialogBarrierOpacity = 0.4;
+  static const Duration dialogAnimationDuration = defaultAnimation;
+
   static const double postingIndicatorSize = 16.0;
   static const double postingIndicatorStrokeWidth = 2.0;
 
   // Timeline Indicator
-  static const double timelineDotSize = 14.0;
-  static const double timelineLineWidth = 2.0;
-  static const double timelineLineBorderWidth = 2.0;
+  static const double timelineDotSize = 16.0;
+  static const double timelineLineWidth = 1.0;
+  static const double timelineLineBorderWidth = 1.5;
+  static const double timelineLineOpacityLight = 0.65;
+  static const double timelineDotFillBlendLight = 0.08;
+  static const double timelineShadowOpacity = 0.08;
+  static const double timelineShadowBlur = 8.0;
+  static const double timelineShadowOffsetY = 2.0;
+  static const double timelineLineOpacityDark = 0.5;
+  static const double timelineDotFillBlendDark = 0.04;
+  static const double timelineShadowOpacityDark = 0.24;
+  static const double timelineShadowBlurDark = 8.0;
+  static const double timelineShadowOffsetYDark = 2.0;
 
   // Journal View Screen
   static const double journalHeaderImageHeight = 180.0;
+  static const double journalHeaderImageElevation = imageGalleryElevation;
   static const double journalAppBarIconSize = 24.0;
   static const double journalAppBarIconSizeSmall = 20.0;
   static const double journalAppBarIconPadding = 12.0;
@@ -128,6 +157,12 @@ class UIConstants {
   static const double journalAppBarActionShadowBlur = 8.0;
   static const double journalAppBarActionShadowOffsetY = 2.0;
   static const double journalAppBarSlideHiddenOffsetY = -1.0;
+
+  // Blurred Bars
+  static const double barBlurSigma = 34.0;
+  static const double barOverlayOpacity = 0.75;
+  static const double barEdgeFadeHeight = 16.0;
+  static const double barEdgeFadeStartOpacity = 0.75;
 
   // Tag Chip Specific
   static const double tagChipWidthPadding = 16.0;
