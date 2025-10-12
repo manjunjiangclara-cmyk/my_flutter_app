@@ -36,7 +36,7 @@ void main() {
           id: '1',
           name: 'Central Park',
           address: 'New York, NY, USA',
-          type: LocationType.landmark,
+          types: ['park', 'tourist_attraction'],
         ),
       ];
 
@@ -114,7 +114,7 @@ void main() {
         id: '1',
         name: 'Central Park',
         address: 'New York, NY, USA',
-        type: LocationType.landmark,
+        types: ['park', 'tourist_attraction'],
       );
 
       blocTest<LocationPickerBloc, LocationPickerState>(

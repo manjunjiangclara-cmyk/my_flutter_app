@@ -33,6 +33,8 @@ class JournalDao {
       DatabaseConstants.journalLocationLatitude;
   static const String columnLocationLongitude =
       DatabaseConstants.journalLocationLongitude;
+  static const String columnLocationTypes =
+      DatabaseConstants.journalLocationTypes;
 
   // Create table SQL
   static const String createTableSQL =
@@ -50,7 +52,8 @@ class JournalDao {
         $columnLocationAddress TEXT,
         $columnLocationPlaceId TEXT,
         $columnLocationLatitude REAL,
-        $columnLocationLongitude REAL
+        $columnLocationLongitude REAL,
+        $columnLocationTypes TEXT
       )
     ''';
 
@@ -62,6 +65,12 @@ class JournalDao {
       ALTER TABLE $tableName ADD COLUMN $columnLocationPlaceId TEXT;
       ALTER TABLE $tableName ADD COLUMN $columnLocationLatitude REAL;
       ALTER TABLE $tableName ADD COLUMN $columnLocationLongitude REAL;
+    ''';
+
+  // Add location types column SQL for database migration
+  static const String addLocationTypesColumnSQL =
+      '''
+      ALTER TABLE $tableName ADD COLUMN $columnLocationTypes TEXT;
     ''';
 
   // Common query helper to reduce duplication

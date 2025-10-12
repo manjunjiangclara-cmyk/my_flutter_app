@@ -191,11 +191,22 @@ class UIConstants {
   static const double locationLoadingIndicatorSize = 24.0;
   static const Duration locationSearchTimeout = Duration(seconds: 6);
 
+  // Location Picker Gradient Transition
+  static const double locationPickerGradientHeight = 32.0;
+  static const double locationPickerGradientOpacity = 0.95;
+
+  // Refresh Indicator
+  static const double refreshDisplacement = 40.0;
+  static const double refreshEdgeOffset = 0.0;
+  static const double refreshStrokeWidth = 2.0;
+
   // Location Chip
-  static const double locationChipHorizontalPadding = 10.0;
-  static const double locationChipVerticalPadding = 6.0;
+  static const double locationChipHorizontalPadding = 8.0;
+  static const double locationChipVerticalPadding = 4.0;
   static const double locationChipRadius = mediumRadius;
   static const double locationChipMaxWidthFraction = 0.66;
+  static const double locationEmojiScale = 1.25;
+  static const double locationChipFontSize = 12.0;
 
   // Journal Image Gallery
   static const int journalImageGalleryColumns = 3;

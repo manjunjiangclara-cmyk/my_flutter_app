@@ -11,6 +11,7 @@ import 'package:my_flutter_app/features/compose/presentation/bloc/location_picke
 import 'package:my_flutter_app/features/compose/presentation/models/location_search_models.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/location/location_search_bar.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/location/location_search_result_item.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/refresh_indicator.dart';
 
 class LocationPickerBottomSheet extends StatefulWidget {
   final Function(LocationSearchResult) onLocationSelected;
@@ -37,6 +38,22 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
     context.read<LocationPickerBloc>().add(
       LocationPickerSearchRequested(query),
     );
+  }
+
+  Future<void> _onRefresh() async {
+    final bloc = context.read<LocationPickerBloc>();
+    final state = bloc.state;
+    String? query;
+
+    if (state is LocationPickerSearchResultsLoaded) {
+      query = state.query;
+    } else if (state is LocationPickerNoResults) {
+      query = state.query;
+    }
+
+    if (query != null && query.trim().isNotEmpty) {
+      bloc.add(LocationPickerSearchRequested(query));
+    }
   }
 
   void _onLocationSelected(LocationSearchResult location) {
@@ -86,14 +103,39 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
             onClearSearch: _clearSearch,
           ),
 
-          const SizedBox(height: Spacing.lg),
-
-          // Content
+          // Content with gradient overlay
           Expanded(
-            child: BlocBuilder<LocationPickerBloc, LocationPickerState>(
-              builder: (context, state) {
-                return _buildContent(state);
-              },
+            child: Stack(
+              children: [
+                BlocBuilder<LocationPickerBloc, LocationPickerState>(
+                  builder: (context, state) {
+                    return _buildContent(state);
+                  },
+                ),
+                // Gradient overlay at the top of results
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: UIConstants.locationPickerGradientHeight,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Theme.of(context).colorScheme.surface.withOpacity(
+                            UIConstants.locationPickerGradientOpacity,
+                          ),
+                          Theme.of(
+                            context,
+                          ).colorScheme.surface.withOpacity(0.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -134,18 +176,21 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
     }
 
     if (state is LocationPickerSearchResultsLoaded) {
-      return ListView.builder(
-        padding: const EdgeInsets.symmetric(
-          horizontal: UIConstants.defaultPadding,
+      return AppRefreshIndicator(
+        onRefresh: _onRefresh,
+        child: ListView.builder(
+          padding: const EdgeInsets.symmetric(
+            horizontal: UIConstants.defaultPadding,
+          ),
+          itemCount: state.searchResults.length,
+          itemBuilder: (context, index) {
+            final location = state.searchResults[index];
+            return LocationSearchResultItem(
+              location: location,
+              onTap: () => _onLocationSelected(location),
+            );
+          },
         ),
-        itemCount: state.searchResults.length,
-        itemBuilder: (context, index) {
-          final location = state.searchResults[index];
-          return LocationSearchResultItem(
-            location: location,
-            onTap: () => _onLocationSelected(location),
-          );
-        },
       );
     }
 

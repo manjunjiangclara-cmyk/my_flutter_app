@@ -135,31 +135,12 @@ class GooglePlaceResult {
       id: placeId,
       name: name,
       address: formattedAddress,
-      type: _getLocationTypeFromTypes(types),
       placeId: placeId,
       latitude: geometry?.location.latitude,
       longitude: geometry?.location.longitude,
       rating: rating,
       types: types,
     );
-  }
-
-  LocationType _getLocationTypeFromTypes(List<String> types) {
-    if (types.contains('locality') ||
-        types.contains('administrative_area_level_1')) {
-      return LocationType.city;
-    } else if (types.contains('establishment') ||
-        types.contains('point_of_interest')) {
-      return LocationType.landmark;
-    } else if (types.contains('restaurant') ||
-        types.contains('store') ||
-        types.contains('business')) {
-      return LocationType.business;
-    } else if (types.contains('neighborhood') ||
-        types.contains('sublocality')) {
-      return LocationType.neighborhood;
-    }
-    return LocationType.landmark; // Default fallback
   }
 }
 

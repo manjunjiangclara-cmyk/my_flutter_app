@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
-import 'package:my_flutter_app/features/compose/presentation/models/location_search_models.dart';
 
-class LocationChip extends StatelessWidget {
-  final LocationSearchResult location;
-  final VoidCallback onRemove;
+/// A read-only location chip used to display an emoji and a location name.
+/// This mirrors the compose `LocationChip` visual style but without the remove button.
+class LocationChipDisplay extends StatelessWidget {
+  final String emoji;
+  final String name;
 
-  const LocationChip({
+  const LocationChipDisplay({
     super.key,
-    required this.location,
-    required this.onRemove,
+    required this.emoji,
+    required this.name,
   });
 
   @override
@@ -34,7 +35,7 @@ class LocationChip extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            location.emoji,
+            emoji,
             style: AppTypography.labelMedium.copyWith(
               fontSize:
                   UIConstants.locationChipFontSize *
@@ -46,21 +47,13 @@ class LocationChip extends StatelessWidget {
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: maxWidth),
               child: Text(
-                location.name,
+                name,
                 style: AppTypography.labelMedium.copyWith(
                   fontSize: UIConstants.locationChipFontSize,
                 ),
                 softWrap: true,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-          ),
-          const SizedBox(width: Spacing.xs),
-          GestureDetector(
-            onTap: onRemove,
-            child: Icon(
-              Icons.close,
-              size: UIConstants.locationIconSize,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ],

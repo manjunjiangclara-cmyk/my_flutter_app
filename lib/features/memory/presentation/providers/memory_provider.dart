@@ -8,6 +8,7 @@ class MemoryData extends ChangeNotifier {
       journalId: 'journal_1',
       date: DateTime(2024, 8, 28),
       location: 'Melbourne',
+      locationTypes: const ['locality', 'political'],
       tags: <String>['Life', 'Travel'],
       description:
           'Praeterea, ex culpa non invenies unum aut non accusatis unum. Et nihil inuitam. Nemo nocere tibi erit, et non inimicos, et ne illa',
@@ -17,6 +18,7 @@ class MemoryData extends ChangeNotifier {
       journalId: 'journal_2',
       date: DateTime(2024, 8, 27),
       location: 'Melbourne',
+      locationTypes: const ['locality', 'political'],
       tags: <String>['Life', 'Travel'],
       description:
           'Praeterea, ex culpa non invenies unum aut non accusatis unum. Et nihil inuitam. Nemo nocere tibi erit, et non inimicos, et ne illa',
@@ -26,6 +28,7 @@ class MemoryData extends ChangeNotifier {
       journalId: 'journal_3',
       date: DateTime(2024, 8, 26),
       location: 'Sydney',
+      locationTypes: const ['locality', 'political'],
       tags: <String>['Work', 'Conference'],
       description:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
@@ -35,6 +38,7 @@ class MemoryData extends ChangeNotifier {
       journalId: 'journal_4',
       date: DateTime(2024, 8, 25),
       location: 'Brisbane',
+      locationTypes: const ['locality', 'political'],
       tags: <String>['Friends', 'Adventure'],
       description:
           'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',

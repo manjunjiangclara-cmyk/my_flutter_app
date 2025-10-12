@@ -38,6 +38,9 @@ class MemoryBloc extends BaseBloc<MemoryEvent, MemoryState> {
       journalId: journal.id,
       date: journal.createdAt,
       location: journal.location,
+      locationTypes: journal.locationTypes.isNotEmpty
+          ? journal.locationTypes
+          : const [],
       tags: journal.tags,
       description: description,
       imagePaths: journal.imagePaths.isNotEmpty ? journal.imagePaths : const [],

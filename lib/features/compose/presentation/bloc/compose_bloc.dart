@@ -171,15 +171,13 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     ComposeLocationAdded event,
     Emitter<ComposeState> emit,
   ) {
-    if (event.location.trim().isNotEmpty) {
-      if (state is ComposeContent) {
-        final currentState = state as ComposeContent;
-        emit(currentState.copyWith(selectedLocation: event.location.trim()));
-      } else {
-        emit(ComposeContent(selectedLocation: event.location.trim()));
-      }
-      locationController.clear();
+    if (state is ComposeContent) {
+      final currentState = state as ComposeContent;
+      emit(currentState.copyWith(selectedLocation: event.location));
+    } else {
+      emit(ComposeContent(selectedLocation: event.location));
     }
+    locationController.clear();
   }
 
   void _onLocationRemoved(
@@ -248,7 +246,8 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         updatedAt: now,
         tags: currentState.selectedTags,
         imagePaths: currentState.attachedPhotoPaths,
-        location: currentState.selectedLocation,
+        location: currentState.selectedLocation?.name,
+        locationTypes: currentState.selectedLocation?.types ?? [],
       );
 
       // Call CreateJournal usecase - this will take as long as the actual database operation

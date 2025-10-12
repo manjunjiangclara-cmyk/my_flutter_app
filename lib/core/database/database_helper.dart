@@ -45,6 +45,10 @@ class DatabaseHelper {
       // Add location columns for version 2
       await db.execute(JournalDao.addLocationColumnsSQL);
     }
+    if (oldVersion < 3) {
+      // Add location types column for version 3
+      await db.execute(JournalDao.addLocationTypesColumnSQL);
+    }
   }
 
   // Close database

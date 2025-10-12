@@ -66,7 +66,11 @@ class _ComposeScreenView extends StatelessWidget {
   }
 
   ComposeContent _getContentFromState(ComposeState state) {
-    return state is ComposeContent ? state : const ComposeContent();
+    if (state is ComposeContent) {
+      return state;
+    }
+    // Always return a fresh ComposeContent with null selectedLocation
+    return const ComposeContent();
   }
 
   PreferredSizeWidget _buildAppBar(
@@ -247,7 +251,7 @@ class _ComposeActionArea extends StatelessWidget {
       context: context,
       controller: bloc.locationController,
       focusNode: bloc.locationFocusNode,
-      onAdd: (location) => bloc.add(ComposeLocationAdded(location.name)),
+      onAdd: (location) => bloc.add(ComposeLocationAdded(location)),
     );
 
     // Commented out for future implementation

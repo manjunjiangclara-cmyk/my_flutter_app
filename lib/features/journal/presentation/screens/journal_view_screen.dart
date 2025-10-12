@@ -184,6 +184,7 @@ class _JournalViewContentState extends State<_JournalViewContent> {
                             widget.journal.createdAt,
                           ),
                           location: widget.journal.location,
+                          locationTypes: widget.journal.locationTypes,
                         ),
                         const SizedBox(height: Spacing.sm),
                         if (widget.journal.tags.isNotEmpty) ...[

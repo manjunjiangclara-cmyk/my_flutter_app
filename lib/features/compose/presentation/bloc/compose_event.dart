@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:my_flutter_app/features/compose/presentation/models/location_search_models.dart';
 
 /// Base class for all compose events
 abstract class ComposeEvent extends Equatable {
@@ -56,7 +57,7 @@ class ComposePhotosReordered extends ComposeEvent {
 
 /// Event for adding a location
 class ComposeLocationAdded extends ComposeEvent {
-  final String location;
+  final LocationSearchResult location;
 
   const ComposeLocationAdded(this.location);
 

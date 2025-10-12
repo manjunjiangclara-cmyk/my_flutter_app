@@ -1,9 +1,10 @@
+import 'place_types.dart';
+
 /// Location search result model
 class LocationSearchResult {
   final String id;
   final String name;
   final String address;
-  final LocationType type;
   final String? placeId;
   final double? latitude;
   final double? longitude;
@@ -14,13 +15,30 @@ class LocationSearchResult {
     required this.id,
     required this.name,
     required this.address,
-    required this.type,
     this.placeId,
     this.latitude,
     this.longitude,
     this.rating,
     this.types,
   });
+
+  /// Get the emoji for this location based on its types
+  String get emoji => emojiForTypes(types ?? []);
+
+  /// Get a display-friendly type name based on the primary type
+  String get displayType {
+    if (types == null || types!.isEmpty) return 'Location';
+
+    // Return the first type, formatted nicely
+    final primaryType = types!.first;
+    return primaryType
+        .split('_')
+        .map(
+          (word) =>
+              word.isEmpty ? word : word[0].toUpperCase() + word.substring(1),
+        )
+        .join(' ');
+  }
 
   @override
   bool operator ==(Object other) {
@@ -33,37 +51,5 @@ class LocationSearchResult {
 
   @override
   String toString() =>
-      'LocationSearchResult(id: $id, name: $name, address: $address, type: $type, placeId: $placeId, lat: $latitude, lng: $longitude)';
-}
-
-/// Types of locations
-enum LocationType { city, landmark, business, neighborhood }
-
-/// Extension to get display properties for location types
-extension LocationTypeExtension on LocationType {
-  String get displayName {
-    switch (this) {
-      case LocationType.city:
-        return 'City';
-      case LocationType.landmark:
-        return 'Landmark';
-      case LocationType.business:
-        return 'Business';
-      case LocationType.neighborhood:
-        return 'Neighborhood';
-    }
-  }
-
-  String get iconName {
-    switch (this) {
-      case LocationType.city:
-        return 'location_city';
-      case LocationType.landmark:
-        return 'place';
-      case LocationType.business:
-        return 'store';
-      case LocationType.neighborhood:
-        return 'home';
-    }
-  }
+      'LocationSearchResult(id: $id, name: $name, address: $address, types: $types, placeId: $placeId, lat: $latitude, lng: $longitude)';
 }

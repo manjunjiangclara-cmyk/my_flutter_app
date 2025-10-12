@@ -46,7 +46,6 @@ void main() {
         id: '1',
         name: 'Test Location',
         address: 'Test Address',
-        type: LocationType.landmark,
         placeId: 'place_123',
         latitude: 40.7128,
         longitude: -74.0060,
@@ -57,12 +56,13 @@ void main() {
       expect(result.id, '1');
       expect(result.name, 'Test Location');
       expect(result.address, 'Test Address');
-      expect(result.type, LocationType.landmark);
       expect(result.placeId, 'place_123');
       expect(result.latitude, 40.7128);
       expect(result.longitude, -74.0060);
       expect(result.rating, 4.5);
       expect(result.types, ['landmark', 'tourist_attraction']);
+      expect(result.displayType, 'Landmark');
+      expect(result.emoji, '📸');
     });
 
     test('should create instance with minimal parameters', () {
@@ -70,34 +70,18 @@ void main() {
         id: '1',
         name: 'Test Location',
         address: 'Test Address',
-        type: LocationType.landmark,
       );
 
       expect(result.id, '1');
       expect(result.name, 'Test Location');
       expect(result.address, 'Test Address');
-      expect(result.type, LocationType.landmark);
       expect(result.placeId, isNull);
       expect(result.latitude, isNull);
       expect(result.longitude, isNull);
       expect(result.rating, isNull);
       expect(result.types, isNull);
-    });
-  });
-
-  group('LocationType', () {
-    test('should have correct display names', () {
-      expect(LocationType.city.displayName, 'City');
-      expect(LocationType.landmark.displayName, 'Landmark');
-      expect(LocationType.business.displayName, 'Business');
-      expect(LocationType.neighborhood.displayName, 'Neighborhood');
-    });
-
-    test('should have correct icon names', () {
-      expect(LocationType.city.iconName, 'location_city');
-      expect(LocationType.landmark.iconName, 'place');
-      expect(LocationType.business.iconName, 'store');
-      expect(LocationType.neighborhood.iconName, 'home');
+      expect(result.displayType, 'Location');
+      expect(result.emoji, '📍');
     });
   });
 }

@@ -13,6 +13,7 @@ import 'package:my_flutter_app/features/memory/presentation/strings/memory_strin
 import 'package:my_flutter_app/features/memory/presentation/widgets/memory_card.dart';
 import 'package:my_flutter_app/features/memory/presentation/widgets/month_year_header.dart';
 import 'package:my_flutter_app/features/memory/presentation/widgets/timeline_indicator.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/refresh_indicator.dart';
 
 class MemoryScreen extends StatelessWidget {
   const MemoryScreen({super.key});
@@ -151,8 +152,7 @@ class _MemoryListState extends State<_MemoryList> {
         final memories = state.memories;
 
         if (memories.isEmpty) {
-          return RefreshIndicator(
-            color: Theme.of(context).colorScheme.primary,
+          return AppRefreshIndicator(
             onRefresh: () async {
               context.read<MemoryBloc>().add(const MemoryRefreshRequested());
             },
@@ -179,8 +179,7 @@ class _MemoryListState extends State<_MemoryList> {
           });
         }
 
-        return RefreshIndicator(
-          color: Theme.of(context).colorScheme.primary,
+        return AppRefreshIndicator(
           onRefresh: () async {
             context.read<MemoryBloc>().add(const MemoryRefreshRequested());
           },

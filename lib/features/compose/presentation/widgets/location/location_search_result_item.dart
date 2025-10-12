@@ -3,6 +3,7 @@ import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/models/location_search_models.dart';
+import 'package:my_flutter_app/features/compose/presentation/models/place_types.dart';
 
 class LocationSearchResultItem extends StatelessWidget {
   final LocationSearchResult location;
@@ -43,13 +44,28 @@ class LocationSearchResultItem extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      location.name,
-                      style: AppTypography.bodyLarge.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (location.types != null &&
+                            location.types!.isNotEmpty) ...[
+                          Text(
+                            emojiForTypes(location.types!),
+                            style: AppTypography.bodyLarge,
+                          ),
+                          const SizedBox(width: Spacing.xs),
+                        ],
+                        Expanded(
+                          child: Text(
+                            location.name,
+                            style: AppTypography.bodyLarge.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: Spacing.xs),
                     Text(
@@ -61,33 +77,33 @@ class LocationSearchResultItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: Spacing.xs),
-                    Row(
-                      children: [
-                        Text(
-                          location.type.displayName,
-                          style: AppTypography.labelSmall.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        if (location.rating != null) ...[
-                          const SizedBox(width: Spacing.sm),
-                          Icon(
-                            Icons.star,
-                            size: UIConstants.locationRatingIconSize,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                          const SizedBox(width: Spacing.xs),
-                          Text(
-                            location.rating!.toStringAsFixed(1),
-                            style: AppTypography.labelSmall.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Text(
+                    //       location.displayType,
+                    //       style: AppTypography.labelSmall.copyWith(
+                    //         color: Theme.of(context).colorScheme.primary,
+                    //         fontWeight: FontWeight.w500,
+                    //       ),
+                    //     ),
+                    //     if (location.rating != null) ...[
+                    //       const SizedBox(width: Spacing.sm),
+                    //       Icon(
+                    //         Icons.star,
+                    //         size: UIConstants.locationRatingIconSize,
+                    //         color: Theme.of(context).colorScheme.primary,
+                    //       ),
+                    //       const SizedBox(width: Spacing.xs),
+                    //       Text(
+                    //         location.rating!.toStringAsFixed(1),
+                    //         style: AppTypography.labelSmall.copyWith(
+                    //           color: Theme.of(context).colorScheme.primary,
+                    //           fontWeight: FontWeight.w500,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ],
+                    // ),
                   ],
                 ),
               ),
@@ -109,18 +125,5 @@ class LocationSearchResultItem extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  IconData _getLocationIcon() {
-    switch (location.type) {
-      case LocationType.city:
-        return Icons.location_city;
-      case LocationType.landmark:
-        return Icons.place;
-      case LocationType.business:
-        return Icons.store;
-      case LocationType.neighborhood:
-        return Icons.home;
-    }
   }
 }

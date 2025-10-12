@@ -1,7 +1,7 @@
 class DatabaseConstants {
   // Database Configuration
   static const String databaseName = 'journal_app.db';
-  static const int databaseVersion = 2;
+  static const int databaseVersion = 3;
 
   // Table Names
   static const String journalsTable = 'journals';
@@ -22,6 +22,7 @@ class DatabaseConstants {
   static const String journalLocationPlaceId = 'location_place_id';
   static const String journalLocationLatitude = 'location_latitude';
   static const String journalLocationLongitude = 'location_longitude';
+  static const String journalLocationTypes = 'location_types';
 
   // Tags Table Columns
   static const String tagId = 'id';
