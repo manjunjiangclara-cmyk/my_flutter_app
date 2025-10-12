@@ -97,7 +97,7 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
                       ).build(context),
                     ],
                     type: BottomNavigationBarType.fixed,
-                    selectedItemColor: Theme.of(context).colorScheme.secondary,
+                    selectedItemColor: Theme.of(context).colorScheme.primary,
                     unselectedItemColor: Theme.of(
                       context,
                     ).colorScheme.onSurfaceVariant,

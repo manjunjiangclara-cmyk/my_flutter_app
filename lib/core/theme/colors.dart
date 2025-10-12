@@ -19,7 +19,7 @@ class AppColors {
   static const Color errorLight = Color(0xFFE57373);
 
   // Text
-  static const Color textPrimaryLight = Color(0xFF333333);
+  static const Color textPrimaryLight = Color(0xFF5A4A3A);
   static const Color textSecondaryLight = Color(0xFF666666);
 
   // ========== DARK MODE COLORS ==========
@@ -37,7 +37,7 @@ class AppColors {
   static const Color errorDark = Color(0xFFD32F2F);
 
   // Text
-  static const Color textPrimaryDark = Color(0xFFE0E0E0);
+  static const Color textPrimaryDark = Color(0xFFE8D5C7);
   static const Color textSecondaryDark = Color(0xFFB0B0B0);
 
   // ========== LEGACY SUPPORT (for backward compatibility) ==========
@@ -54,10 +54,10 @@ class AppColors {
 
   /// Light theme color scheme (no seed)
   static ColorScheme get lightColorScheme => ColorScheme.light(
-    primary: primaryLight,
-    onPrimary: textPrimaryLight,
-    secondary: accentLight,
-    onSecondary: Colors.white,
+    primary: accentLight,
+    onPrimary: Colors.white,
+    secondary: primaryLight,
+    onSecondary: textPrimaryLight,
     tertiary: accentAltLight,
     onTertiary: Colors.white,
     surface: surfaceLight,
@@ -71,9 +71,9 @@ class AppColors {
 
   /// Dark theme color scheme (no seed)
   static ColorScheme get darkColorScheme => ColorScheme.dark(
-    primary: primaryDark,
-    onPrimary: textPrimaryDark,
-    secondary: accentDark,
+    primary: accentDark,
+    onPrimary: Colors.white,
+    secondary: accentAltDark,
     onSecondary: Colors.white,
     tertiary: accentAltDark,
     onTertiary: Colors.white,

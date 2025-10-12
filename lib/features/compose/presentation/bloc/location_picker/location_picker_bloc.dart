@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:my_flutter_app/core/strings.dart';
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/services/location_search_service.dart';
 
 import 'location_picker_event.dart';
@@ -17,6 +19,7 @@ class LocationPickerBloc
   LocationPickerBloc(this._locationSearchService)
     : super(const LocationPickerInitial()) {
     on<LocationPickerSearchRequested>(_onSearchRequested);
+    on<LocationPickerSearchExecute>(_onSearchExecute);
     on<LocationPickerLocationSelected>(_onLocationSelected);
     on<LocationPickerSearchCleared>(_onSearchCleared);
     on<LocationPickerCleared>(_onCleared);
@@ -39,35 +42,42 @@ class LocationPickerBloc
     // Show loading state
     emit(const LocationPickerLoading());
 
-    // Use debouncing to avoid too many API calls
-    _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
-      // Check if the BLoC is still active before emitting
+    // Debounce by scheduling an internal execute event
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
       if (isClosed) return;
-
-      try {
-        final results = await _locationSearchService.searchLocations(
-          event.query,
-        );
-
-        // Check again before emitting results
-        if (isClosed) return;
-
-        if (results.isEmpty) {
-          emit(LocationPickerNoResults(query: event.query));
-        } else {
-          emit(
-            LocationPickerSearchResultsLoaded(
-              searchResults: results,
-              query: event.query,
-            ),
-          );
-        }
-      } catch (e) {
-        // Check again before emitting error
-        if (isClosed) return;
-        emit(LocationPickerError(message: 'Failed to search locations: $e'));
-      }
+      add(LocationPickerSearchExecute(event.query));
     });
+  }
+
+  /// Execute the debounced search (safe to emit here)
+  Future<void> _onSearchExecute(
+    LocationPickerSearchExecute event,
+    Emitter<LocationPickerState> emit,
+  ) async {
+    try {
+      final results = await _locationSearchService
+          .searchLocations(event.query)
+          .timeout(UIConstants.locationSearchTimeout);
+
+      if (results.isEmpty) {
+        emit(LocationPickerNoResults(query: event.query));
+      } else {
+        emit(
+          LocationPickerSearchResultsLoaded(
+            searchResults: results,
+            query: event.query,
+          ),
+        );
+      }
+    } on TimeoutException {
+      emit(
+        const LocationPickerError(message: AppStrings.locationSearchTimeout),
+      );
+    } catch (e) {
+      emit(
+        LocationPickerError(message: '${AppStrings.locationSearchError}: $e'),
+      );
+    }
   }
 
   /// Handle location selection

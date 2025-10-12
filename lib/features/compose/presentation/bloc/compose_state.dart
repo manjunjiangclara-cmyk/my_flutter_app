@@ -43,12 +43,15 @@ class ComposeContent extends ComposeState {
     List<String>? selectedTags,
     String? selectedLocation,
     bool? isPosting,
+    bool removeSelectedLocation = false,
   }) {
     return ComposeContent(
       text: text ?? this.text,
       attachedPhotoPaths: attachedPhotoPaths ?? this.attachedPhotoPaths,
       selectedTags: selectedTags ?? this.selectedTags,
-      selectedLocation: selectedLocation ?? this.selectedLocation,
+      selectedLocation: removeSelectedLocation
+          ? null
+          : (selectedLocation ?? this.selectedLocation),
       isPosting: isPosting ?? this.isPosting,
     );
   }

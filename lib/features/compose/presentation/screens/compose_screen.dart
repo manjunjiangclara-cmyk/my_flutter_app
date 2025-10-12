@@ -13,7 +13,7 @@ import 'package:my_flutter_app/features/compose/presentation/widgets/compose_act
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_app_bar.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_dialogs.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_text_input.dart';
-import 'package:my_flutter_app/features/compose/presentation/widgets/location/location_display.dart';
+import 'package:my_flutter_app/features/compose/presentation/widgets/location/location_chip.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/photo/photo_attachments.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/tags/tags_display.dart';
 
@@ -174,12 +174,28 @@ class _LocationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (content.selectedLocation == null) return const SizedBox.shrink();
+    return BlocBuilder<ComposeBloc, ComposeState>(
+      buildWhen: (previous, current) {
+        final prevLoc = previous is ComposeContent
+            ? previous.selectedLocation
+            : null;
+        final currLoc = current is ComposeContent
+            ? current.selectedLocation
+            : null;
+        return prevLoc != currLoc;
+      },
+      builder: (context, state) {
+        final currentContent = state is ComposeContent ? state : content;
+        if (currentContent.selectedLocation == null) {
+          return const SizedBox.shrink();
+        }
 
-    return LocationDisplay(
-      location: content.selectedLocation!,
-      onRemove: () =>
-          context.read<ComposeBloc>().add(const ComposeLocationRemoved()),
+        return LocationChip(
+          location: currentContent.selectedLocation!,
+          onRemove: () =>
+              context.read<ComposeBloc>().add(const ComposeLocationRemoved()),
+        );
+      },
     );
   }
 }

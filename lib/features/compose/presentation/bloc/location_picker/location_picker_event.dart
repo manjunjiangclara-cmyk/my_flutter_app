@@ -19,6 +19,16 @@ class LocationPickerSearchRequested extends LocationPickerEvent {
   List<Object?> get props => [query];
 }
 
+/// Internal event to execute a debounced search
+class LocationPickerSearchExecute extends LocationPickerEvent {
+  final String query;
+
+  const LocationPickerSearchExecute(this.query);
+
+  @override
+  List<Object?> get props => [query];
+}
+
 /// Event when a location is selected
 class LocationPickerLocationSelected extends LocationPickerEvent {
   final LocationSearchResult location;

@@ -152,7 +152,7 @@ class _MemoryListState extends State<_MemoryList> {
 
         if (memories.isEmpty) {
           return RefreshIndicator(
-            color: Theme.of(context).colorScheme.secondary,
+            color: Theme.of(context).colorScheme.primary,
             onRefresh: () async {
               context.read<MemoryBloc>().add(const MemoryRefreshRequested());
             },
@@ -180,7 +180,7 @@ class _MemoryListState extends State<_MemoryList> {
         }
 
         return RefreshIndicator(
-          color: Theme.of(context).colorScheme.secondary,
+          color: Theme.of(context).colorScheme.primary,
           onRefresh: () async {
             context.read<MemoryBloc>().add(const MemoryRefreshRequested());
           },

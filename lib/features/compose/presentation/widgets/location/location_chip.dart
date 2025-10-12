@@ -3,11 +3,11 @@ import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
-class LocationDisplay extends StatelessWidget {
+class LocationChip extends StatelessWidget {
   final String location;
   final VoidCallback onRemove;
 
-  const LocationDisplay({
+  const LocationChip({
     super.key,
     required this.location,
     required this.onRemove,
@@ -15,15 +15,22 @@ class LocationDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final maxWidth =
+        MediaQuery.of(context).size.width *
+        UIConstants.locationChipMaxWidthFraction;
     return Container(
-      padding: const EdgeInsets.all(Spacing.sm),
+      padding: const EdgeInsets.symmetric(
+        horizontal: UIConstants.locationChipHorizontalPadding,
+        vertical: UIConstants.locationChipVerticalPadding,
+      ),
       decoration: BoxDecoration(
         color: Theme.of(
           context,
         ).colorScheme.outline.withValues(alpha: UIConstants.dialogOpacity),
-        borderRadius: BorderRadius.circular(UIConstants.largeRadius),
+        borderRadius: BorderRadius.circular(UIConstants.locationChipRadius),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             Icons.location_on,
@@ -31,7 +38,17 @@ class LocationDisplay extends StatelessWidget {
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
           const SizedBox(width: Spacing.xs),
-          Expanded(child: Text(location, style: AppTypography.labelMedium)),
+          Flexible(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxWidth),
+              child: Text(
+                location,
+                style: AppTypography.labelMedium,
+                softWrap: true,
+              ),
+            ),
+          ),
+          const SizedBox(width: Spacing.xs),
           GestureDetector(
             onTap: onRemove,
             child: Icon(

@@ -38,20 +38,6 @@ class LocationSearchResultItem extends StatelessWidget {
           ),
           child: Row(
             children: [
-              // Location type icon
-              Container(
-                padding: const EdgeInsets.all(Spacing.sm),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(UIConstants.smallRadius),
-                ),
-                child: Icon(
-                  _getLocationIcon(),
-                  size: UIConstants.defaultIconSize,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-              ),
-              const SizedBox(width: Spacing.md),
               // Location details
               Expanded(
                 child: Column(
@@ -60,7 +46,6 @@ class LocationSearchResultItem extends StatelessWidget {
                     Text(
                       location.name,
                       style: AppTypography.bodyLarge.copyWith(
-                        fontWeight: FontWeight.w600,
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                       maxLines: 1,

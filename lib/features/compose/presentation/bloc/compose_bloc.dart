@@ -188,7 +188,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   ) {
     if (state is ComposeContent) {
       final currentState = state as ComposeContent;
-      emit(currentState.copyWith(selectedLocation: null));
+      emit(currentState.copyWith(removeSelectedLocation: true));
     }
   }
 

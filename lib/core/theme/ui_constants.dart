@@ -176,6 +176,8 @@ class UIConstants {
   static const double locationPickerHeight = 0.8;
   static const double locationPickerHandleWidth = 40.0;
   static const double locationPickerHandleHeight = 4.0;
+  static const double locationPickerCornerRadius = extraLargeRadius;
+  static const double locationPickerHandleRadius = 2.0;
   static const double locationResultItemPadding = 16.0;
   static const double locationResultIconPadding = 8.0;
   static const double locationResultIconSize = 24.0;
@@ -187,6 +189,13 @@ class UIConstants {
   static const double locationTypeChipPadding = 8.0;
   static const double locationErrorIconSize = 48.0;
   static const double locationLoadingIndicatorSize = 24.0;
+  static const Duration locationSearchTimeout = Duration(seconds: 6);
+
+  // Location Chip
+  static const double locationChipHorizontalPadding = 10.0;
+  static const double locationChipVerticalPadding = 6.0;
+  static const double locationChipRadius = mediumRadius;
+  static const double locationChipMaxWidthFraction = 0.66;
 
   // Journal Image Gallery
   static const int journalImageGalleryColumns = 3;

@@ -43,6 +43,8 @@ class AppStrings {
   static const String tryDifferentLocation =
       'Try searching for a different location';
   static const String locationSearchError = 'Failed to search locations';
+  static const String locationSearchTimeout =
+      'Search timed out. Please try again.';
   static const String locationSearchRetry = 'Retry';
   static const String locationSearching = 'Searching...';
   static const String locationSearchHint =
