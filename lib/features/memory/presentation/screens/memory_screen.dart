@@ -247,14 +247,22 @@ class _MemoryListState extends State<_MemoryList> {
         final isFirst = memoryIndex == 0;
         final isLast = memoryIndex == memories.length - 1;
 
-        return IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              TimelineIndicator(isFirst: isFirst, isLast: isLast),
-              const SizedBox(width: Spacing.lg),
-              Expanded(child: MemoryCard(memoryCardModel: memory)),
-            ],
+        return _KeepAliveMemoryRow(
+          key: ValueKey(memory.journalId),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                TimelineIndicator(isFirst: isFirst, isLast: isLast),
+                const SizedBox(width: Spacing.lg),
+                Expanded(
+                  child: MemoryCard(
+                    key: ValueKey(memory.journalId),
+                    memoryCardModel: memory,
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       }
@@ -267,5 +275,26 @@ class _MemoryListState extends State<_MemoryList> {
 
     // Fallback (should not reach here)
     return const SizedBox.shrink();
+  }
+}
+
+class _KeepAliveMemoryRow extends StatefulWidget {
+  final Widget child;
+
+  const _KeepAliveMemoryRow({super.key, required this.child});
+
+  @override
+  State<_KeepAliveMemoryRow> createState() => _KeepAliveMemoryRowState();
+}
+
+class _KeepAliveMemoryRowState extends State<_KeepAliveMemoryRow>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
   }
 }
