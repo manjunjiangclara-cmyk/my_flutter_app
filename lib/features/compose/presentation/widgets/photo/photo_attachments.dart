@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart';
+import 'package:my_flutter_app/features/compose/presentation/bloc/compose_event.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/image_gallery.dart';
-
-import '../../presentation/bloc/compose_bloc.dart';
-import '../../presentation/bloc/compose_event.dart';
 
 /// Photo attachments widget for compose screen
 /// Uses the shared ImageGallery component with compose-specific configuration

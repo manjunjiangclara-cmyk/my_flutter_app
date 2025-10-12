@@ -14,22 +14,28 @@ import 'package:my_flutter_app/core/utils/image_path_service.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // Load environment variables
-  await dotenv.load(fileName: ".env");
-
-  // Lock orientation to portrait only
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
-
-  // Setup global error handling
+  // Setup global error handling first
   GlobalErrorHandler.setup();
 
-  // Run app with error handling zone
-  GlobalErrorHandler.runAppWithErrorHandling(() {
+  // Run everything in the error handling zone
+  GlobalErrorHandler.runAppWithErrorHandling(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    // Load environment variables
+    await dotenv.load(fileName: ".env");
+
+    // Lock orientation to portrait only (with error handling)
+    try {
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    } catch (e) {
+      // Ignore orientation setting errors on some devices
+      print('Warning: Could not set device orientation: $e');
+    }
+
+    // Run the app
     runApp(const MyApp());
   });
 }
