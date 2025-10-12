@@ -1,6 +1,8 @@
 import 'package:intl/intl.dart';
 
 class DateFormatter {
+  // Cached formatted value for today's date to avoid intl warm-up on first use
+  static String? _cachedTodayFormatted;
   // Abbreviated weekdays for compact display
   static const List<String> _weekdaysAbbr = [
     'Mon',
@@ -104,6 +106,33 @@ class DateFormatter {
   static String getTodayFormatted() {
     final today = DateTime.now();
     return DateFormat('MMMM d, yyyy').format(today);
+  }
+
+  /// Pre-compute and cache today's formatted date using intl.
+  /// This avoids doing intl's first-use initialization on a hot UI path.
+  static Future<void> prewarmTodayFormatted() async {
+    try {
+      // Compute once; safe to call multiple times.
+      _cachedTodayFormatted ??= DateFormat(
+        'MMMM d, yyyy',
+      ).format(DateTime.now());
+    } catch (_) {
+      // Ignore prewarm failures; fallback getter will compute on demand
+    }
+  }
+
+  /// Get today's formatted date with caching to avoid first-use jank.
+  static String getTodayFormattedCached() {
+    if (_cachedTodayFormatted != null) {
+      return _cachedTodayFormatted!;
+    }
+    try {
+      _cachedTodayFormatted = DateFormat('MMMM d, yyyy').format(DateTime.now());
+      return _cachedTodayFormatted!;
+    } catch (_) {
+      // Fallback to direct formatting (may incur intl warm-up)
+      return getTodayFormatted();
+    }
   }
 
   /// Formats a date in the journal view style (e.g., "Thu, Sep 18")

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/image_path_service.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/photo_viewer.dart';
+import 'package:reorderables/reorderables.dart';
 
 /// Configuration for image gallery display options
 class ImageGalleryConfig {
@@ -15,6 +16,7 @@ class ImageGalleryConfig {
   final double? itemWidth;
   final bool showRemoveButton;
   final bool enableFullscreenViewer;
+  final bool skipFirstPhoto;
   final EdgeInsets? padding;
   final Widget? emptyWidget;
 
@@ -27,6 +29,7 @@ class ImageGalleryConfig {
     this.itemWidth,
     this.showRemoveButton = false,
     this.enableFullscreenViewer = true,
+    this.skipFirstPhoto = false,
     this.padding,
     this.emptyWidget,
   });
@@ -50,6 +53,7 @@ class ImageGalleryConfig {
     itemHeight: UIConstants.journalImageGalleryItemHeight,
     showRemoveButton: false,
     enableFullscreenViewer: true,
+    skipFirstPhoto: true,
   );
 }
 
@@ -60,6 +64,7 @@ class ImageGallery extends StatefulWidget {
   final ValueChanged<int>? onImageTap;
   final ValueChanged<int>? onRemoveImage;
   final VoidCallback? onEmptyStateTap;
+  final void Function(int oldIndex, int newIndex)? onReorder;
 
   const ImageGallery({
     super.key,
@@ -68,6 +73,7 @@ class ImageGallery extends StatefulWidget {
     this.onImageTap,
     this.onRemoveImage,
     this.onEmptyStateTap,
+    this.onReorder,
   });
 
   @override
@@ -78,6 +84,20 @@ class _ImageGalleryState extends State<ImageGallery> {
   final ImagePathService _imagePathService = ImagePathService();
   Map<String, String> _absolutePaths = {};
   bool _isLoadingPaths = false;
+  final ScrollController _reorderScrollController = ScrollController();
+
+  /// Get the filtered image paths based on skipFirstPhoto configuration
+  List<String> get _filteredImagePaths {
+    if (widget.config.skipFirstPhoto) {
+      if (widget.imagePaths.length <= 1) {
+        // Show nothing if there's only 1 photo or no photos
+        return [];
+      }
+      // Skip the first photo and show the rest
+      return widget.imagePaths.skip(1).toList();
+    }
+    return widget.imagePaths;
+  }
 
   @override
   void initState() {
@@ -135,8 +155,15 @@ class _ImageGalleryState extends State<ImageGallery> {
   }
 
   @override
+  void dispose() {
+    _reorderScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (widget.imagePaths.isEmpty) {
+    final filteredPaths = _filteredImagePaths;
+    if (filteredPaths.isEmpty) {
       return widget.config.emptyWidget ?? const SizedBox.shrink();
     }
 
@@ -156,6 +183,7 @@ class _ImageGalleryState extends State<ImageGallery> {
   }
 
   Widget _buildLoadingGrid() {
+    final filteredPaths = _filteredImagePaths;
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -165,7 +193,7 @@ class _ImageGalleryState extends State<ImageGallery> {
         mainAxisSpacing: widget.config.mainAxisSpacing,
         childAspectRatio: widget.config.childAspectRatio,
       ),
-      itemCount: widget.imagePaths.length,
+      itemCount: filteredPaths.length,
       itemBuilder: (context, index) {
         return _buildLoadingItem();
       },
@@ -173,6 +201,58 @@ class _ImageGalleryState extends State<ImageGallery> {
   }
 
   Widget _buildImageGrid() {
+    final filteredPaths = _filteredImagePaths;
+    // When reordering is enabled, use a ReorderableWrap to allow drag-and-drop
+    if (widget.onReorder != null) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final totalSpacing =
+              (widget.config.crossAxisCount - 1) *
+              widget.config.crossAxisSpacing;
+          final availableWidth = constraints.maxWidth - totalSpacing;
+          final itemWidth =
+              widget.config.itemWidth ??
+              (availableWidth / widget.config.crossAxisCount);
+          final itemHeight =
+              widget.config.itemHeight ??
+              (itemWidth / widget.config.childAspectRatio);
+
+          final ScrollController? inheritedPrimary =
+              PrimaryScrollController.maybeOf(context);
+          return PrimaryScrollController(
+            controller: inheritedPrimary ?? _reorderScrollController,
+            child: ReorderableWrap(
+              spacing: widget.config.crossAxisSpacing,
+              runSpacing: widget.config.mainAxisSpacing,
+              onReorder: (oldIndex, newIndex) {
+                final oldOriginal = _getOriginalIndex(oldIndex);
+                final newOriginal = _getOriginalIndex(newIndex);
+                widget.onReorder?.call(oldOriginal, newOriginal);
+              },
+              buildDraggableFeedback: (context, constraints, child) {
+                return Opacity(
+                  opacity: UIConstants.imageGalleryOpacity,
+                  child: Material(
+                    elevation: UIConstants.imageGalleryElevation,
+                    child: child,
+                  ),
+                );
+              },
+              children: List.generate(filteredPaths.length, (index) {
+                final imagePath = filteredPaths[index];
+                return SizedBox(
+                  key: ValueKey(imagePath),
+                  width: itemWidth,
+                  height: itemHeight,
+                  child: _buildImageItem(imagePath, index),
+                );
+              }),
+            ),
+          );
+        },
+      );
+    }
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -182,9 +262,9 @@ class _ImageGalleryState extends State<ImageGallery> {
         mainAxisSpacing: widget.config.mainAxisSpacing,
         childAspectRatio: widget.config.childAspectRatio,
       ),
-      itemCount: widget.imagePaths.length,
+      itemCount: filteredPaths.length,
       itemBuilder: (context, index) {
-        final imagePath = widget.imagePaths[index];
+        final imagePath = filteredPaths[index];
         return _buildImageItem(imagePath, index);
       },
     );
@@ -193,7 +273,7 @@ class _ImageGalleryState extends State<ImageGallery> {
   Widget _buildLoadingItem() {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+        borderRadius: BorderRadius.circular(UIConstants.largeRadius),
         border: Border.all(
           color: Theme.of(context).colorScheme.outline.withValues(
             alpha: UIConstants.photoBorderOpacity,
@@ -202,7 +282,7 @@ class _ImageGalleryState extends State<ImageGallery> {
         ),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+        borderRadius: BorderRadius.circular(UIConstants.largeRadius),
         child: Container(
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
           child: const Center(
@@ -224,7 +304,7 @@ class _ImageGalleryState extends State<ImageGallery> {
       onTap: () => _handleImageTap(index),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+          borderRadius: BorderRadius.circular(UIConstants.largeRadius),
           border: Border.all(
             color: Theme.of(context).colorScheme.outline.withValues(
               alpha: UIConstants.photoBorderOpacity,
@@ -233,7 +313,7 @@ class _ImageGalleryState extends State<ImageGallery> {
           ),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+          borderRadius: BorderRadius.circular(UIConstants.largeRadius),
           child: Stack(
             children: [
               Positioned.fill(child: _buildImage(absolutePath)),
@@ -302,7 +382,9 @@ class _ImageGalleryState extends State<ImageGallery> {
 
   void _handleImageTap(int index) {
     if (widget.onImageTap != null) {
-      widget.onImageTap!(index);
+      // Convert the filtered index back to the original index
+      final originalIndex = _getOriginalIndex(index);
+      widget.onImageTap!(originalIndex);
     } else if (widget.config.enableFullscreenViewer) {
       _openFullscreenViewer(index);
     }
@@ -314,10 +396,21 @@ class _ImageGalleryState extends State<ImageGallery> {
         .map((path) => _absolutePaths[path] ?? path)
         .toList();
 
+    // Convert the filtered index back to the original index for the viewer
+    final originalIndex = _getOriginalIndex(initialIndex);
+
     PhotoViewer.show(
       context: context,
       photoPaths: absoluteImagePaths,
-      initialIndex: initialIndex,
+      initialIndex: originalIndex,
     );
+  }
+
+  /// Convert filtered index back to original index
+  int _getOriginalIndex(int filteredIndex) {
+    if (widget.config.skipFirstPhoto && widget.imagePaths.length > 1) {
+      return filteredIndex + 1;
+    }
+    return filteredIndex;
   }
 }

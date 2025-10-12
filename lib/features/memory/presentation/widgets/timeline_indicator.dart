@@ -14,7 +14,12 @@ class TimelineIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lineColor = Theme.of(context).colorScheme.onSurface.withOpacity(0.5);
+    final colorScheme = Theme.of(context).colorScheme;
+    final bool isLight = colorScheme.brightness == Brightness.light;
+    final Color baseLine = colorScheme.outline;
+    final Color lineColor = isLight
+        ? baseLine.withOpacity(UIConstants.timelineLineOpacityLight)
+        : baseLine.withOpacity(UIConstants.timelineLineOpacityDark);
     return Column(
       children: <Widget>[
         // Top half of the line segment (before the dot)
@@ -34,11 +39,40 @@ class TimelineIndicator extends StatelessWidget {
           height: UIConstants.timelineDotSize,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Theme.of(context).colorScheme.primary,
+            color: isLight
+                ? Color.lerp(
+                    colorScheme.secondary,
+                    colorScheme.surface,
+                    UIConstants.timelineDotFillBlendLight,
+                  )!
+                : Color.lerp(
+                    colorScheme.secondary,
+                    colorScheme.surface,
+                    UIConstants.timelineDotFillBlendDark,
+                  )!,
             border: Border.all(
-              color: lineColor,
+              color: baseLine,
               width: UIConstants.timelineLineBorderWidth,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: colorScheme.shadow.withOpacity(
+                  isLight
+                      ? UIConstants.timelineShadowOpacity
+                      : UIConstants.timelineShadowOpacityDark,
+                ),
+                blurRadius: isLight
+                    ? UIConstants.timelineShadowBlur
+                    : UIConstants.timelineShadowBlurDark,
+                offset: Offset(
+                  0,
+                  isLight
+                      ? UIConstants.timelineShadowOffsetY
+                      : UIConstants.timelineShadowOffsetYDark,
+                ),
+                spreadRadius: 0,
+              ),
+            ],
           ),
         ),
         // Bottom half of the line segment (after the dot)

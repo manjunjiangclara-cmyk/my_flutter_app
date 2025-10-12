@@ -38,6 +38,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     on<ComposeTagAdded>(_onTagAdded);
     on<ComposeTagRemoved>(_onTagRemoved);
     on<ComposePostSubmitted>(_onPostSubmitted);
+    on<ComposePhotosReordered>(_onPhotosReordered);
 
     // Initialize with empty content state
     add(const ComposeTextChanged(''));
@@ -141,6 +142,28 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
           ..removeAt(event.index);
         emit(currentState.copyWith(attachedPhotoPaths: newPhotoPaths));
       }
+    }
+  }
+
+  void _onPhotosReordered(
+    ComposePhotosReordered event,
+    Emitter<ComposeState> emit,
+  ) {
+    if (state is ComposeContent) {
+      final currentState = state as ComposeContent;
+      final photos = List<String>.from(currentState.attachedPhotoPaths);
+      if (event.oldIndex < 0 || event.oldIndex >= photos.length) return;
+      var newIndex = event.newIndex;
+      if (newIndex < 0) newIndex = 0;
+      if (newIndex > photos.length) newIndex = photos.length;
+
+      final moved = photos.removeAt(event.oldIndex);
+      // Adjust newIndex when moving forward as per Flutter reorder convention
+      if (event.newIndex > event.oldIndex) {
+        newIndex -= 1;
+      }
+      photos.insert(newIndex, moved);
+      emit(currentState.copyWith(attachedPhotoPaths: photos));
     }
   }
 

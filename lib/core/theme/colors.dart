@@ -8,9 +8,11 @@ class AppColors {
 
   // Base palette
   static const Color primaryLight = Color(0xFFFFF3CC);
-  static const Color backgroundLight = Color(0xFFFFF9F2);
-  static const Color borderLight = Color(0xFFE6E6E6);
-  static const Color accentLight = Color(0xFFA3C293);
+  static const Color backgroundLight = Color(0xFFF7F3E9);
+  static const Color surfaceLight = Color(0xFFFFFFFF);
+  static const Color borderLight = Color(0xFFE6E0D6);
+  static const Color accentLight = Color(0xFFD49A7B);
+  static const Color accentAltLight = Color(0xFFA3C293);
 
   // Feedback
   static const Color successLight = Color(0xFF88B04B);
@@ -25,8 +27,10 @@ class AppColors {
   // Base palette
   static const Color primaryDark = Color(0xFF2D2D2D);
   static const Color backgroundDark = Color(0xFF1A1A1A);
+  static const Color surfaceDark = Color(0xFF222222);
   static const Color borderDark = Color(0xFF404040);
-  static const Color accentDark = Color(0xFF6B8E5A);
+  static const Color accentDark = Color(0xFFB37758);
+  static const Color accentAltDark = Color(0xFF6B8E5A);
 
   // Feedback
   static const Color successDark = Color(0xFF7BA05B);
@@ -48,34 +52,38 @@ class AppColors {
 
   // ========== THEME SCHEMES ==========
 
-  /// Light theme color scheme
-  static ColorScheme get lightColorScheme => ColorScheme.fromSeed(
-    seedColor: primaryLight,
+  /// Light theme color scheme (no seed)
+  static ColorScheme get lightColorScheme => ColorScheme.light(
     primary: primaryLight,
-    secondary: accentLight,
-    surface: backgroundLight,
     onPrimary: textPrimaryLight,
+    secondary: accentLight,
     onSecondary: Colors.white,
+    tertiary: accentAltLight,
+    onTertiary: Colors.white,
+    surface: surfaceLight,
     onSurface: textPrimaryLight,
+    surfaceContainerHighest: surfaceLight,
     onSurfaceVariant: textSecondaryLight,
+    outline: borderLight,
     error: errorLight,
     onError: Colors.white,
-    brightness: Brightness.light,
   );
 
-  /// Dark theme color scheme
-  static ColorScheme get darkColorScheme => ColorScheme.fromSeed(
-    seedColor: Colors.deepPurple,
-    // primary: primaryDark,
-    // secondary: accentDark,
-    // surface: backgroundDark,
-    // onPrimary: textPrimaryDark,
-    // onSecondary: Colors.white,
-    // onSurface: textPrimaryDark,
-    // onSurfaceVariant: textSecondaryDark,
-    // error: errorDark,
-    // onError: Colors.white,
-    brightness: Brightness.dark,
+  /// Dark theme color scheme (no seed)
+  static ColorScheme get darkColorScheme => ColorScheme.dark(
+    primary: primaryDark,
+    onPrimary: textPrimaryDark,
+    secondary: accentDark,
+    onSecondary: Colors.white,
+    tertiary: accentAltDark,
+    onTertiary: Colors.white,
+    surface: surfaceDark,
+    onSurface: textPrimaryDark,
+    surfaceContainerHighest: surfaceDark,
+    onSurfaceVariant: textSecondaryDark,
+    outline: borderDark,
+    error: errorDark,
+    onError: Colors.white,
   );
 
   // ========== LEGACY SUPPORT ==========
