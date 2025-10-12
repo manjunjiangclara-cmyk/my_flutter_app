@@ -1,12 +1,18 @@
 import 'package:go_router/go_router.dart';
+import 'package:my_flutter_app/core/presentation/splash_screen.dart';
 import 'package:my_flutter_app/core/router/bottom_navigation_shell.dart';
 import 'package:my_flutter_app/features/journal/presentation/router/journal_router.dart';
 
 /// App router configuration using GoRouter
 class AppRouter {
   static final GoRouter _router = GoRouter(
-    initialLocation: '/',
+    initialLocation: '/splash',
     routes: [
+      // Splash screen
+      GoRoute(
+        path: '/splash',
+        builder: (context, state) => const SplashScreen(),
+      ),
       // Main app with bottom navigation
       GoRoute(
         path: '/',

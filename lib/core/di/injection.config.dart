@@ -15,8 +15,9 @@ import 'package:my_flutter_app/core/database/database_helper.dart' as _i607;
 import 'package:my_flutter_app/core/router/tab_controller.dart' as _i1002;
 import 'package:my_flutter_app/core/services/google_places_service.dart'
     as _i805;
-import 'package:my_flutter_app/core/services/image_picker_service.dart'
-    as _i193;
+import 'package:my_flutter_app/core/utils/file_storage_service.dart' as _i658;
+import 'package:my_flutter_app/core/utils/image_path_service.dart' as _i1035;
+import 'package:my_flutter_app/core/utils/image_picker_service.dart' as _i772;
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart'
     as _i1036;
 import 'package:my_flutter_app/features/compose/presentation/bloc/location_picker/location_picker_bloc.dart'
@@ -33,10 +34,14 @@ import 'package:my_flutter_app/shared/data/repositories_impl/journal_repository_
     as _i705;
 import 'package:my_flutter_app/shared/domain/repositories/journal_repository.dart'
     as _i690;
+import 'package:my_flutter_app/shared/domain/usecases/cleanup_orphaned_files.dart'
+    as _i600;
 import 'package:my_flutter_app/shared/domain/usecases/create_journal.dart'
     as _i808;
 import 'package:my_flutter_app/shared/domain/usecases/delete_journal.dart'
     as _i682;
+import 'package:my_flutter_app/shared/domain/usecases/delete_journal_with_files.dart'
+    as _i308;
 import 'package:my_flutter_app/shared/domain/usecases/get_journal_by_id.dart'
     as _i368;
 import 'package:my_flutter_app/shared/domain/usecases/get_journals.dart'
@@ -53,16 +58,31 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
-    gh.factory<_i193.ImagePickerService>(() => _i193.ImagePickerService());
+    gh.factory<_i658.FileStorageService>(() => _i658.FileStorageService());
+    gh.factory<_i772.ImagePickerService>(() => _i772.ImagePickerService());
     gh.factory<_i1002.AppTabController>(() => _i1002.AppTabController());
-    gh.factory<_i424.JournalLocalDataSourceImpl>(
+    gh.factory<_i1035.ImagePathService>(() => _i1035.ImagePathService());
+    gh.singleton<_i607.DatabaseHelper>(() => _i607.DatabaseHelper.new());
+    gh.factory<_i424.JournalLocalDataSource>(
       () => _i424.JournalLocalDataSourceImpl(),
     );
-    gh.singleton<_i607.DatabaseHelper>(() => _i607.DatabaseHelper.new());
     gh.singleton<_i805.GooglePlacesService>(() => _i805.GooglePlacesService());
-    gh.factory<_i705.JournalRepositoryImpl>(
+    gh.factory<_i690.JournalRepository>(
       () => _i705.JournalRepositoryImpl(
         localDataSource: gh<_i424.JournalLocalDataSource>(),
+        fileStorageService: gh<_i658.FileStorageService>(),
+      ),
+    );
+    gh.factory<_i308.DeleteJournalWithFiles>(
+      () => _i308.DeleteJournalWithFiles(
+        gh<_i690.JournalRepository>(),
+        gh<_i658.FileStorageService>(),
+      ),
+    );
+    gh.factory<_i600.CleanupOrphanedFiles>(
+      () => _i600.CleanupOrphanedFiles(
+        gh<_i690.JournalRepository>(),
+        gh<_i658.FileStorageService>(),
       ),
     );
     gh.factory<_i750.LocationSearchService>(

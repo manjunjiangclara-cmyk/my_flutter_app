@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:equatable/equatable.dart';
 
 /// Base class for all compose states
@@ -18,14 +16,14 @@ class ComposeInitial extends ComposeState {
 /// State representing the current compose content
 class ComposeContent extends ComposeState {
   final String text;
-  final List<File> attachedPhotos;
+  final List<String> attachedPhotoPaths;
   final List<String> selectedTags;
   final String? selectedLocation;
   final bool isPosting;
 
   const ComposeContent({
     this.text = '',
-    this.attachedPhotos = const [],
+    this.attachedPhotoPaths = const [],
     this.selectedTags = const [],
     this.selectedLocation,
     this.isPosting = false,
@@ -34,21 +32,21 @@ class ComposeContent extends ComposeState {
   /// Whether the compose form can be posted
   bool get canPost =>
       text.trim().isNotEmpty ||
-      attachedPhotos.isNotEmpty ||
+      attachedPhotoPaths.isNotEmpty ||
       selectedLocation != null ||
       selectedTags.isNotEmpty;
 
   /// Copy with method for immutable state updates
   ComposeContent copyWith({
     String? text,
-    List<File>? attachedPhotos,
+    List<String>? attachedPhotoPaths,
     List<String>? selectedTags,
     String? selectedLocation,
     bool? isPosting,
   }) {
     return ComposeContent(
       text: text ?? this.text,
-      attachedPhotos: attachedPhotos ?? this.attachedPhotos,
+      attachedPhotoPaths: attachedPhotoPaths ?? this.attachedPhotoPaths,
       selectedTags: selectedTags ?? this.selectedTags,
       selectedLocation: selectedLocation ?? this.selectedLocation,
       isPosting: isPosting ?? this.isPosting,
@@ -58,7 +56,7 @@ class ComposeContent extends ComposeState {
   @override
   List<Object?> get props => [
     text,
-    attachedPhotos,
+    attachedPhotoPaths,
     selectedTags,
     selectedLocation,
     isPosting,
@@ -68,13 +66,13 @@ class ComposeContent extends ComposeState {
 /// State when posting is in progress
 class ComposePosting extends ComposeState {
   final String text;
-  final List<File> attachedPhotos;
+  final List<String> attachedPhotoPaths;
   final List<String> selectedTags;
   final String? selectedLocation;
 
   const ComposePosting({
     required this.text,
-    required this.attachedPhotos,
+    required this.attachedPhotoPaths,
     required this.selectedTags,
     this.selectedLocation,
   });
@@ -82,7 +80,7 @@ class ComposePosting extends ComposeState {
   @override
   List<Object?> get props => [
     text,
-    attachedPhotos,
+    attachedPhotoPaths,
     selectedTags,
     selectedLocation,
   ];

@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/router/router_exports.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/theme_provider.dart';
+import 'package:my_flutter_app/core/utils/date_formatter.dart';
 import 'package:my_flutter_app/core/utils/error_handler.dart';
+import 'package:my_flutter_app/core/utils/image_path_service.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Load environment variables
   await dotenv.load(fileName: ".env");
 
+  // Lock orientation to portrait only
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   // Setup global error handling
   GlobalErrorHandler.setup();
-
-  // Initialize dependency injection
-  configureDependencies();
 
   // Run app with error handling zone
   GlobalErrorHandler.runAppWithErrorHandling(() {
@@ -25,12 +34,77 @@ void main() async {
   });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isInitialized = false;
+  late final GoRouter _router = AppRouter.router;
+
+  // Cache themes to avoid rebuilding them on every build
+  static final ThemeData _lightTheme = _buildLightThemeStatic();
+  static final ThemeData _darkTheme = _buildDarkThemeStatic();
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize dependency injection asynchronously
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeApp();
+    });
+  }
+
+  Future<void> _initializeApp() async {
+    try {
+      // Initialize dependency injection in a separate isolate to avoid blocking UI
+      await Future.microtask(() {
+        configureDependencies();
+      });
+
+      // Prewarm documents directory to avoid jank on first image decode
+      try {
+        await getIt<ImagePathService>().prewarmDocumentsDirectory();
+      } catch (_) {
+        // Ignore prewarm failures
+      }
+
+      // Prewarm intl date formatting and cache today's formatted date
+      try {
+        await DateFormatter.prewarmTodayFormatted();
+      } catch (_) {
+        // Ignore prewarm failures; fallback getter will compute on demand
+      }
+
+      if (mounted) {
+        setState(() {
+          _isInitialized = true;
+        });
+      }
+    } catch (e) {
+      print('❌ Error initializing app: $e');
+      if (mounted) {
+        setState(() {
+          _isInitialized = true; // Still show the app even if DI fails
+        });
+      }
+    }
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    if (!_isInitialized) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: AppStrings.appName,
+        home: const Scaffold(body: Center(child: CircularProgressIndicator())),
+      );
+    }
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => getIt<AppTabController>()),
@@ -41,20 +115,20 @@ class MyApp extends StatelessWidget {
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
             title: AppStrings.appName,
-            theme: _buildLightTheme(),
-            darkTheme: _buildDarkTheme(),
+            theme: _lightTheme,
+            darkTheme: _darkTheme,
             themeMode: themeProvider.themeMode,
-            routerConfig: AppRouter.router,
+            routerConfig: _router,
           );
         },
       ),
     );
   }
 
-  /// Build light theme
-  ThemeData _buildLightTheme() {
+  /// Build light theme (static version for caching)
+  static ThemeData _buildLightThemeStatic() {
     final colorScheme = AppColors.lightColorScheme;
-    return ThemeData(
+    final theme = ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: colorScheme.surface,
@@ -67,12 +141,13 @@ class MyApp extends StatelessWidget {
         elevation: 0,
       ),
     );
+    return theme;
   }
 
-  /// Build dark theme
-  ThemeData _buildDarkTheme() {
+  /// Build dark theme (static version for caching)
+  static ThemeData _buildDarkThemeStatic() {
     final colorScheme = AppColors.darkColorScheme;
-    return ThemeData(
+    final theme = ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: colorScheme.surface,
@@ -85,5 +160,6 @@ class MyApp extends StatelessWidget {
         elevation: 0,
       ),
     );
+    return theme;
   }
 }

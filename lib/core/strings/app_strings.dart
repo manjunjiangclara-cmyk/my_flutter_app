@@ -13,4 +13,15 @@ class AppStrings {
   static const String loading = 'Loading...';
   static const String error = 'Error';
   static const String success = 'Success';
+
+  // ---------- Coming Soon Messages ----------
+  static const String comingSoon = 'coming soon';
+  static const String editFunctionalityComingSoon =
+      'Edit functionality coming soon';
+  static const String shareFunctionalityComingSoon =
+      'Share functionality coming soon';
+  static const String locationFunctionalityComingSoon =
+      'Location functionality coming soon';
+  static const String tagFunctionalityComingSoon =
+      'Tag functionality coming soon';
 }

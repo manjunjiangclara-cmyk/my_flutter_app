@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 
 /// Tab controller for managing bottom navigation state
@@ -10,6 +11,7 @@ class AppTabController extends ChangeNotifier {
 
   void setIndex(int index) {
     if (_currentIndex != index) {
+      HapticFeedback.lightImpact();
       _currentIndex = index;
       notifyListeners();
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/router/navigation_helper.dart';
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/journal/presentation/strings/journal_strings.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/action_button.dart';
 
@@ -14,26 +15,44 @@ class JournalAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      leading: IconButton(
-        icon: const Icon(Icons.close),
-        onPressed: () => NavigationHelper.goBack(context),
-        tooltip: JournalStrings.closeJournal,
+      leading: Padding(
+        padding: const EdgeInsets.only(left: UIConstants.journalContentPadding),
+        child: ActionButton.circular(
+          svgAssetPath: 'assets/icons/close.svg',
+          onPressed: () => NavigationHelper.goBack(context),
+          tooltip: JournalStrings.closeJournal,
+        ),
       ),
       actions: [
-        ActionButton(
-          icon: Icons.edit_outlined,
-          onPressed: onEdit,
-          tooltip: JournalStrings.editJournal,
+        Padding(
+          padding: const EdgeInsets.only(
+            right: UIConstants.journalAppBarIconPadding,
+          ),
+          child: ActionButton.circular(
+            svgAssetPath: 'assets/icons/edit.svg',
+            onPressed: onEdit,
+            tooltip: JournalStrings.editJournal,
+          ),
         ),
-        ActionButton(
-          icon: Icons.delete_outline,
-          onPressed: onDelete,
-          tooltip: JournalStrings.deleteJournal,
+        Padding(
+          padding: const EdgeInsets.only(
+            right: UIConstants.journalAppBarIconPadding,
+          ),
+          child: ActionButton.circular(
+            svgAssetPath: 'assets/icons/delete.svg',
+            onPressed: onDelete,
+            tooltip: JournalStrings.deleteJournal,
+          ),
         ),
-        ActionButton(
-          icon: Icons.ios_share,
-          onPressed: onShare,
-          tooltip: JournalStrings.shareJournal,
+        Padding(
+          padding: const EdgeInsets.only(
+            right: UIConstants.journalAppBarIconPadding,
+          ),
+          child: ActionButton.circular(
+            svgAssetPath: 'assets/icons/share.svg',
+            onPressed: onShare,
+            tooltip: JournalStrings.shareJournal,
+          ),
         ),
       ],
       floating: true,

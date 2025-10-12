@@ -5,7 +5,7 @@ class Journal {
   final DateTime updatedAt;
   final List<String> tags;
   final bool isFavorite;
-  final List<String> imageUrls;
+  final List<String> imagePaths;
   final String? location;
 
   const Journal({
@@ -15,7 +15,7 @@ class Journal {
     required this.updatedAt,
     this.tags = const [],
     this.isFavorite = false,
-    this.imageUrls = const [],
+    this.imagePaths = const [],
     this.location,
   });
 
@@ -26,7 +26,7 @@ class Journal {
     DateTime? updatedAt,
     List<String>? tags,
     bool? isFavorite,
-    List<String>? imageUrls,
+    List<String>? imagePaths,
     String? location,
   }) {
     return Journal(
@@ -36,7 +36,7 @@ class Journal {
       updatedAt: updatedAt ?? this.updatedAt,
       tags: tags ?? this.tags,
       isFavorite: isFavorite ?? this.isFavorite,
-      imageUrls: imageUrls ?? this.imageUrls,
+      imagePaths: imagePaths ?? this.imagePaths,
       location: location ?? this.location,
     );
   }

@@ -1,11 +1,11 @@
-import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/services/image_picker_service.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/core/utils/file_storage_service.dart';
 import 'package:my_flutter_app/shared/domain/entities/journal.dart';
 import 'package:my_flutter_app/shared/domain/usecases/create_journal.dart';
 
@@ -16,7 +16,6 @@ import 'compose_state.dart';
 @injectable
 class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   final CreateJournal _createJournal;
-  final ImagePickerService _imagePickerService;
   final TextEditingController textController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController tagController = TextEditingController();
@@ -25,9 +24,11 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   final FocusNode locationFocusNode = FocusNode();
   final FocusNode tagFocusNode = FocusNode();
 
-  ComposeBloc(this._createJournal)
-    : _imagePickerService = getIt<ImagePickerService>(),
-      super(const ComposeInitial()) {
+  // Lazy-loaded services to avoid blocking UI during initialization
+  ImagePickerService? _imagePickerService;
+  FileStorageService? _fileStorageService;
+
+  ComposeBloc(this._createJournal) : super(const ComposeInitial()) {
     on<ComposeTextChanged>(_onTextChanged);
     on<ComposePhotoAddedFromGallery>(_onPhotoAddedFromGallery);
     on<ComposePhotosAdded>(_onPhotosAdded);
@@ -37,10 +38,21 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     on<ComposeTagAdded>(_onTagAdded);
     on<ComposeTagRemoved>(_onTagRemoved);
     on<ComposePostSubmitted>(_onPostSubmitted);
-    on<ComposeCleared>(_onCleared);
+    on<ComposePhotosReordered>(_onPhotosReordered);
 
     // Initialize with empty content state
     add(const ComposeTextChanged(''));
+  }
+
+  // Lazy getters for services to avoid blocking UI during initialization
+  ImagePickerService get _imagePickerServiceInstance {
+    _imagePickerService ??= getIt<ImagePickerService>();
+    return _imagePickerService!;
+  }
+
+  FileStorageService get _fileStorageServiceInstance {
+    _fileStorageService ??= getIt<FileStorageService>();
+    return _fileStorageService!;
   }
 
   void _onTextChanged(ComposeTextChanged event, Emitter<ComposeState> emit) {
@@ -61,28 +73,35 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         : const ComposeContent();
 
     // Check if we can add more photos
-    if (!_imagePickerService.canAddMorePhotos(
-      currentState.attachedPhotos.length,
+    if (!_imagePickerServiceInstance.canAddMorePhotos(
+      currentState.attachedPhotoPaths.length,
     )) {
       return;
     }
 
     try {
-      final files = await _imagePickerService.pickMultipleImages(
+      final files = await _imagePickerServiceInstance.pickMultipleImages(
         imageQuality: UIConstants.imageQuality,
       );
 
       if (files.isNotEmpty) {
         // Calculate how many photos we can actually add
-        final remainingSlots = _imagePickerService.getRemainingPhotoSlots(
-          currentState.attachedPhotos.length,
-        );
+        final remainingSlots = _imagePickerServiceInstance
+            .getRemainingPhotoSlots(currentState.attachedPhotoPaths.length);
         final photosToAdd = files.take(remainingSlots).toList();
 
         if (photosToAdd.isNotEmpty) {
-          final newPhotos = List<File>.from(currentState.attachedPhotos)
-            ..addAll(photosToAdd);
-          emit(currentState.copyWith(attachedPhotos: newPhotos));
+          // Save images to local storage and get their paths
+          final savedPaths = await _fileStorageServiceInstance.saveImages(
+            photosToAdd,
+          );
+
+          if (savedPaths.isNotEmpty) {
+            final newPhotoPaths = List<String>.from(
+              currentState.attachedPhotoPaths,
+            )..addAll(savedPaths);
+            emit(currentState.copyWith(attachedPhotoPaths: newPhotoPaths));
+          }
         }
       }
     } catch (e) {
@@ -95,18 +114,18 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         ? state as ComposeContent
         : const ComposeContent();
 
-    if (event.photos.isEmpty) return;
+    if (event.photoPaths.isEmpty) return;
 
     // Calculate how many photos we can actually add
-    final remainingSlots = _imagePickerService.getRemainingPhotoSlots(
-      currentState.attachedPhotos.length,
+    final remainingSlots = _imagePickerServiceInstance.getRemainingPhotoSlots(
+      currentState.attachedPhotoPaths.length,
     );
-    final photosToAdd = event.photos.take(remainingSlots).toList();
+    final photoPathsToAdd = event.photoPaths.take(remainingSlots).toList();
 
-    if (photosToAdd.isNotEmpty) {
-      final newPhotos = List<File>.from(currentState.attachedPhotos)
-        ..addAll(photosToAdd);
-      emit(currentState.copyWith(attachedPhotos: newPhotos));
+    if (photoPathsToAdd.isNotEmpty) {
+      final newPhotoPaths = List<String>.from(currentState.attachedPhotoPaths)
+        ..addAll(photoPathsToAdd);
+      emit(currentState.copyWith(attachedPhotoPaths: newPhotoPaths));
     }
   }
 
@@ -114,11 +133,37 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     if (state is ComposeContent) {
       final currentState = state as ComposeContent;
       if (event.index >= 0 &&
-          event.index < currentState.attachedPhotos.length) {
-        final newPhotos = List<File>.from(currentState.attachedPhotos)
+          event.index < currentState.attachedPhotoPaths.length) {
+        // Delete the file from local storage
+        final filePathToDelete = currentState.attachedPhotoPaths[event.index];
+        _fileStorageServiceInstance.deleteFile(filePathToDelete);
+
+        final newPhotoPaths = List<String>.from(currentState.attachedPhotoPaths)
           ..removeAt(event.index);
-        emit(currentState.copyWith(attachedPhotos: newPhotos));
+        emit(currentState.copyWith(attachedPhotoPaths: newPhotoPaths));
       }
+    }
+  }
+
+  void _onPhotosReordered(
+    ComposePhotosReordered event,
+    Emitter<ComposeState> emit,
+  ) {
+    if (state is ComposeContent) {
+      final currentState = state as ComposeContent;
+      final photos = List<String>.from(currentState.attachedPhotoPaths);
+      if (event.oldIndex < 0 || event.oldIndex >= photos.length) return;
+      var newIndex = event.newIndex;
+      if (newIndex < 0) newIndex = 0;
+      if (newIndex > photos.length) newIndex = photos.length;
+
+      final moved = photos.removeAt(event.oldIndex);
+      // Adjust newIndex when moving forward as per Flutter reorder convention
+      if (event.newIndex > event.oldIndex) {
+        newIndex -= 1;
+      }
+      photos.insert(newIndex, moved);
+      emit(currentState.copyWith(attachedPhotoPaths: photos));
     }
   }
 
@@ -187,7 +232,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     emit(
       ComposePosting(
         text: currentState.text,
-        attachedPhotos: currentState.attachedPhotos,
+        attachedPhotoPaths: currentState.attachedPhotoPaths,
         selectedTags: currentState.selectedTags,
         selectedLocation: currentState.selectedLocation,
       ),
@@ -202,9 +247,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         createdAt: now,
         updatedAt: now,
         tags: currentState.selectedTags,
-        imageUrls: currentState.attachedPhotos
-            .map((file) => file.path)
-            .toList(),
+        imagePaths: currentState.attachedPhotoPaths,
         location: currentState.selectedLocation,
       );
 
@@ -218,6 +261,9 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
           );
         },
         (savedJournal) {
+          // Trigger haptic feedback for successful save
+          HapticFeedback.mediumImpact();
+
           // Emit success state
           emit(const ComposePostSuccess());
 
@@ -228,13 +274,6 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     } catch (e) {
       emit(ComposePostFailure('Failed to post: $e'));
     }
-  }
-
-  void _onCleared(ComposeCleared event, Emitter<ComposeState> emit) {
-    textController.clear();
-    locationController.clear();
-    tagController.clear();
-    emit(const ComposeInitial());
   }
 
   @override

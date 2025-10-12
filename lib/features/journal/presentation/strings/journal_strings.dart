@@ -3,6 +3,7 @@ class JournalStrings {
   JournalStrings._();
 
   // ---------- Journal View Screen ----------
+  static const String journal = 'Journal';
   static const String retry = 'Retry';
   static const String showLess = 'Show less';
   static const String editJournal = 'Edit Journal';
@@ -20,6 +21,9 @@ class JournalStrings {
   // ---------- Error Messages ----------
   static const String loadJournalError = 'Failed to load journal';
   static const String deleteJournalError = 'Failed to delete journal';
+
+  // ---------- UI Constants ----------
+  static const String locationEmoji = '📍';
 
   // ---------- Accessibility Labels ----------
   static const String journalImageLabel = 'Journal image';

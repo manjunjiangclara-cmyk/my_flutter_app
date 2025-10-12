@@ -13,11 +13,17 @@ class AppStrings {
   static const String ok = 'OK';
   static const String cancel = 'Cancel';
   static const String confirm = 'Confirm';
+  static const String delete = 'Delete';
   static const String settings = 'Settings';
   static const String memory = 'Memory';
   static const String compose = 'Compose';
   static const String helpAndSupport = 'Help & Support';
   static const String appVersion = 'App Version';
+
+  // ---------- Delete Dialog ----------
+  static const String deleteConfirmTitle = 'Delete Content?';
+  static const String deleteConfirmMessage =
+      'This action cannot be undone. Are you sure you want to delete?';
 
   // ---------- Screens: Memory ----------
   static const String myMemories = 'My Memories';
@@ -25,7 +31,7 @@ class AppStrings {
 
   // ---------- Screens: Compose ----------
   static const String composePrompt = 'Hey, What is on your mind today?';
-  static String get sampleDate => DateFormatter.getTodayFormatted();
+  static String get sampleDate => DateFormatter.getTodayFormattedCached();
   static const String post = 'Post';
   static const String addLocation = 'Add Location';
   static const String addTag = 'Add Tag';
@@ -80,5 +86,15 @@ class AppStrings {
   static const String alwaysDark = 'Always dark';
 
   // ---------- Date Formatting ----------
-  static const String memoryCardDateFormat = 'EEE, MMMM d';
+  static const String memoryCardDateFormat = 'EEE, MMM d';
+
+  // ---------- Image Error Messages ----------
+  static const String imageUnavailable = 'Image unavailable';
+  static const String imageNotFound = 'Image not found';
+  static const String imageLoading = 'Loading image...';
+
+  // ---------- Splash Screen ----------
+  static const String splashTitle = 'Hibi';
+  static const String splashSubtitle = 'Capture your memories';
+  static const String splashLoading = 'Loading...';
 }

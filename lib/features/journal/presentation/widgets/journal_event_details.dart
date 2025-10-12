@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
-import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/journal/presentation/strings/journal_strings.dart';
 
 /// Event details header widget for journal view
@@ -35,19 +34,12 @@ class JournalEventDetails extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          Icons.location_on,
-          size: UIConstants.smallIconSize,
-          color: Theme.of(context).colorScheme.primary,
-          semanticLabel: JournalStrings.journalLocationLabel,
-        ),
+        Text(JournalStrings.locationEmoji, style: AppTypography.labelSmall),
         const SizedBox(width: Spacing.xs),
         Flexible(
           child: Text(
             location,
-            style: AppTypography.labelSmall.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            style: AppTypography.labelSmall,
             overflow: TextOverflow.ellipsis,
             semanticsLabel: JournalStrings.journalLocationLabel,
           ),

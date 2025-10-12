@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
+import 'package:my_flutter_app/core/strings/app_strings.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart';
@@ -155,10 +156,10 @@ class _AttachmentsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (content.attachedPhotos.isEmpty) return const SizedBox.shrink();
+    if (content.attachedPhotoPaths.isEmpty) return const SizedBox.shrink();
 
     return PhotoAttachments(
-      photos: content.attachedPhotos,
+      photoPaths: content.attachedPhotoPaths,
       onRemovePhoto: (index) =>
           context.read<ComposeBloc>().add(ComposePhotoRemoved(index)),
     );
@@ -232,22 +233,37 @@ class _ComposeActionArea extends StatelessWidget {
       focusNode: bloc.locationFocusNode,
       onAdd: (location) => bloc.add(ComposeLocationAdded(location.name)),
     );
+
+    // Commented out for future implementation
+    // final bloc = context.read<ComposeBloc>();
+    // ComposeDialogs.showLocationDialog(
+    //   context: context,
+    //   controller: bloc.locationController,
+    //   focusNode: bloc.locationFocusNode,
+    //   onAdd: (location) => bloc.add(ComposeLocationAdded(location)),
+    // );
   }
 
   void _showTagDialog(BuildContext context) {
-    final bloc = context.read<ComposeBloc>();
-    final currentState = bloc.state;
-    final existingTags = currentState is ComposeContent
-        ? currentState.selectedTags
-        : <String>[];
-
-    ComposeDialogs.showTagDialog(
-      context: context,
-      controller: bloc.tagController,
-      focusNode: bloc.tagFocusNode,
-      onAdd: (tag) => bloc.add(ComposeTagAdded(tag)),
-      existingTags: existingTags,
+    // TODO: Implement tag functionality
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text(AppStrings.tagFunctionalityComingSoon)),
     );
+
+    // Commented out for future implementation
+    // final bloc = context.read<ComposeBloc>();
+    // final currentState = bloc.state;
+    // final existingTags = currentState is ComposeContent
+    //     ? currentState.selectedTags
+    //     : <String>[];
+
+    // ComposeDialogs.showTagDialog(
+    //   context: context,
+    //   controller: bloc.tagController,
+    //   focusNode: bloc.tagFocusNode,
+    //   onAdd: (tag) => bloc.add(ComposeTagAdded(tag)),
+    //   existingTags: existingTags,
+    // );
   }
 }
 

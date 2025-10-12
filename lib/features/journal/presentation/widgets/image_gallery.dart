@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:reorderables/reorderables.dart';
 
 class ImageGallery extends StatelessWidget {
-  final List<String> imageUrls;
+  final List<String> imagePaths;
   final double imageWidth;
   final double imageHeight;
   final bool canAddPhotos;
@@ -14,7 +16,7 @@ class ImageGallery extends StatelessWidget {
   final void Function(int oldIndex, int newIndex)? onReorder;
 
   const ImageGallery({
-    required this.imageUrls,
+    required this.imagePaths,
     this.imageWidth = UIConstants.defaultImageSize,
     this.imageHeight = UIConstants.defaultImageSize,
     required this.canAddPhotos,
@@ -30,12 +32,12 @@ class ImageGallery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> items = [
-      ...imageUrls.asMap().entries.map((entry) {
+      ...imagePaths.asMap().entries.map((entry) {
         int index = entry.key;
-        String url = entry.value;
+        String path = entry.value;
 
         return Stack(
-          key: ValueKey(url),
+          key: ValueKey(path),
           children: [
             // 使用 Material + InkWell 提供长按反馈
             Material(
@@ -47,8 +49,8 @@ class ImageGallery extends StatelessWidget {
                   width: imageWidth,
                   height: imageHeight,
                   color: Theme.of(context).colorScheme.outline,
-                  child: Image.network(
-                    url,
+                  child: Image.file(
+                    File(path),
                     fit: BoxFit.cover,
                     errorBuilder:
                         (
@@ -56,13 +58,32 @@ class ImageGallery extends StatelessWidget {
                           Object error,
                           StackTrace? stackTrace,
                         ) {
+                          // Log the error for debugging
+                          print(
+                            'ImageGallery Error - Path: $path, Error: $error',
+                          );
                           return Center(
-                            child: Icon(
-                              Icons.image,
-                              size: UIConstants.mediumIconSize,
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurfaceVariant,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.broken_image,
+                                  size: UIConstants.mediumIconSize,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Image not found',
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurfaceVariant,
+                                      ),
+                                ),
+                              ],
                             ),
                           );
                         },
@@ -128,7 +149,9 @@ class ImageGallery extends StatelessWidget {
         return Opacity(
           opacity: UIConstants.imageGalleryOpacity,
           child: Material(
-            elevation: UIConstants.imageGalleryElevation,
+            elevation: UIConstants.enableImageShadows
+                ? UIConstants.imageGalleryElevation
+                : 0,
             child: child,
           ),
         );

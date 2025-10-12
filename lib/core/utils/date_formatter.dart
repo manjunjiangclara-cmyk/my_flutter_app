@@ -1,15 +1,17 @@
 import 'package:intl/intl.dart';
 
 class DateFormatter {
-  // Private constants to avoid duplication
-  static const List<String> _weekdays = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
+  // Cached formatted value for today's date to avoid intl warm-up on first use
+  static String? _cachedTodayFormatted;
+  // Abbreviated weekdays for compact display
+  static const List<String> _weekdaysAbbr = [
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+    'Sun',
   ];
 
   // Single source of truth for month data
@@ -26,6 +28,22 @@ class DateFormatter {
     'October',
     'November',
     'December',
+  ];
+
+  // Abbreviated months for compact display
+  static const List<String> _monthsAbbr = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
   // Helper method to get month number (1-based)
@@ -90,10 +108,37 @@ class DateFormatter {
     return DateFormat('MMMM d, yyyy').format(today);
   }
 
-  /// Formats a date in the journal view style (e.g., "Thursday, August 28")
+  /// Pre-compute and cache today's formatted date using intl.
+  /// This avoids doing intl's first-use initialization on a hot UI path.
+  static Future<void> prewarmTodayFormatted() async {
+    try {
+      // Compute once; safe to call multiple times.
+      _cachedTodayFormatted ??= DateFormat(
+        'MMMM d, yyyy',
+      ).format(DateTime.now());
+    } catch (_) {
+      // Ignore prewarm failures; fallback getter will compute on demand
+    }
+  }
+
+  /// Get today's formatted date with caching to avoid first-use jank.
+  static String getTodayFormattedCached() {
+    if (_cachedTodayFormatted != null) {
+      return _cachedTodayFormatted!;
+    }
+    try {
+      _cachedTodayFormatted = DateFormat('MMMM d, yyyy').format(DateTime.now());
+      return _cachedTodayFormatted!;
+    } catch (_) {
+      // Fallback to direct formatting (may incur intl warm-up)
+      return getTodayFormatted();
+    }
+  }
+
+  /// Formats a date in the journal view style (e.g., "Thu, Sep 18")
   static String formatJournalDate(DateTime date) {
-    final weekday = _weekdays[date.weekday - 1];
-    final month = _getMonthName(date.month);
+    final weekday = _weekdaysAbbr[date.weekday - 1];
+    final month = _monthsAbbr[date.month - 1];
     final day = date.day;
 
     return '$weekday, $month $day';

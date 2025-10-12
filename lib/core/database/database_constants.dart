@@ -15,7 +15,7 @@ class DatabaseConstants {
   static const String journalUpdatedAt = 'updated_at';
   static const String journalIsFavorite = 'is_favorite';
   static const String journalTags = 'tags';
-  static const String journalImageUrls = 'image_urls';
+  static const String journalImagePaths = 'image_paths';
   static const String journalLocation = 'location';
   static const String journalLocationName = 'location_name';
   static const String journalLocationAddress = 'location_address';
@@ -36,7 +36,7 @@ class DatabaseConstants {
   // Default Values
   static const int defaultIsFavorite = 0;
   static const String defaultTags = '';
-  static const String defaultImageUrls = '';
+  static const String defaultImagePaths = '';
   static const String defaultLocation = '';
   static const String defaultLocationName = '';
   static const String defaultLocationAddress = '';
