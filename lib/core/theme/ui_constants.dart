@@ -172,6 +172,42 @@ class UIConstants {
   static const double tagChipCollapseButtonIconSpacing = 4.0;
   static const double tagChipCollapseButtonIconSize = 16.0;
 
+  // Location Picker Bottom Sheet
+  static const double locationPickerHeight = 0.8;
+  static const double locationPickerHandleWidth = 40.0;
+  static const double locationPickerHandleHeight = 4.0;
+  static const double locationPickerCornerRadius = extraLargeRadius;
+  static const double locationPickerHandleRadius = 2.0;
+  static const double locationResultItemPadding = 16.0;
+  static const double locationResultIconPadding = 8.0;
+  static const double locationResultIconSize = 24.0;
+  static const double locationSearchDebounceMs = 500.0;
+  static const double locationSearchMinQueryLength = 2.0;
+  static const double locationSearchMaxResults = 20.0;
+  static const double locationRatingIconSize = 16.0;
+  static const double locationTypeChipHeight = 24.0;
+  static const double locationTypeChipPadding = 8.0;
+  static const double locationErrorIconSize = 48.0;
+  static const double locationLoadingIndicatorSize = 24.0;
+  static const Duration locationSearchTimeout = Duration(seconds: 6);
+
+  // Location Picker Gradient Transition
+  static const double locationPickerGradientHeight = 32.0;
+  static const double locationPickerGradientOpacity = 0.95;
+
+  // Refresh Indicator
+  static const double refreshDisplacement = 40.0;
+  static const double refreshEdgeOffset = 0.0;
+  static const double refreshStrokeWidth = 2.0;
+
+  // Location Chip
+  static const double locationChipHorizontalPadding = 8.0;
+  static const double locationChipVerticalPadding = 4.0;
+  static const double locationChipRadius = mediumRadius;
+  static const double locationChipMaxWidthFraction = 0.66;
+  static const double locationEmojiScale = 1.25;
+  static const double locationChipFontSize = 12.0;
+
   // Journal Image Gallery
   static const int journalImageGalleryColumns = 3;
   static const double journalImageGallerySpacing = 8.0;

@@ -41,8 +41,13 @@ class DatabaseHelper {
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     // Handle database schema upgrades here
-    if (oldVersion < newVersion) {
-      // Add new tables or modify existing ones
+    if (oldVersion < 2) {
+      // Add location columns for version 2
+      await db.execute(JournalDao.addLocationColumnsSQL);
+    }
+    if (oldVersion < 3) {
+      // Add location types column for version 3
+      await db.execute(JournalDao.addLocationTypesColumnSQL);
     }
   }
 

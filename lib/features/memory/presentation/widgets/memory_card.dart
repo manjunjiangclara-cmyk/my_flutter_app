@@ -6,9 +6,11 @@ import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/date_formatter.dart';
+import 'package:my_flutter_app/features/compose/presentation/models/place_types.dart';
 import 'package:my_flutter_app/features/journal/presentation/router/journal_router.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/image_card.dart';
 import 'package:my_flutter_app/features/memory/presentation/models/memory_card_model.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/location_chip_display.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/tag_chip.dart';
 
 class MemoryCard extends StatefulWidget {
@@ -144,16 +146,14 @@ class _MemoryCardState extends State<MemoryCard>
         ),
         const Spacer(),
         SizedBox(width: Spacing.xs),
-        SizedBox(
-          child:
-              widget.memoryCardModel.location != null &&
-                  widget.memoryCardModel.location!.isNotEmpty
-              ? Text(
-                  "📍${widget.memoryCardModel.location}",
-                  style: AppTypography.labelSmall,
-                )
-              : const SizedBox.shrink(),
-        ),
+        if (widget.memoryCardModel.location != null && widget.memoryCardModel.location!.isNotEmpty)
+          LocationChipDisplay(
+            emoji: emojiForLocation(
+              types: widget.memoryCardModel.locationTypes,
+              locationName: widget.memoryCardModel.location!,
+            ),
+            name: widget.memoryCardModel.location!,
+          ),
       ],
     );
   }

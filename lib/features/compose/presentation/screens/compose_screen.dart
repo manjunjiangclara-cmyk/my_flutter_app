@@ -11,10 +11,11 @@ import 'package:my_flutter_app/features/compose/presentation/constants/compose_c
 import 'package:my_flutter_app/features/compose/presentation/strings/compose_strings.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_action_buttons.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_app_bar.dart';
+import 'package:my_flutter_app/features/compose/presentation/widgets/compose_dialogs.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_text_input.dart';
-import 'package:my_flutter_app/features/compose/presentation/widgets/location_display.dart';
-import 'package:my_flutter_app/features/compose/presentation/widgets/photo_attachments.dart';
-import 'package:my_flutter_app/features/compose/presentation/widgets/tags_display.dart';
+import 'package:my_flutter_app/features/compose/presentation/widgets/location/location_chip.dart';
+import 'package:my_flutter_app/features/compose/presentation/widgets/photo/photo_attachments.dart';
+import 'package:my_flutter_app/features/compose/presentation/widgets/tags/tags_display.dart';
 
 /// Main compose screen with improved organization and tap-to-edit functionality
 class ComposeScreen extends StatelessWidget {
@@ -65,7 +66,11 @@ class _ComposeScreenView extends StatelessWidget {
   }
 
   ComposeContent _getContentFromState(ComposeState state) {
-    return state is ComposeContent ? state : const ComposeContent();
+    if (state is ComposeContent) {
+      return state;
+    }
+    // Always return a fresh ComposeContent with null selectedLocation
+    return const ComposeContent();
   }
 
   PreferredSizeWidget _buildAppBar(
@@ -173,12 +178,28 @@ class _LocationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (content.selectedLocation == null) return const SizedBox.shrink();
+    return BlocBuilder<ComposeBloc, ComposeState>(
+      buildWhen: (previous, current) {
+        final prevLoc = previous is ComposeContent
+            ? previous.selectedLocation
+            : null;
+        final currLoc = current is ComposeContent
+            ? current.selectedLocation
+            : null;
+        return prevLoc != currLoc;
+      },
+      builder: (context, state) {
+        final currentContent = state is ComposeContent ? state : content;
+        if (currentContent.selectedLocation == null) {
+          return const SizedBox.shrink();
+        }
 
-    return LocationDisplay(
-      location: content.selectedLocation!,
-      onRemove: () =>
-          context.read<ComposeBloc>().add(const ComposeLocationRemoved()),
+        return LocationChip(
+          location: currentContent.selectedLocation!,
+          onRemove: () =>
+              context.read<ComposeBloc>().add(const ComposeLocationRemoved()),
+        );
+      },
     );
   }
 }
@@ -225,9 +246,12 @@ class _ComposeActionArea extends StatelessWidget {
   }
 
   void _showLocationDialog(BuildContext context) {
-    // TODO: Implement location functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text(AppStrings.locationFunctionalityComingSoon)),
+    final bloc = context.read<ComposeBloc>();
+    ComposeDialogs.showLocationDialog(
+      context: context,
+      controller: bloc.locationController,
+      focusNode: bloc.locationFocusNode,
+      onAdd: (location) => bloc.add(ComposeLocationAdded(location)),
     );
 
     // Commented out for future implementation

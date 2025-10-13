@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/router/router_exports.dart';
@@ -12,19 +13,29 @@ import 'package:my_flutter_app/core/utils/error_handler.dart';
 import 'package:my_flutter_app/core/utils/image_path_service.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  // Lock orientation to portrait only
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
-
-  // Setup global error handling
+void main() async {
+  // Setup global error handling first
   GlobalErrorHandler.setup();
 
-  // Run app with error handling zone
-  GlobalErrorHandler.runAppWithErrorHandling(() {
+  // Run everything in the error handling zone
+  GlobalErrorHandler.runAppWithErrorHandling(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    // Load environment variables
+    await dotenv.load(fileName: ".env");
+
+    // Lock orientation to portrait only (with error handling)
+    try {
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    } catch (e) {
+      // Ignore orientation setting errors on some devices
+      print('Warning: Could not set device orientation: $e');
+    }
+
+    // Run the app
     runApp(const MyApp());
   });
 }

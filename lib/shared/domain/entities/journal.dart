@@ -7,6 +7,7 @@ class Journal {
   final bool isFavorite;
   final List<String> imagePaths;
   final String? location;
+  final List<String> locationTypes;
 
   const Journal({
     required this.id,
@@ -17,6 +18,7 @@ class Journal {
     this.isFavorite = false,
     this.imagePaths = const [],
     this.location,
+    this.locationTypes = const [],
   });
 
   Journal copyWith({
@@ -28,6 +30,7 @@ class Journal {
     bool? isFavorite,
     List<String>? imagePaths,
     String? location,
+    List<String>? locationTypes,
   }) {
     return Journal(
       id: id ?? this.id,
@@ -38,6 +41,7 @@ class Journal {
       isFavorite: isFavorite ?? this.isFavorite,
       imagePaths: imagePaths ?? this.imagePaths,
       location: location ?? this.location,
+      locationTypes: locationTypes ?? this.locationTypes,
     );
   }
 

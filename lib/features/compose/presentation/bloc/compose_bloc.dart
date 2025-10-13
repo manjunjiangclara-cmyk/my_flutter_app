@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
+import 'package:my_flutter_app/core/services/image_picker_service.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/file_storage_service.dart';
-import 'package:my_flutter_app/core/utils/image_picker_service.dart';
 import 'package:my_flutter_app/shared/domain/entities/journal.dart';
 import 'package:my_flutter_app/shared/domain/usecases/create_journal.dart';
 
@@ -171,15 +171,13 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     ComposeLocationAdded event,
     Emitter<ComposeState> emit,
   ) {
-    if (event.location.trim().isNotEmpty) {
-      if (state is ComposeContent) {
-        final currentState = state as ComposeContent;
-        emit(currentState.copyWith(selectedLocation: event.location.trim()));
-      } else {
-        emit(ComposeContent(selectedLocation: event.location.trim()));
-      }
-      locationController.clear();
+    if (state is ComposeContent) {
+      final currentState = state as ComposeContent;
+      emit(currentState.copyWith(selectedLocation: event.location));
+    } else {
+      emit(ComposeContent(selectedLocation: event.location));
     }
+    locationController.clear();
   }
 
   void _onLocationRemoved(
@@ -188,7 +186,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   ) {
     if (state is ComposeContent) {
       final currentState = state as ComposeContent;
-      emit(currentState.copyWith(selectedLocation: null));
+      emit(currentState.copyWith(removeSelectedLocation: true));
     }
   }
 
@@ -248,7 +246,8 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         updatedAt: now,
         tags: currentState.selectedTags,
         imagePaths: currentState.attachedPhotoPaths,
-        location: currentState.selectedLocation,
+        location: currentState.selectedLocation?.name,
+        locationTypes: currentState.selectedLocation?.types ?? [],
       );
 
       // Call CreateJournal usecase - this will take as long as the actual database operation

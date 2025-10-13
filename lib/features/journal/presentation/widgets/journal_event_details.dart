@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
+import 'package:my_flutter_app/features/compose/presentation/models/place_types.dart';
 import 'package:my_flutter_app/features/journal/presentation/strings/journal_strings.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/location_chip_display.dart';
 
 /// Event details header widget for journal view
 class JournalEventDetails extends StatelessWidget {
   final String date;
   final String? location;
+  final List<String> locationTypes;
 
-  const JournalEventDetails({super.key, required this.date, this.location});
+  const JournalEventDetails({
+    super.key,
+    required this.date,
+    this.location,
+    this.locationTypes = const [],
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,27 +32,17 @@ class JournalEventDetails extends StatelessWidget {
         ),
         if (location != null) ...[
           const SizedBox(width: Spacing.sm),
-          _buildLocationChip(context, location!),
+          LocationChipDisplay(
+            emoji: emojiForLocation(
+              types: locationTypes,
+              locationName: location!,
+            ),
+            name: location!,
+          ),
         ],
       ],
     );
   }
 
-  Widget _buildLocationChip(BuildContext context, String location) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(JournalStrings.locationEmoji, style: AppTypography.labelSmall),
-        const SizedBox(width: Spacing.xs),
-        Flexible(
-          child: Text(
-            location,
-            style: AppTypography.labelSmall,
-            overflow: TextOverflow.ellipsis,
-            semanticsLabel: JournalStrings.journalLocationLabel,
-          ),
-        ),
-      ],
-    );
-  }
+  // Removed private chip builder in favor of shared `LocationChipDisplay`.
 }

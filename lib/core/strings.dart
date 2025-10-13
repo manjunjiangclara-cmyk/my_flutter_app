@@ -39,6 +39,26 @@ class AppStrings {
   static const String enterTagHint = 'Enter a tag...';
   static const String memoryLodgedSuccessfully =
       'Your memory has been safely lodged ❤️';
+  static const String noLocationsFound = 'No locations found';
+  static const String tryDifferentLocation =
+      'Try searching for a different location';
+  static const String locationSearchError = 'Failed to search locations';
+  static const String locationSearchTimeout =
+      'Search timed out. Please try again.';
+  static const String locationSearchRetry = 'Retry';
+  static const String locationSearching = 'Searching...';
+  static const String locationSearchHint =
+      'Search for places, landmarks, or addresses...';
+  static const String locationRecentSearches = 'Recent Searches';
+  static const String locationNearby = 'Nearby';
+  static const String locationSelectLocation = 'Select Location';
+  static const String locationAddCustom = 'Add Custom Location';
+  static const String locationCustomName = 'Location Name';
+  static const String locationCustomAddress = 'Address (Optional)';
+  static const String locationCustomLatitude = 'Latitude';
+  static const String locationCustomLongitude = 'Longitude';
+  static const String locationCustomAdd = 'Add Custom Location';
+  static const String locationCustomCancel = 'Cancel';
 
   // ---------- Screens: Journal ----------
   static const String location = 'Location';

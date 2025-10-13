@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:my_flutter_app/features/compose/presentation/models/location_search_models.dart';
 
 /// Base class for all compose states
 abstract class ComposeState extends Equatable {
@@ -18,7 +19,7 @@ class ComposeContent extends ComposeState {
   final String text;
   final List<String> attachedPhotoPaths;
   final List<String> selectedTags;
-  final String? selectedLocation;
+  final LocationSearchResult? selectedLocation;
   final bool isPosting;
 
   const ComposeContent({
@@ -41,14 +42,17 @@ class ComposeContent extends ComposeState {
     String? text,
     List<String>? attachedPhotoPaths,
     List<String>? selectedTags,
-    String? selectedLocation,
+    LocationSearchResult? selectedLocation,
     bool? isPosting,
+    bool removeSelectedLocation = false,
   }) {
     return ComposeContent(
       text: text ?? this.text,
       attachedPhotoPaths: attachedPhotoPaths ?? this.attachedPhotoPaths,
       selectedTags: selectedTags ?? this.selectedTags,
-      selectedLocation: selectedLocation ?? this.selectedLocation,
+      selectedLocation: removeSelectedLocation
+          ? null
+          : (selectedLocation ?? this.selectedLocation),
       isPosting: isPosting ?? this.isPosting,
     );
   }
@@ -68,7 +72,7 @@ class ComposePosting extends ComposeState {
   final String text;
   final List<String> attachedPhotoPaths;
   final List<String> selectedTags;
-  final String? selectedLocation;
+  final LocationSearchResult? selectedLocation;
 
   const ComposePosting({
     required this.text,

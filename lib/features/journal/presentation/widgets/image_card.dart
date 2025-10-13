@@ -20,7 +20,8 @@ class ImageCard extends StatefulWidget {
   State<ImageCard> createState() => _ImageCardState();
 }
 
-class _ImageCardState extends State<ImageCard> {
+class _ImageCardState extends State<ImageCard>
+    with AutomaticKeepAliveClientMixin {
   String? _absoluteImagePath;
   bool _isConvertingPath = true;
   double? _aspectRatio; // width / height
@@ -70,6 +71,7 @@ class _ImageCardState extends State<ImageCard> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Card(
       margin: EdgeInsets.zero,
       elevation: UIConstants.enableImageShadows
@@ -115,10 +117,14 @@ class _ImageCardState extends State<ImageCard> {
         file,
         width: double.infinity,
         fit: BoxFit.cover,
+        gaplessPlayback: true,
         errorBuilder: _buildErrorWidget,
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   Widget _buildErrorWidget(
     BuildContext context,

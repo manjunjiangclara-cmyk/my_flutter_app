@@ -15,6 +15,7 @@ class JournalEntityMapper {
       tags: parseCommaSeparatedString(map['tags']),
       imagePaths: imagePaths,
       location: map['location'],
+      locationTypes: parseCommaSeparatedString(map['location_types']),
     );
   }
 
@@ -35,6 +36,7 @@ class JournalEntityMapper {
       'tags': journal.tags.join(','),
       'image_paths': journal.imagePaths.join(','),
       'location': journal.location,
+      'location_types': journal.locationTypes.join(','),
     };
   }
 
@@ -47,6 +49,7 @@ class JournalEntityMapper {
       'tags': journal.tags.join(','),
       'image_paths': journal.imagePaths.join(','),
       'location': journal.location,
+      'location_types': journal.locationTypes.join(','),
     };
   }
 

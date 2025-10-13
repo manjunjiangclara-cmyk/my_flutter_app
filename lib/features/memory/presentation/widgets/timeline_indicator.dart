@@ -41,12 +41,12 @@ class TimelineIndicator extends StatelessWidget {
             shape: BoxShape.circle,
             color: isLight
                 ? Color.lerp(
-                    colorScheme.secondary,
+                    colorScheme.primary,
                     colorScheme.surface,
                     UIConstants.timelineDotFillBlendLight,
                   )!
                 : Color.lerp(
-                    colorScheme.secondary,
+                    colorScheme.primary,
                     colorScheme.surface,
                     UIConstants.timelineDotFillBlendDark,
                   )!,

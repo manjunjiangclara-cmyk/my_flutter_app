@@ -23,7 +23,7 @@ class BottomNavItem {
       ),
       activeIcon: Text(
         emoji,
-        style: AppTypography.titleMedium.copyWith(color: colorScheme.secondary),
+        style: AppTypography.titleMedium.copyWith(color: colorScheme.primary),
       ),
       label: label,
     );
