@@ -50,7 +50,6 @@ class ComposeDialogs {
           decoration: const InputDecoration(
             hintText: AppStrings.enterTagHint,
             border: OutlineInputBorder(),
-            prefixText: '#',
           ),
           onSubmitted: (value) {
             if (value.trim().isNotEmpty &&

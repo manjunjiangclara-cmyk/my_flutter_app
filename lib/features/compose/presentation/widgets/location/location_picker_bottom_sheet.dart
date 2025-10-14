@@ -9,9 +9,9 @@ import 'package:my_flutter_app/features/compose/presentation/bloc/location_picke
 import 'package:my_flutter_app/features/compose/presentation/bloc/location_picker/location_picker_event.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/location_picker/location_picker_state.dart';
 import 'package:my_flutter_app/features/compose/presentation/models/location_search_models.dart';
-import 'package:my_flutter_app/features/compose/presentation/widgets/location/location_search_bar.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/location/location_search_result_item.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/refresh_indicator.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/search_bar.dart';
 
 class LocationPickerBottomSheet extends StatefulWidget {
   final Function(LocationSearchResult) onLocationSelected;
@@ -88,17 +88,18 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
           // Handle bar
           Container(
             margin: const EdgeInsets.only(top: Spacing.md),
-            width: UIConstants.locationPickerHandleWidth,
-            height: UIConstants.locationPickerHandleHeight,
+            width: UIConstants.bottomSheetHandleWidth,
+            height: UIConstants.bottomSheetHandleHeight,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
-                UIConstants.locationPickerHandleRadius,
+                UIConstants.bottomSheetHandleRadius,
               ),
             ),
           ),
 
           // Search bar
-          LocationSearchBar(
+          UniversalSearchBar(
+            hintText: AppStrings.locationSearchHint,
             onSearchChanged: _onSearchChanged,
             onClearSearch: _clearSearch,
           ),

@@ -1,7 +1,7 @@
 class DatabaseConstants {
   // Database Configuration
   static const String databaseName = 'journal_app.db';
-  static const int databaseVersion = 3;
+  static const int databaseVersion = 1;
 
   // Table Names
   static const String journalsTable = 'journals';

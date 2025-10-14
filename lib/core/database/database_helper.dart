@@ -3,6 +3,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'dao/journal_dao.dart';
+import 'dao/tag_dao.dart';
 import 'database_constants.dart';
 
 @singleton
@@ -37,19 +38,14 @@ class DatabaseHelper {
   Future<void> _onCreate(Database db, int version) async {
     // Create journals table
     await db.execute(JournalDao.createTableSQL);
+    // Create tags and junction tables
+    await db.execute(TagDao.createTagsTableSQL);
+    await db.execute(TagDao.createJournalTagsTableSQL);
+    await db.execute(TagDao.createJournalTagsJournalIndexSQL);
+    await db.execute(TagDao.createJournalTagsTagIndexSQL);
   }
 
-  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    // Handle database schema upgrades here
-    if (oldVersion < 2) {
-      // Add location columns for version 2
-      await db.execute(JournalDao.addLocationColumnsSQL);
-    }
-    if (oldVersion < 3) {
-      // Add location types column for version 3
-      await db.execute(JournalDao.addLocationTypesColumnSQL);
-    }
-  }
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {}
 
   // Close database
   Future<void> close() async {

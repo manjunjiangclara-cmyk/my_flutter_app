@@ -19,6 +19,7 @@ class AppStrings {
   static const String compose = 'Compose';
   static const String helpAndSupport = 'Help & Support';
   static const String appVersion = 'App Version';
+  static const String selected = 'Selected';
 
   // ---------- Delete Dialog ----------
   static const String deleteConfirmTitle = 'Delete Content?';
@@ -35,10 +36,13 @@ class AppStrings {
   static const String post = 'Post';
   static const String addLocation = 'Add Location';
   static const String addTag = 'Add Tag';
+  static const String searchTagsHint = 'Search or add tags...';
   static const String searchLocationHint = 'Search for a location...';
   static const String enterTagHint = 'Enter a tag...';
+  static const String noTags = 'No tags';
   static const String memoryLodgedSuccessfully =
       'Your memory has been safely lodged ❤️';
+  static const String tagFunctionalityComingSoon = 'Tags coming soon';
   static const String noLocationsFound = 'No locations found';
   static const String tryDifferentLocation =
       'Try searching for a different location';
@@ -47,8 +51,7 @@ class AppStrings {
       'Search timed out. Please try again.';
   static const String locationSearchRetry = 'Retry';
   static const String locationSearching = 'Searching...';
-  static const String locationSearchHint =
-      'Search for places, landmarks, or addresses...';
+  static const String locationSearchHint = 'Somewhere that holds a memory';
   static const String locationRecentSearches = 'Recent Searches';
   static const String locationNearby = 'Nearby';
   static const String locationSelectLocation = 'Select Location';
