@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
-import 'package:my_flutter_app/core/strings/app_strings.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart';
@@ -15,7 +14,8 @@ import 'package:my_flutter_app/features/compose/presentation/widgets/compose_dia
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_text_input.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/location/location_chip.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/photo/photo_attachments.dart';
-import 'package:my_flutter_app/features/compose/presentation/widgets/tags/tags_display.dart';
+import 'package:my_flutter_app/features/compose/presentation/widgets/tags/tag_picker_bottom_sheet.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/tag_chip.dart';
 
 /// Main compose screen with improved organization and tap-to-edit functionality
 class ComposeScreen extends StatelessWidget {
@@ -214,7 +214,7 @@ class _TagsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     if (content.selectedTags.isEmpty) return const SizedBox.shrink();
 
-    return TagsDisplay(
+    return TagChips(
       tags: content.selectedTags,
       onRemoveTag: (tag) =>
           context.read<ComposeBloc>().add(ComposeTagRemoved(tag)),
@@ -265,25 +265,31 @@ class _ComposeActionArea extends StatelessWidget {
   }
 
   void _showTagDialog(BuildContext context) {
-    // TODO: Implement tag functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text(AppStrings.tagFunctionalityComingSoon)),
+    final bloc = context.read<ComposeBloc>();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => TagPickerBottomSheet(
+        initiallySelected: (bloc.state is ComposeContent)
+            ? (bloc.state as ComposeContent).selectedTags
+            : const [],
+        onDone: (selected) {
+          if (bloc.state is ComposeContent) {
+            final current = (bloc.state as ComposeContent).selectedTags;
+            for (final t in current) {
+              if (!selected.contains(t)) {
+                bloc.add(ComposeTagRemoved(t));
+              }
+            }
+          }
+          for (final t in selected) {
+            bloc.add(ComposeTagAdded(t));
+          }
+          Navigator.of(context).pop();
+        },
+      ),
     );
-
-    // Commented out for future implementation
-    // final bloc = context.read<ComposeBloc>();
-    // final currentState = bloc.state;
-    // final existingTags = currentState is ComposeContent
-    //     ? currentState.selectedTags
-    //     : <String>[];
-
-    // ComposeDialogs.showTagDialog(
-    //   context: context,
-    //   controller: bloc.tagController,
-    //   focusNode: bloc.tagFocusNode,
-    //   onAdd: (tag) => bloc.add(ComposeTagAdded(tag)),
-    //   existingTags: existingTags,
-    // );
   }
 }
 

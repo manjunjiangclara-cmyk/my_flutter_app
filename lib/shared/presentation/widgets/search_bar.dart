@@ -1,25 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
-class LocationSearchBar extends StatefulWidget {
+class UniversalSearchBar extends StatefulWidget {
+  final String hintText;
   final Function(String) onSearchChanged;
   final VoidCallback? onClearSearch;
   final bool autoFocus;
+  final EdgeInsetsGeometry? padding;
+  final double? borderRadius;
+  final TextInputAction? textInputAction;
+  final Function(String)? onSubmitted;
 
-  const LocationSearchBar({
+  const UniversalSearchBar({
     super.key,
+    required this.hintText,
     required this.onSearchChanged,
     this.onClearSearch,
     this.autoFocus = true,
+    this.padding,
+    this.borderRadius,
+    this.textInputAction = TextInputAction.search,
+    this.onSubmitted,
   });
 
   @override
-  State<LocationSearchBar> createState() => _LocationSearchBarState();
+  State<UniversalSearchBar> createState() => _UniversalSearchBarState();
 }
 
-class _LocationSearchBarState extends State<LocationSearchBar> {
+class _UniversalSearchBarState extends State<UniversalSearchBar> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
 
@@ -54,14 +63,17 @@ class _LocationSearchBarState extends State<LocationSearchBar> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(UIConstants.defaultPadding),
+      padding:
+          widget.padding ?? const EdgeInsets.all(UIConstants.defaultPadding),
       child: TextField(
         controller: _searchController,
         focusNode: _searchFocusNode,
+        onTapOutside: (_) => FocusScope.of(context).unfocus(),
         style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
         cursorColor: Theme.of(context).colorScheme.primary,
+        textInputAction: widget.textInputAction,
         decoration: InputDecoration(
-          hintText: AppStrings.locationSearchHint,
+          hintText: widget.hintText,
           hintStyle: TextStyle(
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
@@ -82,20 +94,24 @@ class _LocationSearchBarState extends State<LocationSearchBar> {
           filled: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-              UIConstants.locationPickerCornerRadius,
+              widget.borderRadius ?? UIConstants.searchBarCornerRadius,
             ),
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.outline,
             ),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+            borderRadius: BorderRadius.circular(
+              widget.borderRadius ?? UIConstants.searchBarCornerRadius,
+            ),
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.outline,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+            borderRadius: BorderRadius.circular(
+              widget.borderRadius ?? UIConstants.searchBarCornerRadius,
+            ),
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.outline,
               width: 2.0,
@@ -107,7 +123,7 @@ class _LocationSearchBarState extends State<LocationSearchBar> {
           ),
         ),
         onChanged: _onSearchChanged,
-        textInputAction: TextInputAction.search,
+        onSubmitted: widget.onSubmitted,
       ),
     );
   }

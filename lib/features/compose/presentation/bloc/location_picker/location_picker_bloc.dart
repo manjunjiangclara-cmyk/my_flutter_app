@@ -57,7 +57,7 @@ class LocationPickerBloc
     try {
       final results = await _locationSearchService
           .searchLocations(event.query)
-          .timeout(UIConstants.locationSearchTimeout);
+          .timeout(UIConstants.searchBarTimeout);
 
       if (results.isEmpty) {
         emit(LocationPickerNoResults(query: event.query));

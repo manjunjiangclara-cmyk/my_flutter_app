@@ -10,9 +10,9 @@ import 'package:my_flutter_app/core/utils/ui_calculations.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/journal_header_image.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/action_button.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/image_gallery.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/tag_chip.dart';
 
 import '../../../../shared/domain/entities/journal.dart';
-import '../../../../shared/presentation/widgets/tag_chip.dart';
 import '../bloc/journal_view/journal_view_bloc.dart';
 import '../bloc/journal_view/journal_view_event.dart';
 import '../bloc/journal_view/journal_view_state.dart';
@@ -186,12 +186,13 @@ class _JournalViewContentState extends State<_JournalViewContent> {
                           location: widget.journal.location,
                           locationTypes: widget.journal.locationTypes,
                         ),
-                        const SizedBox(height: Spacing.sm),
+                        const SizedBox(height: Spacing.lg),
+                        JournalContentSection(content: widget.journal.content),
+                        const SizedBox(height: Spacing.lg),
                         if (widget.journal.tags.isNotEmpty) ...[
                           TagChips(tags: widget.journal.tags),
                           const SizedBox(height: Spacing.lg),
                         ],
-                        JournalContentSection(content: widget.journal.content),
                         const SizedBox(height: Spacing.lg),
                         Builder(
                           builder: (context) {
@@ -220,7 +221,6 @@ class _JournalViewContentState extends State<_JournalViewContent> {
                             );
                           },
                         ),
-                        const SizedBox(height: Spacing.lg),
                       ],
                     ),
                   ),

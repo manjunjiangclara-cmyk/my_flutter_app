@@ -146,7 +146,8 @@ class _MemoryCardState extends State<MemoryCard>
         ),
         const Spacer(),
         SizedBox(width: Spacing.xs),
-        if (widget.memoryCardModel.location != null && widget.memoryCardModel.location!.isNotEmpty)
+        if (widget.memoryCardModel.location != null &&
+            widget.memoryCardModel.location!.isNotEmpty)
           LocationChipDisplay(
             emoji: emojiForLocation(
               types: widget.memoryCardModel.locationTypes,

@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/database/dao/journal_dao.dart';
+import '../../../../core/database/dao/tag_dao.dart';
 import '../../domain/entities/journal.dart';
 
 abstract class JournalLocalDataSource {
@@ -17,6 +18,7 @@ abstract class JournalLocalDataSource {
 @Injectable(as: JournalLocalDataSource)
 class JournalLocalDataSourceImpl implements JournalLocalDataSource {
   final JournalDao _journalDao = JournalDao();
+  final TagDao _tagDao = TagDao();
 
   @override
   Future<List<Journal>> getJournals() async {
@@ -31,13 +33,18 @@ class JournalLocalDataSourceImpl implements JournalLocalDataSource {
   @override
   Future<void> cacheJournal(Journal journal) async {
     final existing = await _journalDao.findById(journal.id);
+    int numericId;
     if (existing == null) {
       // Insert new journal
-      await _journalDao.insert(journal);
+      numericId = await _journalDao.insert(journal);
     } else {
       // Update existing journal
       await _journalDao.update(journal);
+      numericId = int.parse(journal.id);
     }
+
+    // Efficiently upsert mappings
+    await _tagDao.upsertJournalTagsByNames(numericId, journal.tags);
   }
 
   @override
