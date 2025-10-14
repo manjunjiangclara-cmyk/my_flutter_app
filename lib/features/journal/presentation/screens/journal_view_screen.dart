@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/router/navigation_helper.dart';
 import 'package:my_flutter_app/core/strings/app_strings.dart';
@@ -96,10 +97,13 @@ class _JournalViewScreenView extends StatelessWidget {
   }
 
   void _handleEdit(BuildContext context) {
-    // TODO: Implement edit functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text(AppStrings.editFunctionalityComingSoon)),
-    );
+    final parent = context.findAncestorWidgetOfExactType<JournalViewScreen>();
+    if (parent != null) {
+      context.pushNamed(
+        'compose-edit',
+        pathParameters: {'journalId': parent.journalId},
+      );
+    }
   }
 
   void _handleDelete(BuildContext context, String journalId) {

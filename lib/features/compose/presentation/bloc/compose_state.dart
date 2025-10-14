@@ -21,6 +21,8 @@ class ComposeContent extends ComposeState {
   final List<String> selectedTags;
   final LocationSearchResult? selectedLocation;
   final bool isPosting;
+  final String? editingJournalId;
+  final DateTime? originalCreatedAt;
 
   const ComposeContent({
     this.text = '',
@@ -28,6 +30,8 @@ class ComposeContent extends ComposeState {
     this.selectedTags = const [],
     this.selectedLocation,
     this.isPosting = false,
+    this.editingJournalId,
+    this.originalCreatedAt,
   });
 
   /// Whether the compose form can be posted
@@ -45,6 +49,8 @@ class ComposeContent extends ComposeState {
     LocationSearchResult? selectedLocation,
     bool? isPosting,
     bool removeSelectedLocation = false,
+    String? editingJournalId,
+    DateTime? originalCreatedAt,
   }) {
     return ComposeContent(
       text: text ?? this.text,
@@ -54,6 +60,8 @@ class ComposeContent extends ComposeState {
           ? null
           : (selectedLocation ?? this.selectedLocation),
       isPosting: isPosting ?? this.isPosting,
+      editingJournalId: editingJournalId ?? this.editingJournalId,
+      originalCreatedAt: originalCreatedAt ?? this.originalCreatedAt,
     );
   }
 
@@ -64,6 +72,8 @@ class ComposeContent extends ComposeState {
     selectedTags,
     selectedLocation,
     isPosting,
+    editingJournalId,
+    originalCreatedAt,
   ];
 }
 

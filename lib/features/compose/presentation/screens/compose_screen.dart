@@ -19,22 +19,33 @@ import 'package:my_flutter_app/shared/presentation/widgets/tag_chip.dart';
 
 /// Main compose screen with improved organization and tap-to-edit functionality
 class ComposeScreen extends StatelessWidget {
-  const ComposeScreen({super.key});
+  final String? journalId;
+
+  const ComposeScreen({super.key, this.journalId});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<ComposeBloc>(),
-      child: const _ComposeScreenView(),
+      child: _ComposeScreenView(journalId: journalId),
     );
   }
 }
 
 class _ComposeScreenView extends StatelessWidget {
-  const _ComposeScreenView();
+  final String? journalId;
+
+  const _ComposeScreenView({this.journalId});
 
   @override
   Widget build(BuildContext context) {
+    if (journalId != null) {
+      // Dispatch initialization for edit mode
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<ComposeBloc>().add(ComposeInitializeForEdit(journalId!));
+      });
+    }
+
     return BlocListener<ComposeBloc, ComposeState>(
       listener: _handleStateChanges,
       child: BlocBuilder<ComposeBloc, ComposeState>(
@@ -253,15 +264,6 @@ class _ComposeActionArea extends StatelessWidget {
       focusNode: bloc.locationFocusNode,
       onAdd: (location) => bloc.add(ComposeLocationAdded(location)),
     );
-
-    // Commented out for future implementation
-    // final bloc = context.read<ComposeBloc>();
-    // ComposeDialogs.showLocationDialog(
-    //   context: context,
-    //   controller: bloc.locationController,
-    //   focusNode: bloc.locationFocusNode,
-    //   onAdd: (location) => bloc.add(ComposeLocationAdded(location)),
-    // );
   }
 
   void _showTagDialog(BuildContext context) {

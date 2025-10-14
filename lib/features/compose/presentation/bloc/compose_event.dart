@@ -9,6 +9,16 @@ abstract class ComposeEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+/// Event to initialize compose for editing an existing journal
+class ComposeInitializeForEdit extends ComposeEvent {
+  final String journalId;
+
+  const ComposeInitializeForEdit(this.journalId);
+
+  @override
+  List<Object?> get props => [journalId];
+}
+
 /// Event for text content changes
 class ComposeTextChanged extends ComposeEvent {
   final String text;

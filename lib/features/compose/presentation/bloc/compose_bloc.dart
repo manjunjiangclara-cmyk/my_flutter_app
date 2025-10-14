@@ -6,8 +6,11 @@ import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/services/image_picker_service.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/file_storage_service.dart';
+import 'package:my_flutter_app/features/compose/presentation/models/location_search_models.dart';
 import 'package:my_flutter_app/shared/domain/entities/journal.dart';
 import 'package:my_flutter_app/shared/domain/usecases/create_journal.dart';
+import 'package:my_flutter_app/shared/domain/usecases/get_journal_by_id.dart';
+import 'package:my_flutter_app/shared/domain/usecases/update_journal.dart';
 
 import 'compose_event.dart';
 import 'compose_state.dart';
@@ -16,6 +19,8 @@ import 'compose_state.dart';
 @injectable
 class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   final CreateJournal _createJournal;
+  GetJournalById? _getJournalById;
+  UpdateJournal? _updateJournal;
   final TextEditingController textController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController tagController = TextEditingController();
@@ -29,6 +34,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   FileStorageService? _fileStorageService;
 
   ComposeBloc(this._createJournal) : super(const ComposeInitial()) {
+    on<ComposeInitializeForEdit>(_onInitializeForEdit);
     on<ComposeTextChanged>(_onTextChanged);
     on<ComposePhotoAddedFromGallery>(_onPhotoAddedFromGallery);
     on<ComposePhotosAdded>(_onPhotosAdded);
@@ -42,6 +48,55 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
     // Initialize with empty content state
     add(const ComposeTextChanged(''));
+  }
+  GetJournalById get _getJournalByIdInstance {
+    _getJournalById ??= getIt<GetJournalById>();
+    return _getJournalById!;
+  }
+
+  UpdateJournal get _updateJournalInstance {
+    _updateJournal ??= getIt<UpdateJournal>();
+    return _updateJournal!;
+  }
+
+  Future<void> _onInitializeForEdit(
+    ComposeInitializeForEdit event,
+    Emitter<ComposeState> emit,
+  ) async {
+    try {
+      final result = await _getJournalByIdInstance(
+        GetJournalByIdParams(event.journalId),
+      );
+      await result.fold(
+        (failure) async {
+          // If loading fails, keep current state
+        },
+        (journal) async {
+          final content = ComposeContent(
+            text: journal.content,
+            attachedPhotoPaths: journal.imagePaths,
+            selectedTags: journal.tags,
+            selectedLocation: journal.location == null
+                ? null
+                : LocationSearchResult(
+                    id: journal.location!,
+                    name: journal.location!,
+                    address: journal.location!,
+                    types: journal.locationTypes,
+                  ),
+            editingJournalId: journal.id,
+            originalCreatedAt: journal.createdAt,
+          );
+
+          // Prefill controllers for immediate UI reflection
+          textController.text = journal.content;
+
+          emit(content);
+        },
+      );
+    } catch (_) {
+      // swallow; UI remains in initial state
+    }
   }
 
   // Lazy getters for services to avoid blocking UI during initialization
@@ -237,12 +292,15 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     );
 
     try {
-      // Create Journal entity from compose content
       final now = DateTime.now();
+      final isEditing = currentState.editingJournalId != null;
+
       final journal = Journal(
-        id: now.toUtc().millisecondsSinceEpoch.toString(),
+        id: isEditing
+            ? currentState.editingJournalId!
+            : now.toUtc().millisecondsSinceEpoch.toString(),
         content: currentState.text,
-        createdAt: now,
+        createdAt: isEditing ? (currentState.originalCreatedAt ?? now) : now,
         updatedAt: now,
         tags: currentState.selectedTags,
         imagePaths: currentState.attachedPhotoPaths,
@@ -250,8 +308,9 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         locationTypes: currentState.selectedLocation?.types ?? [],
       );
 
-      // Call CreateJournal usecase - this will take as long as the actual database operation
-      final result = await _createJournal(CreateJournalParams(journal));
+      final result = isEditing
+          ? await _updateJournalInstance(UpdateJournalParams(journal))
+          : await _createJournal(CreateJournalParams(journal));
 
       result.fold(
         (failure) {
