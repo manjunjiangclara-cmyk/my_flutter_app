@@ -4,6 +4,7 @@ import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/expressive_loading_indicator.dart';
 
 /// Splash screen widget that displays app branding and loading indicator
 class SplashScreen extends StatefulWidget {
@@ -161,12 +162,7 @@ class _SplashScreenState extends State<SplashScreen>
                   SizedBox(
                     width: UIConstants.splashLoadingIndicatorSize,
                     height: UIConstants.splashLoadingIndicatorSize,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.5,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        isDark ? AppColors.accentDark : AppColors.accentLight,
-                      ),
-                    ),
+                    child: const ExpressiveLoadingIndicator(),
                   ),
 
                   SizedBox(height: UIConstants.mediumPadding),

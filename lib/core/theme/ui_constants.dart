@@ -6,6 +6,8 @@ class UIConstants {
   static const bool enableImageShadows = false;
 
   // Spacing
+  static const double extraSmallPadding = 4.0;
+  static const double tinyPadding = 2.0;
   static const double defaultPadding = 16.0;
   static const double smallPadding = 8.0;
   static const double mediumPadding = 24.0;
@@ -67,6 +69,14 @@ class UIConstants {
   static const Duration fastAnimation = Duration(milliseconds: 150);
   static const Duration defaultAnimation = Duration(milliseconds: 300);
   static const Duration slowAnimation = Duration(milliseconds: 500);
+
+  // Expressive Loading Indicator
+  static const double expressiveIndicatorSizeSm = 16.0;
+  static const double expressiveIndicatorSizeMd = 24.0;
+  static const double expressiveIndicatorSizeLg = 40.0;
+  static const Duration expressiveIndicatorAnimationDuration = Duration(
+    milliseconds: 1400,
+  );
 
   // Screen Breakpoints (for responsive design)
   static const double mobileBreakpoint = 600.0;
@@ -163,6 +173,34 @@ class UIConstants {
   static const double barOverlayOpacity = 0.75;
   static const double barEdgeFadeHeight = 16.0;
   static const double barEdgeFadeStartOpacity = 0.75;
+
+  // Docked Toolbar
+  static const double dockedBarHeight = 56.0;
+  static const double dockedBarRadius = extraLargeRadius;
+  static const double dockedBarHorizontalPadding = smallPadding;
+  static const double dockedBarVerticalPadding = smallPadding;
+  static const double dockedBarMargin = defaultPadding;
+  static const double dockedBarIconSize = 26.0;
+  static const double dockedBarIconPadding = 12.0;
+  static const double dockedBarActiveOverlayOpacity = 0.90;
+  static const double dockedBarShadowOpacity = 0.12;
+  static const double dockedBarShadowBlur = 8.0;
+  static const double dockedBarShadowOffsetY = 6.0;
+  static const double dockedBarShadowSpread = -0.5;
+  static const double dockedBarShadow2Opacity = 0.06;
+  static const double dockedBarShadow2Blur = 32.0;
+  static const double dockedBarShadow2OffsetY = 12.0;
+  static const double dockedBarShadow2Spread = -2.0;
+  static const double dockedBarBottomOffset = 20.0;
+  static const double dockedBarMaxWidth = 280.0;
+  static const Duration dockedBarSlideDuration = Duration(milliseconds: 300);
+  static const double dockedBarSlideOffset = 100.0;
+  static const Duration dockedBarFadeDuration = Duration(milliseconds: 260);
+  static const Duration dockedBarScaleDuration = Duration(milliseconds: 340);
+  static const double dockedBarHiddenScale = 0.98;
+  static const double dockedBarAccentTintOpacity = 0.10;
+  static const double dockedBarAccentBorderWidth = 1.0;
+  static const double dockedBarAccentBorderOpacity = 0.12;
 
   // Tag Chip Specific
   static const double tagChipWidthPadding = 16.0;

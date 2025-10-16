@@ -11,6 +11,7 @@ import 'package:my_flutter_app/core/theme/theme_provider.dart';
 import 'package:my_flutter_app/core/utils/date_formatter.dart';
 import 'package:my_flutter_app/core/utils/error_handler.dart';
 import 'package:my_flutter_app/core/utils/image_path_service.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/expressive_loading_indicator.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -107,7 +108,7 @@ class _MyAppState extends State<MyApp> {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: AppStrings.appName,
-        home: const Scaffold(body: Center(child: CircularProgressIndicator())),
+        home: const Scaffold(body: Center(child: ExpressiveLoadingIndicator())),
       );
     }
 

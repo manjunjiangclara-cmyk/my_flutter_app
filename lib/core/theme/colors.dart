@@ -50,6 +50,9 @@ class AppColors {
   static const Color textPrimary = textPrimaryLight;
   static const Color textSecondary = textSecondaryLight;
 
+  // Subtle shadow tint that blends a hint of primary into shadows
+  static const Color shadowTint = Color(0xFF19120E);
+
   // ========== THEME SCHEMES ==========
 
   /// Light theme color scheme (no seed)
