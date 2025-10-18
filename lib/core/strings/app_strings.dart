@@ -20,8 +20,14 @@ class AppStrings {
       'Edit functionality coming soon';
   static const String shareFunctionalityComingSoon =
       'Share functionality coming soon';
+  static const String shareImagePreparing = 'Preparing image…';
+  static const String shareSaved = 'Image saved to Photos';
   static const String locationFunctionalityComingSoon =
       'Location functionality coming soon';
   static const String tagFunctionalityComingSoon =
       'Tag functionality coming soon';
+
+  // ---------- Errors ----------
+  static const String shareFailed = 'Failed to share content';
+  static const String shareSuccess = 'Shared successfully';
 }

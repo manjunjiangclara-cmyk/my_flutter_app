@@ -44,7 +44,7 @@ class TagChip extends StatelessWidget {
     super.key,
     required this.tag,
     this.chipHorizontalPadding = 8.0,
-    this.chipVerticalPadding = 4.0,
+    this.chipVerticalPadding = 0.0,
     this.onRemoveTag,
   });
 
@@ -68,7 +68,7 @@ class TagChip extends StatelessWidget {
           children: [
             Text(
               tag,
-              style: AppTypography.labelMedium.copyWith(
+              style: AppTypography.labelSmall.copyWith(
                 color: primary,
                 fontWeight: FontWeight.w500,
               ),
@@ -90,7 +90,7 @@ class TagChip extends StatelessWidget {
       return Chip(
         label: Text(
           tag,
-          style: AppTypography.labelMedium.copyWith(color: primary),
+          style: AppTypography.labelSmall.copyWith(color: primary),
         ),
         backgroundColor: Theme.of(context).colorScheme.surface,
         shape: RoundedRectangleBorder(

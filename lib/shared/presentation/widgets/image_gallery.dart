@@ -19,6 +19,7 @@ class ImageGalleryConfig {
   final bool skipFirstPhoto;
   final EdgeInsets? padding;
   final Widget? emptyWidget;
+  final bool preferTwoColumnsWhenRemainderTwo;
 
   const ImageGalleryConfig({
     this.crossAxisCount = UIConstants.photosPerRow,
@@ -32,6 +33,7 @@ class ImageGalleryConfig {
     this.skipFirstPhoto = false,
     this.padding,
     this.emptyWidget,
+    this.preferTwoColumnsWhenRemainderTwo = false,
   });
 
   /// Configuration for compose screen photo attachments
@@ -54,6 +56,7 @@ class ImageGalleryConfig {
     showRemoveButton: false,
     enableFullscreenViewer: true,
     skipFirstPhoto: true,
+    preferTwoColumnsWhenRemainderTwo: true,
   );
 }
 
@@ -184,11 +187,14 @@ class _ImageGalleryState extends State<ImageGallery> {
 
   Widget _buildLoadingGrid() {
     final filteredPaths = _filteredImagePaths;
+    final effectiveCrossAxisCount = _effectiveCrossAxisCount(
+      filteredPaths.length,
+    );
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: widget.config.crossAxisCount,
+        crossAxisCount: effectiveCrossAxisCount,
         crossAxisSpacing: widget.config.crossAxisSpacing,
         mainAxisSpacing: widget.config.mainAxisSpacing,
         childAspectRatio: widget.config.childAspectRatio,
@@ -206,13 +212,15 @@ class _ImageGalleryState extends State<ImageGallery> {
     if (widget.onReorder != null) {
       return LayoutBuilder(
         builder: (context, constraints) {
+          final effectiveCrossAxisCount = _effectiveCrossAxisCount(
+            filteredPaths.length,
+          );
           final totalSpacing =
-              (widget.config.crossAxisCount - 1) *
-              widget.config.crossAxisSpacing;
+              (effectiveCrossAxisCount - 1) * widget.config.crossAxisSpacing;
           final availableWidth = constraints.maxWidth - totalSpacing;
           final itemWidth =
               widget.config.itemWidth ??
-              (availableWidth / widget.config.crossAxisCount);
+              (availableWidth / effectiveCrossAxisCount);
           final itemHeight =
               widget.config.itemHeight ??
               (itemWidth / widget.config.childAspectRatio);
@@ -257,7 +265,7 @@ class _ImageGalleryState extends State<ImageGallery> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: widget.config.crossAxisCount,
+        crossAxisCount: _effectiveCrossAxisCount(filteredPaths.length),
         crossAxisSpacing: widget.config.crossAxisSpacing,
         mainAxisSpacing: widget.config.mainAxisSpacing,
         childAspectRatio: widget.config.childAspectRatio,
@@ -268,6 +276,15 @@ class _ImageGalleryState extends State<ImageGallery> {
         return _buildImageItem(imagePath, index);
       },
     );
+  }
+
+  int _effectiveCrossAxisCount(int itemCount) {
+    final baseCount = widget.config.crossAxisCount;
+    if (!widget.config.preferTwoColumnsWhenRemainderTwo) return baseCount;
+    if (itemCount == 0) return baseCount;
+    return (itemCount % baseCount == 2)
+        ? UIConstants.imageGalleryTwoColumnCount
+        : baseCount;
   }
 
   Widget _buildLoadingItem() {
