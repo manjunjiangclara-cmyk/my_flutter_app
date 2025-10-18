@@ -62,6 +62,7 @@ class UIConstants {
   static const double imageGalleryRunSpacing = 8.0;
   static const double imageGalleryOpacity = 0.8;
   static const double imageGalleryElevation = 6.0;
+  static const int imageGalleryTwoColumnCount = 2;
 
   // Animation Durations
   static const Duration fastAnimation = Duration(milliseconds: 150);
@@ -187,9 +188,13 @@ class UIConstants {
   // Bottom Sheet Heights
   static const double locationPickerHeight = 0.8;
   static const double tagPickerHeight = 0.85;
+  static const double shareOptionsHeight = 0.35;
 
   // Location Picker Bottom Sheet
   static const double locationPickerCornerRadius = extraLargeRadius;
+  static const double shareOptionsCornerRadius = extraLargeRadius;
+  static const double shareOptionItemPadding = 16.0;
+  static const double shareOptionIconSize = defaultIconSize;
   static const double locationResultItemPadding = 16.0;
   static const double locationResultIconPadding = 8.0;
   static const double locationResultIconSize = 24.0;
@@ -220,6 +225,10 @@ class UIConstants {
   static const int journalImageGalleryColumns = 3;
   static const double journalImageGallerySpacing = 8.0;
   static const double journalImageGalleryItemHeight = 120.0;
+
+  // Sharing/Capture
+  static const double shareCapturePixelRatio = 4.0;
+  static const double shareCapturePadding = 20.0;
 
   // ========== SPLASH SCREEN ==========
 
