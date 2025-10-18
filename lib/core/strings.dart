@@ -66,6 +66,13 @@ class AppStrings {
 
   // ---------- Screens: Journal ----------
   static const String location = 'Location';
+  static const String shareToApps = 'Share to apps';
+  static const String saveToPhotos = 'Save to Photos';
+  static const String shareOptionsTitle = 'Share Options';
+  static const String shareAsImage = 'Share as Image';
+  static const String shareAsPdf = 'Share as PDF';
+  static const String shareImagePreparing = 'Preparing image…';
+  static const String sharePdfPreparing = 'Preparing PDF…';
 
   // ---------- Settings ----------
   static const String general = 'General';
