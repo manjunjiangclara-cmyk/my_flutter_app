@@ -177,7 +177,7 @@ class UIConstants {
 
   // Docked Toolbar
   static const double dockedBarHeight = 52.0;
-  static const double dockedBarRadius = extraLargeRadius;
+  static const double dockedBarRadius = 32.0;
   static const double dockedBarHorizontalPadding = smallPadding;
   static const double dockedBarVerticalPadding = smallPadding;
   static const double dockedBarMargin = defaultPadding;

@@ -37,7 +37,7 @@ class DockedToolbar extends StatelessWidget {
 
     double mix(double a, double b, double t) => a + (b - a) * t;
     final double t = elevationT.clamp(0.0, 1.0);
-    final double stadiumRadius = UIConstants.dockedBarHeight / 2;
+    final double stadiumRadius = UIConstants.dockedBarRadius;
 
     // Interpolated shadow layer 1
     final double shadow1Opacity = mix(
@@ -152,34 +152,20 @@ class DockedToolbar extends StatelessWidget {
                           width: 1.0,
                         ),
                         boxShadow: [
+                          // 主阴影 - 更柔和
                           BoxShadow(
                             color: AppColors.shadowTint.withValues(
-                              alpha: shadow1Opacity,
+                              alpha: shadow1Opacity * 0.6,
                             ),
-                            blurRadius: shadow1Blur,
-                            offset: Offset(0, shadow1OffsetY),
-                            spreadRadius: shadow1Spread,
+                            blurRadius: shadow1Blur * 1.2,
+                            offset: Offset(0, shadow1OffsetY * 0.8),
+                            spreadRadius: shadow1Spread * 0.5,
                           ),
+                          // 顶部高光边框 - 更细腻
                           BoxShadow(
-                            color: AppColors.shadowTint.withValues(
-                              alpha: shadow2Opacity,
-                            ),
-                            blurRadius: shadow2Blur,
-                            offset: Offset(0, shadow2OffsetY),
-                            spreadRadius: shadow2Spread,
-                          ),
-                          // 顶部高光边框
-                          BoxShadow(
-                            color: Colors.white.withValues(alpha: 0.1),
+                            color: Colors.white.withValues(alpha: 0.08),
                             blurRadius: 0,
-                            offset: Offset(0, -1),
-                            spreadRadius: 0,
-                          ),
-                          // 底部阴影边框
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.05),
-                            blurRadius: 0,
-                            offset: Offset(0, 1),
+                            offset: Offset(0, -0.5),
                             spreadRadius: 0,
                           ),
                         ],
@@ -314,7 +300,7 @@ class _DockedToolbarButtonState extends State<_DockedToolbarButton>
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(
-                      UIConstants.dockedBarHeight / 2,
+                      UIConstants.dockedBarRadius,
                     ),
                     // 移除按钮容器的背景色，只保留图标周围的圆形背景
                   ),
