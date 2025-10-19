@@ -192,8 +192,8 @@ class UIConstants {
   static const double dockedBarShadow2Blur = 32.0;
   static const double dockedBarShadow2OffsetY = 12.0;
   static const double dockedBarShadow2Spread = -2.0;
-  static const double dockedBarBottomOffset = 20.0;
-  static const double dockedBarMaxWidth = 240.0;
+  static const double dockedBarBottomOffset = 8.0;
+  static const double dockedBarMaxWidth = 600.0;
   static const Duration dockedBarSlideDuration = Duration(milliseconds: 300);
   static const double dockedBarSlideOffset = 100.0;
   static const Duration dockedBarFadeDuration = Duration(milliseconds: 260);
@@ -252,7 +252,7 @@ class UIConstants {
   // Cleaned up toolbar constants
   static const double dockedBarButtonScaleMin = 0.96;
   static const double dockedBarButtonRotationMax = 0.05;
-  static const double dockedBarSelectedIconSizeIncrease = 2.0;
+  static const double dockedBarSelectedIconSizeIncrease = 4.0;
   static const double dockedBarSelectedOverlayOpacity = 0.15;
   static const double dockedBarSelectedBorderOpacity = 0.2;
   static const double dockedBarSelectedBorderWidth = 0.5;
