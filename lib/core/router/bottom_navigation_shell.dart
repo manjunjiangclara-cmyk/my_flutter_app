@@ -24,6 +24,11 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
   List<Widget>? _pages;
   bool _isToolbarVisible = true;
   double _elevationT = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
   // We use NotificationListener to detect scroll direction across nested scrollables
 
   void _handleUserScroll(UserScrollNotification notification) {

@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/liquid_glass_view.dart';
 
 class DockedToolbarItem {
   final IconData icon;
@@ -32,13 +35,17 @@ class DockedToolbar extends StatelessWidget {
     final mediaQuery = MediaQuery.of(context);
     final bool keyboardOpen = mediaQuery.viewInsets.bottom > 0;
     final bool hasBottomSafeArea = mediaQuery.padding.bottom > 0;
+
+    // Calculate slide animation offset
     final double slideOutFraction =
         1.0 + (UIConstants.dockedBarBottomOffset / UIConstants.dockedBarHeight);
 
+    // Helper function for smooth interpolation
     double mix(double a, double b, double t) => a + (b - a) * t;
     final double t = elevationT.clamp(0.0, 1.0);
     final double stadiumRadius = UIConstants.dockedBarRadius;
 
+    // Calculate dynamic shadow properties based on elevation
     // Interpolated shadow layer 1
     final double shadow1Opacity = mix(
       UIConstants.dockedBarShadowOpacityMin,
@@ -61,7 +68,7 @@ class DockedToolbar extends StatelessWidget {
       t,
     );
 
-    // Interpolated shadow layer 2
+    // Interpolated shadow layer 2 for depth
     final double shadow2Opacity = mix(
       UIConstants.dockedBarShadow2OpacityMin,
       UIConstants.dockedBarShadow2OpacityMax,
@@ -83,6 +90,7 @@ class DockedToolbar extends StatelessWidget {
       t,
     );
 
+    // Main toolbar container with slide, fade, and scale animations
     return AnimatedSlide(
       offset: isVisible ? Offset.zero : Offset(0, slideOutFraction),
       duration: UIConstants.dockedBarSlideDuration,
@@ -113,90 +121,90 @@ class DockedToolbar extends StatelessWidget {
                   constraints: BoxConstraints(
                     maxWidth: UIConstants.dockedBarMaxWidth,
                   ),
-                  child: AnimatedContainer(
-                    duration: UIConstants.defaultAnimation,
-                    curve: Curves.easeOutCubic,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(stadiumRadius),
-                      border: Border.all(
-                        color: colorScheme.primary.withValues(
-                          alpha: UIConstants.dockedBarAccentBorderOpacity,
-                        ),
-                        width: UIConstants.dockedBarAccentBorderWidth,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.shadowTint.withValues(
-                            alpha: shadow1Opacity,
-                          ),
-                          blurRadius: shadow1Blur,
-                          offset: Offset(0, shadow1OffsetY),
-                          spreadRadius: shadow1Spread,
-                        ),
-                        BoxShadow(
-                          color: AppColors.shadowTint.withValues(
-                            alpha: shadow2Opacity,
-                          ),
-                          blurRadius: shadow2Blur,
-                          offset: Offset(0, shadow2OffsetY),
-                          spreadRadius: shadow2Spread,
-                        ),
-                      ],
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(stadiumRadius),
-                        color: colorScheme.primary,
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.15),
-                          width: 1.0,
-                        ),
-                        boxShadow: [
-                          // 主阴影 - 更柔和
-                          BoxShadow(
-                            color: AppColors.shadowTint.withValues(
-                              alpha: shadow1Opacity * 0.6,
+                  // Platform-specific rendering
+                  child: Platform.isIOS
+                      ? LiquidGlassView(
+                          selectedIndex: currentIndex,
+                          onButtonTap: (index) {
+                            HapticFeedback.lightImpact();
+                            onTap(index);
+                          },
+                        )
+                      : AnimatedContainer(
+                          duration: UIConstants.defaultAnimation,
+                          curve: Curves.easeOutCubic,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(stadiumRadius),
+                            color: colorScheme.primary,
+                            border: Border.all(
+                              color: Colors.white.withValues(
+                                alpha: UIConstants.dockedBarAccentBorderOpacity,
+                              ),
+                              width: UIConstants.dockedBarAccentBorderWidth,
                             ),
-                            blurRadius: shadow1Blur * 1.2,
-                            offset: Offset(0, shadow1OffsetY * 0.8),
-                            spreadRadius: shadow1Spread * 0.5,
-                          ),
-                          // 顶部高光边框 - 更细腻
-                          BoxShadow(
-                            color: Colors.white.withValues(alpha: 0.08),
-                            blurRadius: 0,
-                            offset: Offset(0, -0.5),
-                            spreadRadius: 0,
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: UIConstants.dockedBarHorizontalPadding,
-                          vertical: UIConstants.tinyPadding,
-                        ),
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: UIConstants.dockedBarHeight,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              for (int i = 0; i < items.length; i++)
-                                _DockedToolbarButton(
-                                  item: items[i],
-                                  isSelected: i == currentIndex,
-                                  onPressed: () {
-                                    HapticFeedback.lightImpact();
-                                    onTap(i);
-                                  },
+                            boxShadow: [
+                              // Primary shadow
+                              BoxShadow(
+                                color: AppColors.shadowTint.withValues(
+                                  alpha: shadow1Opacity,
                                 ),
+                                blurRadius: shadow1Blur,
+                                offset: Offset(0, shadow1OffsetY),
+                                spreadRadius: shadow1Spread,
+                              ),
+                              // Secondary shadow for depth
+                              BoxShadow(
+                                color: AppColors.shadowTint.withValues(
+                                  alpha: shadow2Opacity,
+                                ),
+                                blurRadius: shadow2Blur,
+                                offset: Offset(0, shadow2OffsetY),
+                                spreadRadius: shadow2Spread,
+                              ),
+                              // Top highlight
+                              BoxShadow(
+                                color: Colors.white.withValues(
+                                  alpha:
+                                      UIConstants.dockedBarTopHighlightOpacity,
+                                ),
+                                blurRadius: 0,
+                                offset: Offset(
+                                  0,
+                                  UIConstants.dockedBarTopHighlightOffset,
+                                ),
+                                spreadRadius: 0,
+                              ),
                             ],
                           ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  UIConstants.dockedBarHorizontalPadding,
+                              vertical: UIConstants.tinyPadding,
+                            ),
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                minHeight: UIConstants.dockedBarHeight,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  // Render toolbar buttons
+                                  for (int i = 0; i < items.length; i++)
+                                    _DockedToolbarButton(
+                                      item: items[i],
+                                      isSelected: i == currentIndex,
+                                      onPressed: () {
+                                        HapticFeedback.lightImpact();
+                                        onTap(i);
+                                      },
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                 ),
               ),
             ),
@@ -207,6 +215,8 @@ class DockedToolbar extends StatelessWidget {
   }
 }
 
+/// Individual button widget for the docked toolbar
+/// Handles tap animations and visual states
 class _DockedToolbarButton extends StatefulWidget {
   final DockedToolbarItem item;
   final bool isSelected;
@@ -223,37 +233,34 @@ class _DockedToolbarButton extends StatefulWidget {
 }
 
 class _DockedToolbarButtonState extends State<_DockedToolbarButton>
-    with TickerProviderStateMixin {
-  late AnimationController _scaleController;
-  late AnimationController _rotationController;
+    with SingleTickerProviderStateMixin {
+  // Simplified animation system - only scale animation
+  late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
-  late Animation<double> _rotationAnimation;
 
   @override
   void initState() {
     super.initState();
-    _scaleController = AnimationController(
+    _animationController = AnimationController(
       duration: UIConstants.fastAnimation,
       vsync: this,
     );
-    _rotationController = AnimationController(
-      duration: UIConstants.defaultAnimation,
-      vsync: this,
-    );
 
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.96).animate(
-      CurvedAnimation(parent: _scaleController, curve: Curves.easeInOut),
-    );
-
-    _rotationAnimation = Tween<double>(begin: 0.0, end: 0.05).animate(
-      CurvedAnimation(parent: _rotationController, curve: Curves.elasticOut),
-    );
+    _scaleAnimation =
+        Tween<double>(
+          begin: 1.0,
+          end: UIConstants.dockedBarButtonScaleMin,
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeInOut,
+          ),
+        );
   }
 
   @override
   void dispose() {
-    _scaleController.dispose();
-    _rotationController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -263,75 +270,66 @@ class _DockedToolbarButtonState extends State<_DockedToolbarButton>
     final bool isLight = colorScheme.brightness == Brightness.light;
     final Color baseLine = colorScheme.outline;
     final Color lineColor = isLight
-        ? baseLine.withOpacity(UIConstants.timelineLineOpacityLight)
-        : baseLine.withOpacity(UIConstants.timelineLineOpacityDark);
+        ? baseLine.withValues(alpha: UIConstants.timelineLineOpacityLight)
+        : baseLine.withValues(alpha: UIConstants.timelineLineOpacityDark);
 
+    // Determine button color based on selection state
     final Color baseColor = widget.isSelected
-        ? colorScheme.onSurface.withValues(alpha: 0.8)
-        : lineColor.withValues(alpha: 0.7);
+        ? colorScheme.onSurface.withValues(
+            alpha: UIConstants.dockedBarSelectedTextOpacity,
+          )
+        : lineColor.withValues(
+            alpha: UIConstants.dockedBarUnselectedTextOpacity,
+          );
 
     return Expanded(
       child: GestureDetector(
-        onTapDown: (_) {
-          _scaleController.forward();
-          _rotationController.forward();
-        },
-        onTapUp: (_) {
-          _scaleController.reverse();
-          _rotationController.reverse();
-        },
-        onTapCancel: () {
-          _scaleController.reverse();
-          _rotationController.reverse();
-        },
+        onTapDown: (_) => _animationController.forward(),
+        onTapUp: (_) => _animationController.reverse(),
+        onTapCancel: () => _animationController.reverse(),
         onTap: widget.onPressed,
         child: AnimatedBuilder(
-          animation: Listenable.merge([_scaleAnimation, _rotationAnimation]),
+          animation: _scaleAnimation,
           builder: (context, child) {
             return Transform.scale(
               scale: _scaleAnimation.value,
-              child: Transform.rotate(
-                angle: _rotationAnimation.value,
-                child: Container(
-                  height: UIConstants.dockedBarHeight,
-                  margin: EdgeInsets.symmetric(
-                    horizontal: UIConstants.tinyPadding,
-                    vertical: UIConstants.tinyPadding / 2,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      UIConstants.dockedBarRadius,
+              child: Container(
+                height: UIConstants.dockedBarHeight,
+                margin: EdgeInsets.symmetric(
+                  horizontal: UIConstants.tinyPadding,
+                  vertical: UIConstants.tinyPadding / 2,
+                ),
+                child: Center(
+                  child: AnimatedContainer(
+                    duration: UIConstants.fastAnimation,
+                    curve: Curves.easeOutCubic,
+                    padding: EdgeInsets.all(UIConstants.smallPadding),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: widget.isSelected
+                          ? Colors.white.withValues(
+                              alpha:
+                                  UIConstants.dockedBarSelectedOverlayOpacity,
+                            )
+                          : Colors.transparent,
+                      border: widget.isSelected
+                          ? Border.all(
+                              color: Colors.white.withValues(
+                                alpha:
+                                    UIConstants.dockedBarSelectedBorderOpacity,
+                              ),
+                              width: UIConstants.dockedBarSelectedBorderWidth,
+                            )
+                          : null,
                     ),
-                    // 移除按钮容器的背景色，只保留图标周围的圆形背景
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AnimatedContainer(
-                        duration: UIConstants.fastAnimation,
-                        curve: Curves.easeOutCubic,
-                        padding: EdgeInsets.all(UIConstants.smallPadding),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: widget.isSelected
-                              ? Colors.white.withValues(alpha: 0.15)
-                              : Colors.transparent,
-                          border: widget.isSelected
-                              ? Border.all(
-                                  color: Colors.white.withValues(alpha: 0.2),
-                                  width: 0.5,
-                                )
-                              : null,
-                        ),
-                        child: Icon(
-                          widget.item.icon,
-                          color: baseColor,
-                          size: widget.isSelected
-                              ? UIConstants.dockedBarIconSize + 2
-                              : UIConstants.dockedBarIconSize,
-                        ),
-                      ),
-                    ],
+                    child: Icon(
+                      widget.item.icon,
+                      color: baseColor,
+                      size: widget.isSelected
+                          ? UIConstants.dockedBarIconSize +
+                                UIConstants.dockedBarSelectedIconSizeIncrease
+                          : UIConstants.dockedBarIconSize,
+                    ),
                   ),
                 ),
               ),

@@ -25,7 +25,11 @@ class JournalRouter {
         );
 
         if (defaultTargetPlatform == TargetPlatform.iOS) {
-          return CupertinoPage<void>(key: state.pageKey, child: child);
+          return CupertinoPage<void>(
+            key: state.pageKey,
+            child: child,
+            fullscreenDialog: false,
+          );
         }
 
         return MaterialPage<void>(key: state.pageKey, child: child);

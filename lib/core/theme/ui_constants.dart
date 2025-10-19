@@ -249,6 +249,18 @@ class UIConstants {
   static const double dockedBarInnerHighlightOpacityMin = 0.10;
   static const double dockedBarInnerHighlightOpacityMax = 0.18;
 
+  // Cleaned up toolbar constants
+  static const double dockedBarButtonScaleMin = 0.96;
+  static const double dockedBarButtonRotationMax = 0.05;
+  static const double dockedBarSelectedIconSizeIncrease = 2.0;
+  static const double dockedBarSelectedOverlayOpacity = 0.15;
+  static const double dockedBarSelectedBorderOpacity = 0.2;
+  static const double dockedBarSelectedBorderWidth = 0.5;
+  static const double dockedBarTopHighlightOpacity = 0.08;
+  static const double dockedBarTopHighlightOffset = -0.5;
+  static const double dockedBarSelectedTextOpacity = 0.8;
+  static const double dockedBarUnselectedTextOpacity = 0.7;
+
   // Tag Chip Specific
   static const double tagChipWidthPadding = 16.0;
   static const double tagChipBorderWidth = 1.0;

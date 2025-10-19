@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -146,57 +147,61 @@ class _JournalViewContentState extends State<_JournalViewContent> {
     // Always use only status bar height for content padding; overlay app bar should not push content
     final statusBarHeight = UICalculations.getTopBarArea(context, false);
 
-    return WillPopScope(
-      onWillPop: () async => !_isSharing,
-      child: Scaffold(
-        body: Stack(
-          children: [
-            // Main scrollable content
-            GestureDetector(
-              onTap: _toggleAppBar,
-              child: Screenshot(
-                controller: _screenshotController,
-                child: JournalContentScroll(
-                  journal: widget.journal,
-                  captureKey: _captureKey,
-                  statusBarHeight: statusBarHeight,
+    final scaffold = Scaffold(
+      body: Stack(
+        children: [
+          // Main scrollable content
+          GestureDetector(
+            onTap: _toggleAppBar,
+            child: Screenshot(
+              controller: _screenshotController,
+              child: JournalContentScroll(
+                journal: widget.journal,
+                captureKey: _captureKey,
+                statusBarHeight: statusBarHeight,
+              ),
+            ),
+          ),
+
+          // Overlay app bar (does not push content) with gradient across status bar + toolbar
+          JournalAppBarOverlay(
+            statusBarHeight: statusBarHeight,
+            isVisible: _isAppBarVisible,
+            onClose: () => NavigationHelper.goBack(context),
+            onEdit: widget.onEdit,
+            onDelete: widget.onDelete,
+            onShareTap: () async {
+              final selected = await ShareOptionsBottomSheet.show(context);
+              if (selected == null) return;
+              if (selected == ShareOption.shareToApps) {
+                await _captureAndShare(context);
+              } else if (selected == ShareOption.saveToPhotos) {
+                await _captureAndSave(context);
+              }
+            },
+          ),
+
+          if (_isSharing) ...[
+            Positioned.fill(
+              child: ModalBarrier(
+                dismissible: false,
+                color: Theme.of(context).colorScheme.scrim.withValues(
+                  alpha: UIConstants.dialogBarrierOpacity,
                 ),
               ),
             ),
-
-            // Overlay app bar (does not push content) with gradient across status bar + toolbar
-            JournalAppBarOverlay(
-              statusBarHeight: statusBarHeight,
-              isVisible: _isAppBarVisible,
-              onClose: () => NavigationHelper.goBack(context),
-              onEdit: widget.onEdit,
-              onDelete: widget.onDelete,
-              onShareTap: () async {
-                final selected = await ShareOptionsBottomSheet.show(context);
-                if (selected == null) return;
-                if (selected == ShareOption.shareToApps) {
-                  await _captureAndShare(context);
-                } else if (selected == ShareOption.saveToPhotos) {
-                  await _captureAndSave(context);
-                }
-              },
-            ),
-
-            if (_isSharing) ...[
-              Positioned.fill(
-                child: ModalBarrier(
-                  dismissible: false,
-                  color: Theme.of(context).colorScheme.scrim.withValues(
-                    alpha: UIConstants.dialogBarrierOpacity,
-                  ),
-                ),
-              ),
-              const Center(child: CircularProgressIndicator()),
-            ],
+            const Center(child: CircularProgressIndicator()),
           ],
-        ),
+        ],
       ),
     );
+
+    // Only use WillPopScope on Android to avoid blocking iOS swipe back gesture
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return WillPopScope(onWillPop: () async => !_isSharing, child: scaffold);
+    }
+
+    return scaffold;
   }
 
   Future<void> _captureAndShare(BuildContext context) async {
