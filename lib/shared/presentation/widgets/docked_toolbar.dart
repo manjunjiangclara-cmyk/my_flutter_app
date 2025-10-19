@@ -1,10 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
-import 'package:my_flutter_app/shared/presentation/widgets/liquid_glass_view.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/liquid_glass_toolbar.dart';
 
 class DockedToolbarItem {
   final IconData icon;
@@ -19,6 +17,7 @@ class DockedToolbar extends StatelessWidget {
   final ValueChanged<int> onTap;
   final bool isVisible;
   final double elevationT;
+  final bool useLiquidGlass;
 
   const DockedToolbar({
     super.key,
@@ -27,6 +26,7 @@ class DockedToolbar extends StatelessWidget {
     required this.onTap,
     this.isVisible = true,
     this.elevationT = 0.0,
+    this.useLiquidGlass = false,
   }) : assert(items.length >= 2);
 
   @override
@@ -121,14 +121,15 @@ class DockedToolbar extends StatelessWidget {
                   constraints: BoxConstraints(
                     maxWidth: UIConstants.dockedBarMaxWidth,
                   ),
-                  // Platform-specific rendering
-                  child: Platform.isIOS
-                      ? LiquidGlassView(
+                  // Switch between LiquidGlass and Material docked bar
+                  child: useLiquidGlass
+                      ? LiquidGlassToolbar(
                           selectedIndex: currentIndex,
                           onButtonTap: (index) {
                             HapticFeedback.lightImpact();
                             onTap(index);
                           },
+                          icons: items.map((e) => e.icon).toList(),
                         )
                       : AnimatedContainer(
                           duration: UIConstants.defaultAnimation,
@@ -322,13 +323,17 @@ class _DockedToolbarButtonState extends State<_DockedToolbarButton>
                             )
                           : null,
                     ),
-                    child: Icon(
-                      widget.item.icon,
-                      color: baseColor,
-                      size: widget.isSelected
-                          ? UIConstants.dockedBarIconSize +
-                                UIConstants.dockedBarSelectedIconSizeIncrease
-                          : UIConstants.dockedBarIconSize,
+                    child: TweenAnimationBuilder<Color?>(
+                      duration: UIConstants.toolbarIconColorFadeDuration,
+                      tween: ColorTween(begin: baseColor, end: baseColor),
+                      builder: (context, color, _) => Icon(
+                        widget.item.icon,
+                        color: color,
+                        size: widget.isSelected
+                            ? UIConstants.dockedBarIconSize +
+                                  UIConstants.dockedBarSelectedIconSizeIncrease
+                            : UIConstants.dockedBarIconSize,
+                      ),
                     ),
                   ),
                 ),

@@ -193,12 +193,15 @@ class UIConstants {
   static const double dockedBarShadow2OffsetY = 12.0;
   static const double dockedBarShadow2Spread = -2.0;
   static const double dockedBarBottomOffset = 8.0;
-  static const double dockedBarMaxWidth = 600.0;
+  static const double dockedBarMaxWidth = 240.0;
   static const Duration dockedBarSlideDuration = Duration(milliseconds: 300);
   static const double dockedBarSlideOffset = 100.0;
   static const Duration dockedBarFadeDuration = Duration(milliseconds: 260);
   static const Duration dockedBarScaleDuration = Duration(milliseconds: 340);
   static const double dockedBarHiddenScale = 0.98;
+  static const Duration toolbarIconColorFadeDuration = Duration(
+    milliseconds: 180,
+  );
   static const double dockedBarAccentTintOpacity = 0.10;
   static const double dockedBarAccentBorderWidth = 1.0;
   static const double dockedBarAccentBorderOpacity = 0.12;
@@ -260,6 +263,9 @@ class UIConstants {
   static const double dockedBarTopHighlightOffset = -0.5;
   static const double dockedBarSelectedTextOpacity = 0.8;
   static const double dockedBarUnselectedTextOpacity = 0.7;
+
+  // LiquidGlass specific tweaks
+  static const double liquidGlassUnselectedIconOpacity = 0.6;
 
   // Tag Chip Specific
   static const double tagChipWidthPadding = 16.0;

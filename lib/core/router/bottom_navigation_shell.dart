@@ -100,18 +100,28 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
                   bottom: UIConstants.dockedBarBottomOffset,
                   child: IgnorePointer(
                     ignoring: false,
-                    child: DockedToolbar(
-                      items: const [
-                        DockedToolbarItem(icon: Icons.book, label: ''),
-                        DockedToolbarItem(icon: Icons.edit, label: ''),
-                        DockedToolbarItem(icon: Icons.settings, label: ''),
-                      ],
-                      currentIndex: tabController.currentIndex,
-                      onTap: (int index) {
-                        tabController.setIndex(index);
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 180),
+                      switchInCurve: Curves.easeInOutCubic,
+                      switchOutCurve: Curves.easeInOutCubic,
+                      transitionBuilder: (child, animation) {
+                        return FadeTransition(opacity: animation, child: child);
                       },
-                      isVisible: _isToolbarVisible,
-                      elevationT: _elevationT,
+                      child: DockedToolbar(
+                        key: ValueKey<bool>(tabController.currentIndex == 0),
+                        items: const [
+                          DockedToolbarItem(icon: Icons.book, label: ''),
+                          DockedToolbarItem(icon: Icons.edit, label: ''),
+                          DockedToolbarItem(icon: Icons.settings, label: ''),
+                        ],
+                        currentIndex: tabController.currentIndex,
+                        onTap: (int index) {
+                          tabController.setIndex(index);
+                        },
+                        isVisible: _isToolbarVisible,
+                        elevationT: _elevationT,
+                        useLiquidGlass: tabController.currentIndex == 0,
+                      ),
                     ),
                   ),
                 ),

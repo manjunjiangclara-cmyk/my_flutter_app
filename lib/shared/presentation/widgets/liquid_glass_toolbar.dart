@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
-class LiquidGlassView extends StatefulWidget {
+class LiquidGlassToolbar extends StatefulWidget {
   final int selectedIndex;
   final ValueChanged<int>? onButtonTap;
   final List<IconData>? icons;
 
-  const LiquidGlassView({
+  const LiquidGlassToolbar({
     super.key,
     required this.selectedIndex,
     this.onButtonTap,
@@ -17,10 +17,10 @@ class LiquidGlassView extends StatefulWidget {
   });
 
   @override
-  State<LiquidGlassView> createState() => _LiquidGlassViewState();
+  State<LiquidGlassToolbar> createState() => _LiquidGlassToolbarState();
 }
 
-class _LiquidGlassViewState extends State<LiquidGlassView> {
+class _LiquidGlassToolbarState extends State<LiquidGlassToolbar> {
   int _selectedIndex = 0;
 
   @override
@@ -30,7 +30,7 @@ class _LiquidGlassViewState extends State<LiquidGlassView> {
   }
 
   @override
-  void didUpdateWidget(LiquidGlassView oldWidget) {
+  void didUpdateWidget(LiquidGlassToolbar oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.selectedIndex != oldWidget.selectedIndex) {
       _selectedIndex = widget.selectedIndex;
@@ -47,9 +47,8 @@ class _LiquidGlassViewState extends State<LiquidGlassView> {
         : baseLine.withValues(alpha: UIConstants.timelineLineOpacityDark);
 
     return Container(
-      // Follow DockedToolbar sizing
+      // Follow DockedToolbar sizing (height via inner ConstrainedBox)
       width: double.infinity,
-      height: UIConstants.dockedBarHeight,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(UIConstants.dockedBarRadius),
         color: Colors.white.withValues(
@@ -104,21 +103,26 @@ class _LiquidGlassViewState extends State<LiquidGlassView> {
                 horizontal: UIConstants.dockedBarHorizontalPadding,
                 vertical: UIConstants.tinyPadding,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  for (int i = 0; i < 3; i++)
-                    Expanded(
-                      child: _buildButton(
-                        (widget.icons != null && widget.icons!.length > i)
-                            ? widget.icons![i]
-                            : (i == 0
-                                  ? Icons.chrome_reader_mode
-                                  : (i == 1 ? Icons.edit : Icons.settings)),
-                        i,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: UIConstants.dockedBarHeight,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    for (int i = 0; i < 3; i++)
+                      Expanded(
+                        child: _buildButton(
+                          (widget.icons != null && widget.icons!.length > i)
+                              ? widget.icons![i]
+                              : (i == 0
+                                    ? Icons.chrome_reader_mode
+                                    : (i == 1 ? Icons.edit : Icons.settings)),
+                          i,
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -130,11 +134,6 @@ class _LiquidGlassViewState extends State<LiquidGlassView> {
   Widget _buildButton(IconData icon, int index) {
     final isSelected = index == _selectedIndex;
     final colorScheme = Theme.of(context).colorScheme;
-    final bool isLight = colorScheme.brightness == Brightness.light;
-    final Color baseLine = colorScheme.outline;
-    final Color lineColor = isLight
-        ? baseLine.withValues(alpha: UIConstants.timelineLineOpacityLight)
-        : baseLine.withValues(alpha: UIConstants.timelineLineOpacityDark);
 
     return GestureDetector(
       onTap: () {
@@ -143,56 +142,57 @@ class _LiquidGlassViewState extends State<LiquidGlassView> {
         });
         widget.onButtonTap?.call(index);
       },
-      child: SizedBox(
+      child: Container(
         height: UIConstants.dockedBarHeight, // align with docked
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Center(
-                child: Container(
-                  width: isSelected ? 44 : 36,
-                  height: isSelected ? 44 : 36,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(isSelected ? 22 : 18),
-                    color: isSelected
-                        ? (isLight
-                              ? Colors.white.withValues(alpha: 0.25)
-                              : colorScheme.primary.withValues(alpha: 0.2))
-                        : Colors.white.withValues(alpha: 0.05),
-                    border: isSelected
-                        ? Border.all(
-                            color: isLight
-                                ? lineColor.withValues(alpha: 0.8)
-                                : colorScheme.primary.withValues(alpha: 0.6),
-                            width: 0.6,
-                          )
-                        : Border.all(
-                            color: isLight
-                                ? lineColor.withValues(alpha: 0.4)
-                                : colorScheme.outline.withValues(alpha: 0.3),
-                            width: 0.3,
-                          ),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      icon,
-                      size: isSelected
-                          ? UIConstants.dockedBarIconSize +
-                                UIConstants.dockedBarSelectedIconSizeIncrease
-                          : UIConstants.dockedBarIconSize,
-                      color: isSelected
-                          ? colorScheme.primary
-                          : colorScheme.onSurface.withValues(
-                              alpha:
-                                  UIConstants.liquidGlassUnselectedIconOpacity,
-                            ),
-                    ),
-                  ),
-                ),
+        margin: EdgeInsets.symmetric(
+          horizontal: UIConstants.tinyPadding,
+          vertical: UIConstants.tinyPadding / 2,
+        ),
+        child: Center(
+          child: AnimatedContainer(
+            duration: UIConstants.fastAnimation,
+            curve: Curves.easeOutCubic,
+            padding: EdgeInsets.all(UIConstants.smallPadding),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isSelected
+                  ? Colors.white.withValues(
+                      alpha: UIConstants.dockedBarSelectedOverlayOpacity,
+                    )
+                  : Colors.transparent,
+              border: isSelected
+                  ? Border.all(
+                      color: Colors.white.withValues(
+                        alpha: UIConstants.dockedBarSelectedBorderOpacity,
+                      ),
+                      width: UIConstants.dockedBarSelectedBorderWidth,
+                    )
+                  : null,
+            ),
+            child: TweenAnimationBuilder<Color?>(
+              duration: UIConstants.toolbarIconColorFadeDuration,
+              tween: ColorTween(
+                begin: isSelected
+                    ? colorScheme.primary
+                    : colorScheme.onSurface.withValues(
+                        alpha: UIConstants.liquidGlassUnselectedIconOpacity,
+                      ),
+                end: isSelected
+                    ? colorScheme.primary
+                    : colorScheme.onSurface.withValues(
+                        alpha: UIConstants.liquidGlassUnselectedIconOpacity,
+                      ),
+              ),
+              builder: (context, color, _) => Icon(
+                icon,
+                size: isSelected
+                    ? UIConstants.dockedBarIconSize +
+                          UIConstants.dockedBarSelectedIconSizeIncrease
+                    : UIConstants.dockedBarIconSize,
+                color: color,
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
