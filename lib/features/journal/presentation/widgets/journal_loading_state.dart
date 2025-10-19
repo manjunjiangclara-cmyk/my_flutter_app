@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/expressive_loading_indicator.dart';
 
 /// Loading state widget for journal view
 class JournalLoadingState extends StatelessWidget {
@@ -12,7 +13,7 @@ class JournalLoadingState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
+            ExpressiveLoadingIndicator(),
             SizedBox(height: Spacing.md),
             Text('Loading journal...'),
           ],

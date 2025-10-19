@@ -20,6 +20,7 @@ class AppStrings {
   static const String helpAndSupport = 'Help & Support';
   static const String appVersion = 'App Version';
   static const String selected = 'Selected';
+  static const String loading = 'Loading...';
 
   // ---------- Delete Dialog ----------
   static const String deleteConfirmTitle = 'Delete Content?';

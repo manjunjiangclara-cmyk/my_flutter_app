@@ -15,6 +15,7 @@ import 'package:my_flutter_app/features/compose/presentation/widgets/compose_tex
 import 'package:my_flutter_app/features/compose/presentation/widgets/location/location_chip.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/photo/photo_attachments.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/tags/tag_picker_bottom_sheet.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/expressive_loading_indicator.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/tag_chip.dart';
 
 /// Main compose screen with improved organization and tap-to-edit functionality
@@ -308,9 +309,7 @@ class _PostingIndicator extends StatelessWidget {
           SizedBox(
             width: ComposeConstants.postingIndicatorSize,
             height: ComposeConstants.postingIndicatorSize,
-            child: CircularProgressIndicator(
-              strokeWidth: ComposeConstants.postingIndicatorStrokeWidth,
-            ),
+            child: ExpressiveLoadingIndicator(),
           ),
           SizedBox(width: Spacing.sm),
           Text(ComposeStrings.postingMemory),

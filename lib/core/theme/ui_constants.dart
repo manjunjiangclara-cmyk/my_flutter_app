@@ -6,6 +6,8 @@ class UIConstants {
   static const bool enableImageShadows = false;
 
   // Spacing
+  static const double extraSmallPadding = 4.0;
+  static const double tinyPadding = 2.0;
   static const double defaultPadding = 16.0;
   static const double smallPadding = 8.0;
   static const double mediumPadding = 24.0;
@@ -68,6 +70,14 @@ class UIConstants {
   static const Duration fastAnimation = Duration(milliseconds: 150);
   static const Duration defaultAnimation = Duration(milliseconds: 300);
   static const Duration slowAnimation = Duration(milliseconds: 500);
+
+  // Expressive Loading Indicator
+  static const double expressiveIndicatorSizeSm = 16.0;
+  static const double expressiveIndicatorSizeMd = 24.0;
+  static const double expressiveIndicatorSizeLg = 40.0;
+  static const Duration expressiveIndicatorAnimationDuration = Duration(
+    milliseconds: 1400,
+  );
 
   // Screen Breakpoints (for responsive design)
   static const double mobileBreakpoint = 600.0;
@@ -164,6 +174,98 @@ class UIConstants {
   static const double barOverlayOpacity = 0.75;
   static const double barEdgeFadeHeight = 16.0;
   static const double barEdgeFadeStartOpacity = 0.75;
+
+  // Docked Toolbar
+  static const double dockedBarHeight = 48.0;
+  static const double dockedBarRadius = 32.0;
+  static const double dockedBarHorizontalPadding = smallPadding;
+  static const double dockedBarVerticalPadding = smallPadding;
+  static const double dockedBarMargin = defaultPadding;
+  static const double dockedBarIconSize = 26.0;
+  static const double dockedBarIconPadding = 12.0;
+  static const double dockedBarActiveOverlayOpacity = 0.90;
+  static const double dockedBarShadowOpacity = 0.12;
+  static const double dockedBarShadowBlur = 8.0;
+  static const double dockedBarShadowOffsetY = 6.0;
+  static const double dockedBarShadowSpread = -0.5;
+  static const double dockedBarShadow2Opacity = 0.06;
+  static const double dockedBarShadow2Blur = 32.0;
+  static const double dockedBarShadow2OffsetY = 12.0;
+  static const double dockedBarShadow2Spread = -2.0;
+  static const double dockedBarBottomOffset = 8.0;
+  static const double dockedBarMaxWidth = 240.0;
+  static const Duration dockedBarSlideDuration = Duration(milliseconds: 300);
+  static const double dockedBarSlideOffset = 100.0;
+  static const Duration dockedBarFadeDuration = Duration(milliseconds: 260);
+  static const Duration dockedBarScaleDuration = Duration(milliseconds: 340);
+  static const double dockedBarHiddenScale = 0.98;
+  static const Duration toolbarIconColorFadeDuration = Duration(
+    milliseconds: 180,
+  );
+  static const double dockedBarAccentTintOpacity = 0.10;
+  static const double dockedBarAccentBorderWidth = 1.0;
+  static const double dockedBarAccentBorderOpacity = 0.12;
+
+  // Docked Toolbar Dynamic Elevation (scroll-driven)
+  static const double dockedBarElevScrollStart = 0.0;
+  static const double dockedBarElevScrollEnd = 120.0;
+
+  // Overlay opacity interpolation
+  static const double dockedBarOverlayOpacityMin =
+      0.80; // base stronger for readability
+  static const double dockedBarOverlayOpacityMax =
+      0.92; // deeper scroll = more contrast
+
+  // Shadow 1 interpolation (near shadow)
+  static const double dockedBarShadowOpacityMin =
+      dockedBarShadowOpacity; // 0.12
+  static const double dockedBarShadowOpacityMax = 0.18;
+  static const double dockedBarShadowBlurMin = dockedBarShadowBlur; // 8.0
+  static const double dockedBarShadowBlurMax = 16.0;
+  static const double dockedBarShadowOffsetYMin = dockedBarShadowOffsetY; // 6.0
+  static const double dockedBarShadowOffsetYMax = 10.0;
+  static const double dockedBarShadowSpreadMin = dockedBarShadowSpread; // -0.5
+  static const double dockedBarShadowSpreadMax = -0.5;
+
+  // Shadow 2 interpolation (far/ambient shadow)
+  static const double dockedBarShadow2OpacityMin =
+      dockedBarShadow2Opacity; // 0.06
+  static const double dockedBarShadow2OpacityMax = 0.12;
+  static const double dockedBarShadow2BlurMin = dockedBarShadow2Blur; // 32.0
+  static const double dockedBarShadow2BlurMax = 48.0;
+  static const double dockedBarShadow2OffsetYMin =
+      dockedBarShadow2OffsetY; // 12.0
+  static const double dockedBarShadow2OffsetYMax = 18.0;
+  static const double dockedBarShadow2SpreadMin =
+      dockedBarShadow2Spread; // -2.0
+  static const double dockedBarShadow2SpreadMax = -2.0;
+
+  // Docked Toolbar Visual Differentiation (Scheme A)
+  static const double dockedBarTintOpacityMin = 0.02; // more subtle tint
+  static const double dockedBarTintOpacityMax = 0.06; // restrained at elevation
+  static const double dockedBarEdgeGradientOpacityMin =
+      0.08; // top edge separator
+  static const double dockedBarEdgeGradientOpacityMax = 0.12;
+
+  // Option C: inner highlight stroke
+  static const double dockedBarInnerHighlightWidth = 1.0;
+  static const double dockedBarInnerHighlightOpacityMin = 0.10;
+  static const double dockedBarInnerHighlightOpacityMax = 0.18;
+
+  // Cleaned up toolbar constants
+  static const double dockedBarButtonScaleMin = 0.96;
+  static const double dockedBarButtonRotationMax = 0.05;
+  static const double dockedBarSelectedIconSizeIncrease = 4.0;
+  static const double dockedBarSelectedOverlayOpacity = 0.15;
+  static const double dockedBarSelectedBorderOpacity = 0.2;
+  static const double dockedBarSelectedBorderWidth = 0.5;
+  static const double dockedBarTopHighlightOpacity = 0.08;
+  static const double dockedBarTopHighlightOffset = -0.5;
+  static const double dockedBarSelectedTextOpacity = 0.8;
+  static const double dockedBarUnselectedTextOpacity = 0.7;
+
+  // LiquidGlass specific tweaks
+  static const double liquidGlassUnselectedIconOpacity = 0.6;
 
   // Tag Chip Specific
   static const double tagChipWidthPadding = 16.0;
