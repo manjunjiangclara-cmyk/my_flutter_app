@@ -3,7 +3,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/router/tab_controller.dart';
-import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart';
 import 'package:my_flutter_app/features/compose/presentation/screens/compose_home_screen.dart';
@@ -24,14 +23,28 @@ class BottomNavigationShell extends StatefulWidget {
 class _BottomNavigationShellState extends State<BottomNavigationShell> {
   List<Widget>? _pages;
   bool _isToolbarVisible = true;
+  double _elevationT = 0.0;
   // We use NotificationListener to detect scroll direction across nested scrollables
 
-  void _handleScrollNotification(UserScrollNotification notification) {
+  void _handleUserScroll(UserScrollNotification notification) {
     final direction = notification.direction;
     if (direction == ScrollDirection.reverse && _isToolbarVisible) {
       setState(() => _isToolbarVisible = false);
     } else if (direction == ScrollDirection.forward && !_isToolbarVisible) {
       setState(() => _isToolbarVisible = true);
+    }
+  }
+
+  void _handleScrollMetrics(ScrollMetrics metrics) {
+    final double extent = metrics.extentBefore;
+    final double start = UIConstants.dockedBarElevScrollStart;
+    final double end = UIConstants.dockedBarElevScrollEnd;
+    final double rawT = (extent - start) / (end - start);
+    final double clamped = rawT.clamp(0.0, 1.0);
+
+    // Only update when value changes meaningfully to reduce rebuilds
+    if ((clamped - _elevationT).abs() > 0.01) {
+      setState(() => _elevationT = clamped);
     }
   }
 
@@ -56,9 +69,12 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
       builder: (context, tabController, child) {
         return Scaffold(
           extendBody: true,
-          body: NotificationListener<UserScrollNotification>(
+          body: NotificationListener<ScrollNotification>(
             onNotification: (notification) {
-              _handleScrollNotification(notification);
+              if (notification is UserScrollNotification) {
+                _handleUserScroll(notification);
+              }
+              _handleScrollMetrics(notification.metrics);
               return false; // allow scroll to propagate
             },
             child: Stack(
@@ -81,24 +97,16 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
                     ignoring: false,
                     child: DockedToolbar(
                       items: const [
-                        DockedToolbarItem(
-                          emoji: '📸',
-                          label: AppStrings.memory,
-                        ),
-                        DockedToolbarItem(
-                          emoji: '✍️',
-                          label: AppStrings.compose,
-                        ),
-                        DockedToolbarItem(
-                          emoji: '⚙️',
-                          label: AppStrings.settings,
-                        ),
+                        DockedToolbarItem(icon: Icons.book, label: ''),
+                        DockedToolbarItem(icon: Icons.edit, label: ''),
+                        DockedToolbarItem(icon: Icons.settings, label: ''),
                       ],
                       currentIndex: tabController.currentIndex,
                       onTap: (int index) {
                         tabController.setIndex(index);
                       },
                       isVisible: _isToolbarVisible,
+                      elevationT: _elevationT,
                     ),
                   ),
                 ),

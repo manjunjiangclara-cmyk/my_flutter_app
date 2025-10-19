@@ -176,7 +176,7 @@ class UIConstants {
   static const double barEdgeFadeStartOpacity = 0.75;
 
   // Docked Toolbar
-  static const double dockedBarHeight = 56.0;
+  static const double dockedBarHeight = 52.0;
   static const double dockedBarRadius = extraLargeRadius;
   static const double dockedBarHorizontalPadding = smallPadding;
   static const double dockedBarVerticalPadding = smallPadding;
@@ -193,7 +193,7 @@ class UIConstants {
   static const double dockedBarShadow2OffsetY = 12.0;
   static const double dockedBarShadow2Spread = -2.0;
   static const double dockedBarBottomOffset = 20.0;
-  static const double dockedBarMaxWidth = 280.0;
+  static const double dockedBarMaxWidth = 240.0;
   static const Duration dockedBarSlideDuration = Duration(milliseconds: 300);
   static const double dockedBarSlideOffset = 100.0;
   static const Duration dockedBarFadeDuration = Duration(milliseconds: 260);
@@ -202,6 +202,52 @@ class UIConstants {
   static const double dockedBarAccentTintOpacity = 0.10;
   static const double dockedBarAccentBorderWidth = 1.0;
   static const double dockedBarAccentBorderOpacity = 0.12;
+
+  // Docked Toolbar Dynamic Elevation (scroll-driven)
+  static const double dockedBarElevScrollStart = 0.0;
+  static const double dockedBarElevScrollEnd = 120.0;
+
+  // Overlay opacity interpolation
+  static const double dockedBarOverlayOpacityMin =
+      0.80; // base stronger for readability
+  static const double dockedBarOverlayOpacityMax =
+      0.92; // deeper scroll = more contrast
+
+  // Shadow 1 interpolation (near shadow)
+  static const double dockedBarShadowOpacityMin =
+      dockedBarShadowOpacity; // 0.12
+  static const double dockedBarShadowOpacityMax = 0.18;
+  static const double dockedBarShadowBlurMin = dockedBarShadowBlur; // 8.0
+  static const double dockedBarShadowBlurMax = 16.0;
+  static const double dockedBarShadowOffsetYMin = dockedBarShadowOffsetY; // 6.0
+  static const double dockedBarShadowOffsetYMax = 10.0;
+  static const double dockedBarShadowSpreadMin = dockedBarShadowSpread; // -0.5
+  static const double dockedBarShadowSpreadMax = -0.5;
+
+  // Shadow 2 interpolation (far/ambient shadow)
+  static const double dockedBarShadow2OpacityMin =
+      dockedBarShadow2Opacity; // 0.06
+  static const double dockedBarShadow2OpacityMax = 0.12;
+  static const double dockedBarShadow2BlurMin = dockedBarShadow2Blur; // 32.0
+  static const double dockedBarShadow2BlurMax = 48.0;
+  static const double dockedBarShadow2OffsetYMin =
+      dockedBarShadow2OffsetY; // 12.0
+  static const double dockedBarShadow2OffsetYMax = 18.0;
+  static const double dockedBarShadow2SpreadMin =
+      dockedBarShadow2Spread; // -2.0
+  static const double dockedBarShadow2SpreadMax = -2.0;
+
+  // Docked Toolbar Visual Differentiation (Scheme A)
+  static const double dockedBarTintOpacityMin = 0.02; // more subtle tint
+  static const double dockedBarTintOpacityMax = 0.06; // restrained at elevation
+  static const double dockedBarEdgeGradientOpacityMin =
+      0.08; // top edge separator
+  static const double dockedBarEdgeGradientOpacityMax = 0.12;
+
+  // Option C: inner highlight stroke
+  static const double dockedBarInnerHighlightWidth = 1.0;
+  static const double dockedBarInnerHighlightOpacityMin = 0.10;
+  static const double dockedBarInnerHighlightOpacityMax = 0.18;
 
   // Tag Chip Specific
   static const double tagChipWidthPadding = 16.0;

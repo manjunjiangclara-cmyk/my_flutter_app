@@ -1,3 +1,6 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
@@ -14,12 +17,18 @@ class JournalRouter {
     GoRoute(
       path: journalViewPath,
       name: journalViewName,
-      builder: (context, state) {
+      pageBuilder: (context, state) {
         final journalId = state.pathParameters['journalId']!;
-        return BlocProvider(
+        final child = BlocProvider(
           create: (context) => getIt<JournalViewBloc>(),
           child: JournalViewScreen(journalId: journalId),
         );
+
+        if (defaultTargetPlatform == TargetPlatform.iOS) {
+          return CupertinoPage<void>(key: state.pageKey, child: child);
+        }
+
+        return MaterialPage<void>(key: state.pageKey, child: child);
       },
     ),
   ];
