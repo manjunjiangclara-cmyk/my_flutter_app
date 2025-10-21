@@ -18,6 +18,8 @@ class ActionButton extends StatelessWidget {
   final double? iconSize;
   final EdgeInsets? padding;
   final Color? iconColor;
+  final Color? circularBackgroundColor; // only for circular style
+  final BoxBorder? circularBorder; // only for circular style
   final bool enabled;
   final ActionButtonStyle style;
 
@@ -30,6 +32,8 @@ class ActionButton extends StatelessWidget {
     this.iconSize,
     this.padding,
     this.iconColor,
+    this.circularBackgroundColor,
+    this.circularBorder,
     this.enabled = true,
     this.style = ActionButtonStyle.icon,
   }) : assert(
@@ -47,6 +51,8 @@ class ActionButton extends StatelessWidget {
     this.iconSize,
     this.padding,
     this.iconColor,
+    this.circularBackgroundColor,
+    this.circularBorder,
     this.enabled = true,
   }) : style = ActionButtonStyle.icon,
        assert(
@@ -64,6 +70,8 @@ class ActionButton extends StatelessWidget {
     this.iconSize,
     this.padding,
     this.iconColor,
+    this.circularBackgroundColor,
+    this.circularBorder,
     this.enabled = true,
   }) : style = ActionButtonStyle.filled,
        assert(
@@ -81,6 +89,8 @@ class ActionButton extends StatelessWidget {
     this.iconSize,
     this.padding,
     this.iconColor,
+    this.circularBackgroundColor,
+    this.circularBorder,
     this.enabled = true,
   }) : style = ActionButtonStyle.circular,
        assert(
@@ -169,18 +179,21 @@ class ActionButton extends StatelessWidget {
           child: Container(
             padding: effectivePadding,
             decoration: BoxDecoration(
-              color: enabled
-                  ? Color.lerp(
-                      Colors.grey[100]!,
-                      Theme.of(context).colorScheme.surface,
-                      0.3,
-                    )
-                  : Color.lerp(
-                      Colors.grey[100]!,
-                      Theme.of(context).colorScheme.surface,
-                      0.3,
-                    )!.withValues(alpha: 0.5),
+              color:
+                  circularBackgroundColor ??
+                  (enabled
+                      ? Color.lerp(
+                          Colors.grey[100]!,
+                          Theme.of(context).colorScheme.surface,
+                          0.3,
+                        )
+                      : Color.lerp(
+                          Colors.grey[100]!,
+                          Theme.of(context).colorScheme.surface,
+                          0.3,
+                        )!.withValues(alpha: 0.5)),
               shape: BoxShape.circle,
+              border: circularBorder,
             ),
             child: iconWidget,
           ),

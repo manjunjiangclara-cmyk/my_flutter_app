@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/journal/presentation/strings/journal_strings.dart';
-import 'package:my_flutter_app/shared/presentation/widgets/action_button.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/liquid_glass_icon_button.dart';
 
 class JournalAppBarOverlay extends StatelessWidget {
   final double statusBarHeight;
@@ -64,32 +64,12 @@ class JournalAppBarOverlay extends StatelessWidget {
                       padding: const EdgeInsets.only(
                         left: UIConstants.journalContentPadding,
                       ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).colorScheme.shadow
-                                  .withValues(
-                                    alpha: UIConstants
-                                        .journalAppBarActionShadowOpacity,
-                                  ),
-                              blurRadius:
-                                  UIConstants.journalAppBarActionShadowBlur,
-                              offset: const Offset(
-                                0,
-                                UIConstants.journalAppBarActionShadowOffsetY,
-                              ),
-                            ),
-                          ],
-                        ),
-                        child: ActionButton.circular(
-                          svgAssetPath: 'assets/icons/close.svg',
-                          onPressed: onClose,
-                          tooltip: JournalStrings.closeJournal,
-                          iconSize: UIConstants.journalAppBarIconSizeSmall,
-                          iconColor: Theme.of(context).colorScheme.onSurface,
-                        ),
+                      child: LiquidGlassIconButton(
+                        svgAssetPath: 'assets/icons/close.svg',
+                        onPressed: onClose,
+                        tooltip: JournalStrings.closeJournal,
+                        iconSize: UIConstants.journalAppBarIconSizeSmall,
+                        alwaysShowBackground: true,
                       ),
                     ),
                     Row(
@@ -98,105 +78,36 @@ class JournalAppBarOverlay extends StatelessWidget {
                           padding: const EdgeInsets.only(
                             right: UIConstants.journalAppBarIconPadding,
                           ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Theme.of(context).colorScheme.shadow
-                                      .withValues(
-                                        alpha: UIConstants
-                                            .journalAppBarActionShadowOpacity,
-                                      ),
-                                  blurRadius:
-                                      UIConstants.journalAppBarActionShadowBlur,
-                                  offset: const Offset(
-                                    0,
-                                    UIConstants
-                                        .journalAppBarActionShadowOffsetY,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            child: ActionButton.circular(
-                              svgAssetPath: 'assets/icons/edit.svg',
-                              onPressed: onEdit,
-                              tooltip: JournalStrings.editJournal,
-                              iconSize: UIConstants.journalAppBarIconSizeSmall,
-                              iconColor: Theme.of(
-                                context,
-                              ).colorScheme.onSurface,
-                            ),
+                          child: LiquidGlassIconButton(
+                            svgAssetPath: 'assets/icons/edit.svg',
+                            onPressed: onEdit,
+                            tooltip: JournalStrings.editJournal,
+                            iconSize: UIConstants.journalAppBarIconSizeSmall,
+                            alwaysShowBackground: true,
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
                             right: UIConstants.journalAppBarIconPadding,
                           ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Theme.of(context).colorScheme.shadow
-                                      .withValues(
-                                        alpha: UIConstants
-                                            .journalAppBarActionShadowOpacity,
-                                      ),
-                                  blurRadius:
-                                      UIConstants.journalAppBarActionShadowBlur,
-                                  offset: const Offset(
-                                    0,
-                                    UIConstants
-                                        .journalAppBarActionShadowOffsetY,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            child: ActionButton.circular(
-                              svgAssetPath: 'assets/icons/delete.svg',
-                              onPressed: onDelete,
-                              tooltip: JournalStrings.deleteJournal,
-                              iconSize: UIConstants.journalAppBarIconSizeSmall,
-                              iconColor: Theme.of(
-                                context,
-                              ).colorScheme.onSurface,
-                            ),
+                          child: LiquidGlassIconButton(
+                            svgAssetPath: 'assets/icons/delete.svg',
+                            onPressed: onDelete,
+                            tooltip: JournalStrings.deleteJournal,
+                            iconSize: UIConstants.journalAppBarIconSizeSmall,
+                            alwaysShowBackground: true,
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
                             right: UIConstants.journalAppBarIconPadding,
                           ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Theme.of(context).colorScheme.shadow
-                                      .withValues(
-                                        alpha: UIConstants
-                                            .journalAppBarActionShadowOpacity,
-                                      ),
-                                  blurRadius:
-                                      UIConstants.journalAppBarActionShadowBlur,
-                                  offset: const Offset(
-                                    0,
-                                    UIConstants
-                                        .journalAppBarActionShadowOffsetY,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            child: ActionButton.circular(
-                              svgAssetPath: 'assets/icons/share.svg',
-                              onPressed: onShareTap,
-                              tooltip: JournalStrings.shareJournal,
-                              iconSize: UIConstants.journalAppBarIconSizeSmall,
-                              iconColor: Theme.of(
-                                context,
-                              ).colorScheme.onSurface,
-                            ),
+                          child: LiquidGlassIconButton(
+                            svgAssetPath: 'assets/icons/share.svg',
+                            onPressed: onShareTap,
+                            tooltip: JournalStrings.shareJournal,
+                            iconSize: UIConstants.journalAppBarIconSizeSmall,
+                            alwaysShowBackground: true,
                           ),
                         ),
                       ],

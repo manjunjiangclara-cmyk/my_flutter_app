@@ -1,4 +1,6 @@
 /// UI constants for consistent design system
+library;
+
 class UIConstants {
   UIConstants._();
 
@@ -266,6 +268,8 @@ class UIConstants {
 
   // LiquidGlass specific tweaks
   static const double liquidGlassUnselectedIconOpacity = 0.6;
+  static const double liquidGlassIconBackgroundOpacity =
+      0.8; // Less transparent background for journal app bar icons
 
   // Tag Chip Specific
   static const double tagChipWidthPadding = 16.0;

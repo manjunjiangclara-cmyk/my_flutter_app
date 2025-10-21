@@ -53,6 +53,13 @@ class AppColors {
   // Subtle shadow tint that blends a hint of primary into shadows
   static const Color shadowTint = Color(0xFF19120E);
 
+  // ========== UI COMPONENT COLORS ==========
+
+  // Liquid Glass Icon Button
+  static const Color liquidGlassIconBackground = Color(
+    0xFFF2F2F2,
+  ); // Light gray background for journal app bar icons
+
   // ========== THEME SCHEMES ==========
 
   /// Light theme color scheme (no seed)
