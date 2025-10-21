@@ -51,7 +51,9 @@ class SettingsTile extends StatelessWidget {
                 child: Icon(
                   icon,
                   size: UIConstants.settingsTileIconSize,
-                  color: enabled ? theme.primaryColor : theme.disabledColor,
+                  color: enabled
+                      ? theme.colorScheme.primary
+                      : theme.disabledColor,
                 ),
               ),
 
