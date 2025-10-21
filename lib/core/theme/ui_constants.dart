@@ -19,7 +19,7 @@ class UIConstants {
   static const double smallRadius = 4.0;
   static const double mediumRadius = 12.0;
   static const double largeRadius = 16.0;
-  static const double extraLargeRadius = 24.0;
+  static const double extraLargeRadius = 28.0;
 
   // Elevation
   static const double defaultElevation = 2.0;
@@ -291,6 +291,7 @@ class UIConstants {
   static const double locationPickerHeight = 0.8;
   static const double tagPickerHeight = 0.85;
   static const double shareOptionsHeight = 0.35;
+  static const double themeBottomSheetHeight = 0.35;
 
   // Location Picker Bottom Sheet
   static const double locationPickerCornerRadius = extraLargeRadius;
@@ -377,6 +378,12 @@ class UIConstants {
 
   /// Settings tile trailing icon padding
   static const double settingsTileTrailingIconPadding = 0.0;
+
+  // Light Dropdown Arrow
+  static const double lightDropdownArrowSize = 16.0;
+  static const double lightDropdownArrowOpacity = 0.3;
+  static const double lightDropdownArrowRotation =
+      0.0; // radians, 0 = no rotation
 
   /// Settings section divider height
   static const double settingsSectionDividerHeight = 1.0;

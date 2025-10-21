@@ -98,6 +98,11 @@ class AppStrings {
   static const String alwaysLight = 'Always light';
   static const String alwaysDark = 'Always dark';
 
+  // Theme display values for settings
+  static const String themeValueLight = 'Light';
+  static const String themeValueDark = 'Dark';
+  static const String themeValueSystem = 'System';
+
   // ---------- Date Formatting ----------
   static const String memoryCardDateFormat = 'EEE, MMM d';
 

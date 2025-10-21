@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/base_bottom_sheet.dart';
 
 enum ShareOption { shareToApps, saveToPhotos }
 
@@ -8,22 +9,11 @@ class ShareOptionsBottomSheet extends StatelessWidget {
   const ShareOptionsBottomSheet({super.key});
 
   static Future<ShareOption?> show(BuildContext context) {
-    return showModalBottomSheet<ShareOption>(
+    return BaseBottomSheet.show<ShareOption>(
       context: context,
-      useSafeArea: true,
-      isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(UIConstants.shareOptionsCornerRadius),
-          topRight: Radius.circular(UIConstants.shareOptionsCornerRadius),
-        ),
-      ),
-      builder: (context) {
-        final height =
-            MediaQuery.of(context).size.height * UIConstants.shareOptionsHeight;
-        return SizedBox(height: height, child: const ShareOptionsBottomSheet());
-      },
+      height:
+          MediaQuery.of(context).size.height * UIConstants.shareOptionsHeight,
+      child: const ShareOptionsBottomSheet(),
     );
   }
 
@@ -31,33 +21,7 @@ class ShareOptionsBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
-        const SizedBox(height: UIConstants.mediumPadding),
-        Container(
-          width: UIConstants.bottomSheetHandleWidth,
-          height: UIConstants.bottomSheetHandleHeight,
-          decoration: BoxDecoration(
-            color: colorScheme.onSurface.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(
-              UIConstants.bottomSheetHandleRadius,
-            ),
-          ),
-        ),
-        const SizedBox(height: UIConstants.mediumPadding),
-        // // Padding(
-        // //   padding: const EdgeInsets.symmetric(
-        // //     horizontal: UIConstants.defaultPadding,
-        // //   ),
-        // //   child: Align(
-        // //     alignment: Alignment.centerLeft,
-        // //     child: Text(
-        // //       AppStrings.shareOptionsTitle,
-        // //       style: Theme.of(context).textTheme.labelLarge,
-        // //     ),
-        // //   ),
-        // // ),
-        // const SizedBox(height: UIConstants.mediumPadding),
         _ShareOptionItem(
           icon: Icons.ios_share,
           label: AppStrings.shareToApps,
@@ -74,7 +38,6 @@ class ShareOptionsBottomSheet extends StatelessWidget {
           label: AppStrings.saveToPhotos,
           onTap: () => Navigator.of(context).pop(ShareOption.saveToPhotos),
         ),
-        const SizedBox(height: UIConstants.largePadding),
       ],
     );
   }

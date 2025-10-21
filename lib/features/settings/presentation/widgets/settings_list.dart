@@ -3,6 +3,7 @@ import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/settings/presentation/models/settings_item_model.dart';
 import 'package:my_flutter_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:my_flutter_app/features/settings/presentation/widgets/settings_tile.dart';
+import 'package:my_flutter_app/features/settings/presentation/widgets/settings_tile_with_value.dart';
 
 /// A widget that displays a list of settings sections.
 class SettingsList extends StatelessWidget {
@@ -24,12 +25,20 @@ class SettingsList extends StatelessWidget {
             showBottomDivider: false,
             children: section.items
                 .map(
-                  (item) => SettingsTile(
-                    icon: item.icon,
-                    title: item.title,
-                    onTap: item.onTap,
-                    enabled: item.enabled,
-                  ),
+                  (item) => item.value != null
+                      ? SettingsTileWithValue(
+                          icon: item.icon,
+                          title: item.title,
+                          value: item.value!,
+                          onTap: item.onTap,
+                          enabled: item.enabled,
+                        )
+                      : SettingsTile(
+                          icon: item.icon,
+                          title: item.title,
+                          onTap: item.onTap,
+                          enabled: item.enabled,
+                        ),
                 )
                 .toList(),
           ),
