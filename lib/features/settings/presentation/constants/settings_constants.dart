@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/strings.dart';
+import 'package:my_flutter_app/core/theme/theme_provider.dart';
 import 'package:my_flutter_app/features/settings/presentation/models/settings_item_model.dart';
-import 'package:my_flutter_app/features/settings/presentation/screens/theme_selection_screen.dart';
+import 'package:my_flutter_app/features/settings/presentation/widgets/theme_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 
 /// Constants and configuration for the settings screen.
 class SettingsConstants {
@@ -10,72 +12,77 @@ class SettingsConstants {
   /// The current app version.
   static const String appVersion = '1.0.0';
 
+  /// Get the display value for the current theme mode
+  static String getThemeDisplayValue(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    switch (themeProvider.themeMode) {
+      case ThemeMode.light:
+        return AppStrings.themeValueLight;
+      case ThemeMode.dark:
+        return AppStrings.themeValueDark;
+      case ThemeMode.system:
+        return AppStrings.themeValueSystem;
+    }
+  }
+
   /// All settings sections with their items.
-  static List<SettingsSectionModel> get settingsSections => [
-    SettingsSectionModel(
-      title: AppStrings.general,
-      items: [
-        SettingsItemModel(
-          icon: Icons.palette,
-          title: AppStrings.theme,
-          subtitle: AppStrings.changeAppAppearance,
-          onTap: (context) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const ThemeSelectionScreen(),
-              ),
-            );
-          },
+  static List<SettingsSectionModel> getSettingsSections(BuildContext context) =>
+      [
+        SettingsSectionModel(
+          title: AppStrings.general,
+          items: [
+            SettingsItemModel(
+              icon: Icons.palette_outlined,
+              title: AppStrings.theme,
+              value: getThemeDisplayValue(context),
+              onTap: (context) {
+                ThemeBottomSheet.show(context);
+              },
+            ),
+            SettingsItemModel(
+              icon: Icons.notifications_outlined,
+              title: AppStrings.notifications,
+              onTap: (context) {
+                // Handle notification settings
+              },
+            ),
+          ],
         ),
-        SettingsItemModel(
-          icon: Icons.notifications,
-          title: AppStrings.notifications,
-          subtitle: AppStrings.manageNotificationPreferences,
-          onTap: (context) {
-            // Handle notification settings
-          },
+        SettingsSectionModel(
+          title: AppStrings.dataAndPrivacy,
+          items: [
+            SettingsItemModel(
+              icon: Icons.backup_outlined,
+              title: AppStrings.backupAndSync,
+              onTap: (context) {
+                // Handle backup settings
+              },
+            ),
+            SettingsItemModel(
+              icon: Icons.security_outlined,
+              title: AppStrings.privacy,
+              onTap: (context) {
+                // Handle privacy settings
+              },
+            ),
+          ],
         ),
-      ],
-    ),
-    SettingsSectionModel(
-      title: AppStrings.dataAndPrivacy,
-      items: [
-        SettingsItemModel(
-          icon: Icons.backup,
-          title: AppStrings.backupAndSync,
-          subtitle: AppStrings.manageYourDataBackup,
-          onTap: (context) {
-            // Handle backup settings
-          },
+        SettingsSectionModel(
+          title: 'About',
+          items: [
+            SettingsItemModel(
+              icon: Icons.info_outlined,
+              title: AppStrings.appVersion,
+              enabled: false, // Version info is not clickable
+            ),
+            SettingsItemModel(
+              icon: Icons.help_outlined,
+              title: AppStrings.helpAndSupport,
+              onTap: (context) {
+                // Handle help
+              },
+            ),
+          ],
         ),
-        SettingsItemModel(
-          icon: Icons.security,
-          title: AppStrings.privacy,
-          subtitle: AppStrings.controlYourPrivacySettings,
-          onTap: (context) {
-            // Handle privacy settings
-          },
-        ),
-      ],
-    ),
-    SettingsSectionModel(
-      title: 'About',
-      items: [
-        SettingsItemModel(
-          icon: Icons.info,
-          title: AppStrings.appVersion,
-          subtitle: appVersion,
-          enabled: false, // Version info is not clickable
-        ),
-        SettingsItemModel(
-          icon: Icons.help,
-          title: AppStrings.helpAndSupport,
-          subtitle: 'Get help and contact support',
-          onTap: (context) {
-            // Handle help
-          },
-        ),
-      ],
-    ),
-  ];
+      ];
 }

@@ -3,13 +3,16 @@ import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
-/// A reusable widget for displaying individual settings items in Airbnb style.
-class SettingsTile extends StatelessWidget {
+/// A reusable widget for displaying settings items with a value and light dropdown arrow.
+class SettingsTileWithValue extends StatelessWidget {
   /// The icon to display for this setting.
   final IconData icon;
 
   /// The title of the setting.
   final String title;
+
+  /// The current value to display on the right side.
+  final String value;
 
   /// The callback to execute when the tile is tapped.
   final void Function(BuildContext)? onTap;
@@ -17,10 +20,11 @@ class SettingsTile extends StatelessWidget {
   /// Whether this tile is enabled (can be tapped).
   final bool enabled;
 
-  const SettingsTile({
+  const SettingsTileWithValue({
     super.key,
     required this.icon,
     required this.title,
+    required this.value,
     this.onTap,
     this.enabled = true,
   });
@@ -28,7 +32,6 @@ class SettingsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Material(
       color: Colors.transparent,
@@ -64,8 +67,6 @@ class SettingsTile extends StatelessWidget {
                 child: Text(
                   title,
                   style: AppTypography.bodyLarge.copyWith(
-                    // fontWeight: FontWeight.w500,
-                    // fontSize: 15,
                     color: enabled
                         ? theme.colorScheme.onSurface
                         : theme.disabledColor,
@@ -73,12 +74,29 @@ class SettingsTile extends StatelessWidget {
                 ),
               ),
 
-              // Trailing chevron
+              // Value with light dropdown arrow
               if (enabled)
-                Icon(
-                  Icons.chevron_right,
-                  size: UIConstants.settingsTileTrailingIconSize,
-                  color: theme.colorScheme.onSurface.withOpacity(0.4),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      value,
+                      style: AppTypography.bodyLarge.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                    const SizedBox(width: Spacing.xs),
+                    Transform.rotate(
+                      angle: UIConstants.lightDropdownArrowRotation,
+                      child: Icon(
+                        Icons.keyboard_arrow_down,
+                        size: UIConstants.lightDropdownArrowSize,
+                        color: theme.colorScheme.onSurface.withOpacity(
+                          UIConstants.lightDropdownArrowOpacity,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
             ],
           ),

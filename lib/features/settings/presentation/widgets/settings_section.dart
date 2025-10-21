@@ -1,33 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
-/// A reusable widget for displaying a section of settings with a title and children.
+/// A reusable widget for displaying a section of settings with a horizontal divider.
 class SettingsSection extends StatelessWidget {
-  /// The title of the settings section.
-  final String title;
-
   /// The list of widgets to display in this section.
   final List<Widget> children;
 
+  /// Whether to show the top divider (default: true).
+  final bool showTopDivider;
+
+  /// Whether to show the bottom divider (default: false).
+  final bool showBottomDivider;
+
   const SettingsSection({
     super.key,
-    required this.title,
     required this.children,
+    this.showTopDivider = false,
+    this.showBottomDivider = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          title,
-          style: AppTypography.bodyLarge.copyWith(fontWeight: FontWeight.bold),
+    final theme = Theme.of(context);
+
+    return Card(
+      color: theme.colorScheme.primaryContainer,
+      elevation: UIConstants.smallElevation,
+      shadowColor: theme.colorScheme.shadow.withOpacity(0.2),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(UIConstants.largeRadius),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: UIConstants.settingsCardContentLeftPadding,
+          right: UIConstants.defaultCardPadding,
+          top: UIConstants.defaultCardPadding,
+          bottom: UIConstants.defaultCardPadding,
         ),
-        SizedBox(height: Spacing.sm),
-        ...children,
-      ],
+        child: Column(children: [...children]),
+      ),
     );
   }
 }

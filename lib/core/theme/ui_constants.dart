@@ -19,7 +19,7 @@ class UIConstants {
   static const double smallRadius = 4.0;
   static const double mediumRadius = 12.0;
   static const double largeRadius = 16.0;
-  static const double extraLargeRadius = 24.0;
+  static const double extraLargeRadius = 28.0;
 
   // Elevation
   static const double defaultElevation = 2.0;
@@ -291,6 +291,7 @@ class UIConstants {
   static const double locationPickerHeight = 0.8;
   static const double tagPickerHeight = 0.85;
   static const double shareOptionsHeight = 0.35;
+  static const double themeBottomSheetHeight = 0.35;
 
   // Location Picker Bottom Sheet
   static const double locationPickerCornerRadius = extraLargeRadius;
@@ -357,4 +358,48 @@ class UIConstants {
 
   /// Splash screen horizontal padding
   static const double splashHorizontalPadding = 32.0;
+
+  // ========== SETTINGS TILES ==========
+
+  /// Settings tile horizontal padding (aligned with app bar title)
+  static const double settingsTileHorizontalPadding = 0.0;
+
+  /// Settings tile vertical padding
+  static const double settingsTileVerticalPadding = 4.0;
+
+  /// Settings tile icon container size
+  static const double settingsTileIconContainerSize = 40.0;
+
+  /// Settings tile icon size
+  static const double settingsTileIconSize = 24.0;
+
+  /// Settings tile trailing icon size
+  static const double settingsTileTrailingIconSize = 16.0;
+
+  /// Settings tile trailing icon padding
+  static const double settingsTileTrailingIconPadding = 0.0;
+
+  // Light Dropdown Arrow
+  static const double lightDropdownArrowSize = 16.0;
+  static const double lightDropdownArrowOpacity = 0.3;
+  static const double lightDropdownArrowRotation =
+      0.0; // radians, 0 = no rotation
+
+  /// Settings section divider height
+  static const double settingsSectionDividerHeight = 1.0;
+
+  /// Settings section divider opacity
+  static const double settingsSectionDividerOpacity = 0.12;
+
+  /// Settings section top margin
+  static const double settingsSectionTopMargin = defaultPadding;
+
+  /// Settings section bottom margin
+  static const double settingsSectionBottomMargin = defaultPadding;
+
+  // Spacing between settings cards
+  static const double settingsCardSpacing = defaultPadding;
+
+  // Settings card content left padding (aligns with app bar title)
+  static const double settingsCardContentLeftPadding = defaultPadding;
 }
