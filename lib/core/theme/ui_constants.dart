@@ -357,4 +357,42 @@ class UIConstants {
 
   /// Splash screen horizontal padding
   static const double splashHorizontalPadding = 32.0;
+
+  // ========== SETTINGS TILES ==========
+
+  /// Settings tile horizontal padding (aligned with app bar title)
+  static const double settingsTileHorizontalPadding = 0.0;
+
+  /// Settings tile vertical padding
+  static const double settingsTileVerticalPadding = 4.0;
+
+  /// Settings tile icon container size
+  static const double settingsTileIconContainerSize = 40.0;
+
+  /// Settings tile icon size
+  static const double settingsTileIconSize = 24.0;
+
+  /// Settings tile trailing icon size
+  static const double settingsTileTrailingIconSize = 16.0;
+
+  /// Settings tile trailing icon padding
+  static const double settingsTileTrailingIconPadding = 0.0;
+
+  /// Settings section divider height
+  static const double settingsSectionDividerHeight = 1.0;
+
+  /// Settings section divider opacity
+  static const double settingsSectionDividerOpacity = 0.12;
+
+  /// Settings section top margin
+  static const double settingsSectionTopMargin = defaultPadding;
+
+  /// Settings section bottom margin
+  static const double settingsSectionBottomMargin = defaultPadding;
+
+  // Spacing between settings cards
+  static const double settingsCardSpacing = defaultPadding;
+
+  // Settings card content left padding (aligns with app bar title)
+  static const double settingsCardContentLeftPadding = defaultPadding;
 }

@@ -22,6 +22,10 @@ class AppColors {
   static const Color textPrimaryLight = Color(0xFF5A4A3A);
   static const Color textSecondaryLight = Color(0xFF666666);
 
+  // Containers (light) — almost white with subtle warm tint
+  static const Color primaryContainerLight = Color(0xFFFDF9F6);
+  static const Color onPrimaryContainerLight = textPrimaryLight;
+
   // ========== DARK MODE COLORS ==========
 
   // Base palette
@@ -39,6 +43,12 @@ class AppColors {
   // Text
   static const Color textPrimaryDark = Color(0xFFE8D5C7);
   static const Color textSecondaryDark = Color(0xFFB0B0B0);
+
+  // Containers (dark) — same as memory cards in dark mode
+  static const Color primaryContainerDark = Color(
+    0xFF252525,
+  ); // surfaceDark + 6% white
+  static const Color onPrimaryContainerDark = Color(0xFFF5E6D9);
 
   // ========== LEGACY SUPPORT (for backward compatibility) ==========
   static const Color primary = primaryLight;
@@ -59,6 +69,8 @@ class AppColors {
   static ColorScheme get lightColorScheme => ColorScheme.light(
     primary: accentLight,
     onPrimary: Colors.white,
+    primaryContainer: primaryContainerLight,
+    onPrimaryContainer: onPrimaryContainerLight,
     secondary: primaryLight,
     onSecondary: textPrimaryLight,
     tertiary: accentAltLight,
@@ -76,6 +88,8 @@ class AppColors {
   static ColorScheme get darkColorScheme => ColorScheme.dark(
     primary: accentDark,
     onPrimary: Colors.white,
+    primaryContainer: primaryContainerDark,
+    onPrimaryContainer: onPrimaryContainerDark,
     secondary: accentAltDark,
     onSecondary: Colors.white,
     tertiary: accentAltDark,

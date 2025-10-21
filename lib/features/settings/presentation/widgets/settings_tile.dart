@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
-/// A reusable widget for displaying individual settings items.
+/// A reusable widget for displaying individual settings items in Airbnb style.
 class SettingsTile extends StatelessWidget {
   /// The icon to display for this setting.
   final IconData icon;
 
   /// The title of the setting.
   final String title;
-
-  /// The subtitle/description of the setting.
-  final String subtitle;
 
   /// The callback to execute when the tile is tapped.
   final void Function(BuildContext)? onTap;
@@ -23,38 +21,67 @@ class SettingsTile extends StatelessWidget {
     super.key,
     required this.icon,
     required this.title,
-    required this.subtitle,
     this.onTap,
     this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: enabled ? null : Theme.of(context).disabledColor,
-      ),
-      title: Text(
-        title,
-        style: AppTypography.bodyLarge.copyWith(
-          color: enabled ? null : Theme.of(context).disabledColor,
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: enabled ? () => onTap?.call(context) : null,
+        splashColor: theme.primaryColor.withOpacity(0.1),
+        highlightColor: theme.primaryColor.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: UIConstants.settingsTileHorizontalPadding,
+            vertical: UIConstants.settingsTileVerticalPadding,
+          ),
+          child: Row(
+            children: [
+              // Leading icon
+              SizedBox(
+                width: 40,
+                height: 40,
+                child: Icon(
+                  icon,
+                  size: UIConstants.settingsTileIconSize,
+                  color: enabled ? theme.primaryColor : theme.disabledColor,
+                ),
+              ),
+
+              const SizedBox(width: Spacing.md),
+
+              // Title
+              Expanded(
+                child: Text(
+                  title,
+                  style: AppTypography.bodyLarge.copyWith(
+                    // fontWeight: FontWeight.w500,
+                    // fontSize: 15,
+                    color: enabled
+                        ? theme.colorScheme.onSurface
+                        : theme.disabledColor,
+                  ),
+                ),
+              ),
+
+              // Trailing chevron
+              if (enabled)
+                Icon(
+                  Icons.chevron_right,
+                  size: UIConstants.settingsTileTrailingIconSize,
+                  color: theme.colorScheme.onSurface.withOpacity(0.4),
+                ),
+            ],
+          ),
         ),
       ),
-      subtitle: Text(
-        subtitle,
-        style: AppTypography.labelMedium.copyWith(
-          color: enabled
-              ? Theme.of(context).hintColor
-              : Theme.of(context).disabledColor,
-        ),
-      ),
-      onTap: enabled ? () => onTap?.call(context) : null,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: Spacing.lg,
-        vertical: Spacing.xs,
-      ),
-      dense: true,
     );
   }
 }

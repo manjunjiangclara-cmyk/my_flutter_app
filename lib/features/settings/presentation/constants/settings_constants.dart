@@ -16,9 +16,8 @@ class SettingsConstants {
       title: AppStrings.general,
       items: [
         SettingsItemModel(
-          icon: Icons.palette,
+          icon: Icons.palette_outlined,
           title: AppStrings.theme,
-          subtitle: AppStrings.changeAppAppearance,
           onTap: (context) {
             Navigator.of(context).push(
               MaterialPageRoute(
@@ -28,9 +27,8 @@ class SettingsConstants {
           },
         ),
         SettingsItemModel(
-          icon: Icons.notifications,
+          icon: Icons.notifications_outlined,
           title: AppStrings.notifications,
-          subtitle: AppStrings.manageNotificationPreferences,
           onTap: (context) {
             // Handle notification settings
           },
@@ -41,17 +39,15 @@ class SettingsConstants {
       title: AppStrings.dataAndPrivacy,
       items: [
         SettingsItemModel(
-          icon: Icons.backup,
+          icon: Icons.backup_outlined,
           title: AppStrings.backupAndSync,
-          subtitle: AppStrings.manageYourDataBackup,
           onTap: (context) {
             // Handle backup settings
           },
         ),
         SettingsItemModel(
-          icon: Icons.security,
+          icon: Icons.security_outlined,
           title: AppStrings.privacy,
-          subtitle: AppStrings.controlYourPrivacySettings,
           onTap: (context) {
             // Handle privacy settings
           },
@@ -62,15 +58,13 @@ class SettingsConstants {
       title: 'About',
       items: [
         SettingsItemModel(
-          icon: Icons.info,
+          icon: Icons.info_outlined,
           title: AppStrings.appVersion,
-          subtitle: appVersion,
           enabled: false, // Version info is not clickable
         ),
         SettingsItemModel(
-          icon: Icons.help,
+          icon: Icons.help_outlined,
           title: AppStrings.helpAndSupport,
-          subtitle: 'Get help and contact support',
           onTap: (context) {
             // Handle help
           },

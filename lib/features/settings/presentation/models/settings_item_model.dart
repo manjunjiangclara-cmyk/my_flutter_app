@@ -8,9 +8,6 @@ class SettingsItemModel {
   /// The title of the setting.
   final String title;
 
-  /// The subtitle/description of the setting.
-  final String subtitle;
-
   /// The callback to execute when the item is tapped.
   final void Function(BuildContext)? onTap;
 
@@ -20,7 +17,6 @@ class SettingsItemModel {
   const SettingsItemModel({
     required this.icon,
     required this.title,
-    required this.subtitle,
     this.onTap,
     this.enabled = true,
   });
