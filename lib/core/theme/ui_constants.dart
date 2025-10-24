@@ -53,6 +53,23 @@ class UIConstants {
 
   // Memory Card Color Tuning
   static const double memoryCardDarkLightenAmount = 0.06;
+  // Memory Card Layout
+  static const double memoryCardVerticalMargin = 8.0; // replaces Spacing.sm
+  static const double memoryCardBorderWidth = 1.0;
+  static const double memoryCardSectionSpacingLarge =
+      16.0; // replaces Spacing.lg
+  static const double memoryCardSectionSpacingSmall =
+      4.0; // replaces Spacing.xs
+  static const double memoryCardChipHorizontalPadding =
+      8.0; // replaces Spacing.sm
+  static const double memoryCardChipVerticalPadding =
+      4.0; // replaces Spacing.xs
+  static const double memoryCardTagSpacing = 8.0; // replaces Spacing.sm
+  static const double memoryCardTagRunSpacing = 4.0; // replaces Spacing.xs
+  static const double memoryCardHeaderSpacer = 4.0; // replaces Spacing.xs
+
+  // Memory Screen behavior
+  static const int memoryDefaultExpandedGroupCount = 1;
 
   // Memory Card Press Feedback
   static const double memoryCardPressScale = 0.96;
@@ -121,6 +138,10 @@ class UIConstants {
   static const double locationIconSize = 16.0;
   static const double tagCloseIconSize = 14.0;
   static const double tagCloseIconSpacing = 4.0;
+
+  // Tag Chip Padding - Interactive (with close button)
+  static const double tagChipInteractiveHorizontalPadding = 12.0;
+  static const double tagChipInteractiveVerticalPadding = 6.0;
 
   static const double actionButtonIconSize = 24.0;
   static const double actionButtonPadding = 12.0;
@@ -319,7 +340,7 @@ class UIConstants {
   // Location Chip
   static const double locationChipHorizontalPadding = 8.0;
   static const double locationChipVerticalPadding = 4.0;
-  static const double locationChipRadius = mediumRadius;
+  static const double locationChipRadius = largeRadius;
   static const double locationChipMaxWidthFraction = 0.66;
   static const double locationEmojiScale = 1.25;
   static const double locationChipFontSize = 12.0;

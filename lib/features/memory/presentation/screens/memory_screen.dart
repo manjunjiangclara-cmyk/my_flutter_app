@@ -171,11 +171,13 @@ class _MemoryListState extends State<_MemoryList> {
         final groupedMemories = state.groupedMemories;
         final sortedKeys = state.sortedGroupKeys;
 
-        // Expand all groups by default if they haven't been toggled yet
+        // Expand only first N groups by default if they haven't been toggled yet
         if (_expandedGroups.isEmpty && sortedKeys.isNotEmpty) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             setState(() {
-              _expandedGroups.addAll(sortedKeys);
+              _expandedGroups.addAll(
+                sortedKeys.take(UIConstants.memoryDefaultExpandedGroupCount),
+              );
             });
           });
         }
@@ -287,14 +289,9 @@ class _KeepAliveMemoryRow extends StatefulWidget {
   State<_KeepAliveMemoryRow> createState() => _KeepAliveMemoryRowState();
 }
 
-class _KeepAliveMemoryRowState extends State<_KeepAliveMemoryRow>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
+class _KeepAliveMemoryRowState extends State<_KeepAliveMemoryRow> {
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return widget.child;
   }
 }

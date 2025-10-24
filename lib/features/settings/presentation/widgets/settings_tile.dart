@@ -64,8 +64,6 @@ class SettingsTile extends StatelessWidget {
                 child: Text(
                   title,
                   style: AppTypography.bodyLarge.copyWith(
-                    // fontWeight: FontWeight.w500,
-                    // fontSize: 15,
                     color: enabled
                         ? theme.colorScheme.onSurface
                         : theme.disabledColor,

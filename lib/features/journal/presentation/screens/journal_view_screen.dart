@@ -93,13 +93,16 @@ class _JournalViewScreenView extends StatelessWidget {
     }
   }
 
-  void _handleEdit(BuildContext context) {
+  Future<void> _handleEdit(BuildContext context) async {
     final parent = context.findAncestorWidgetOfExactType<JournalViewScreen>();
     if (parent != null) {
-      context.pushNamed(
+      final updated = await context.pushNamed(
         'compose-edit',
         pathParameters: {'journalId': parent.journalId},
       );
+      if (updated == true) {
+        context.read<JournalViewBloc>().add(LoadJournal(parent.journalId));
+      }
     }
   }
 

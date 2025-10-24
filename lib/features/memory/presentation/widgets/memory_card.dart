@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/date_formatter.dart';
 import 'package:my_flutter_app/features/compose/presentation/models/place_types.dart';
@@ -16,34 +15,7 @@ import 'package:my_flutter_app/shared/presentation/widgets/tag_chip.dart';
 class MemoryCard extends StatefulWidget {
   final MemoryCardModel memoryCardModel;
 
-  // Configurable UI parameters with sensible defaults
-  final double imageHeight;
-  final double borderRadius;
-  final double borderWidth;
-  final double cardPadding;
-  final double sectionSpacingLarge;
-  final double sectionSpacingSmall;
-  final double chipHorizontalPadding;
-  final double chipVerticalPadding;
-  final double tagSpacing;
-  final double tagRunSpacing;
-  final double locationIconSize;
-
-  const MemoryCard({
-    super.key,
-    required this.memoryCardModel,
-    this.imageHeight = UIConstants.defaultImageSize * 1.5,
-    this.borderRadius = UIConstants.imageCardRadius,
-    this.borderWidth = 1.0,
-    this.cardPadding = UIConstants.defaultCardPadding,
-    this.sectionSpacingLarge = Spacing.lg,
-    this.sectionSpacingSmall = Spacing.xxs,
-    this.chipHorizontalPadding = Spacing.sm,
-    this.chipVerticalPadding = Spacing.xs,
-    this.tagSpacing = Spacing.sm,
-    this.tagRunSpacing = Spacing.xs,
-    this.locationIconSize = UIConstants.smallIconSize,
-  });
+  const MemoryCard({super.key, required this.memoryCardModel});
 
   @override
   State<MemoryCard> createState() => _MemoryCardState();
@@ -66,9 +38,11 @@ class _MemoryCardState extends State<MemoryCard>
       duration: UIConstants.memoryCardPressDuration,
       curve: Curves.easeOutCubic,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: Spacing.sm),
+        margin: EdgeInsets.symmetric(
+          vertical: UIConstants.memoryCardVerticalMargin,
+        ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(widget.borderRadius),
+          borderRadius: BorderRadius.circular(UIConstants.imageCardRadius),
           color: Theme.of(context).brightness == Brightness.dark
               ? Color.lerp(
                   Theme.of(context).colorScheme.surface,
@@ -78,7 +52,7 @@ class _MemoryCardState extends State<MemoryCard>
               : Theme.of(context).colorScheme.surface,
           border: Border.all(
             color: Theme.of(context).colorScheme.outline,
-            width: widget.borderWidth,
+            width: UIConstants.memoryCardBorderWidth,
           ),
           boxShadow: [
             BoxShadow(
@@ -108,23 +82,23 @@ class _MemoryCardState extends State<MemoryCard>
           onTapDown: (_) => setState(() => _isPressed = true),
           onTapCancel: () => setState(() => _isPressed = false),
           onTapUp: (_) => setState(() => _isPressed = false),
-          borderRadius: BorderRadius.circular(widget.borderRadius),
+          borderRadius: BorderRadius.circular(UIConstants.imageCardRadius),
           child: Padding(
-            padding: EdgeInsets.all(widget.cardPadding),
+            padding: EdgeInsets.all(UIConstants.defaultCardPadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 if (widget.memoryCardModel.imagePaths.isNotEmpty) ...[
                   ImageCard(
                     imagePath: widget.memoryCardModel.imagePaths.first,
-                    imageHeight: widget.imageHeight,
+                    imageHeight: UIConstants.defaultImageSize,
                   ),
-                  SizedBox(height: widget.sectionSpacingLarge),
+                  SizedBox(height: UIConstants.memoryCardSectionSpacingLarge),
                 ],
                 _buildHeaderRow(),
-                SizedBox(height: widget.sectionSpacingSmall),
+                SizedBox(height: UIConstants.extraSmallPadding),
                 _buildTags(),
-                SizedBox(height: widget.sectionSpacingSmall),
+                SizedBox(height: UIConstants.memoryCardSectionSpacingSmall),
                 _buildDescription(),
               ],
             ),
@@ -136,16 +110,22 @@ class _MemoryCardState extends State<MemoryCard>
 
   Widget _buildHeaderRow() {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          DateFormatter.formatDate(
-            widget.memoryCardModel.date,
-            format: AppStrings.memoryCardDateFormat,
+        Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: UIConstants.locationChipVerticalPadding,
           ),
-          style: AppTypography.labelMedium,
+          child: Text(
+            DateFormatter.formatDate(
+              widget.memoryCardModel.date,
+              format: AppStrings.memoryCardDateFormat,
+            ),
+            style: AppTypography.labelMedium,
+          ),
         ),
         const Spacer(),
-        SizedBox(width: Spacing.xs),
+        SizedBox(width: UIConstants.memoryCardHeaderSpacer),
         if (widget.memoryCardModel.location != null &&
             widget.memoryCardModel.location!.isNotEmpty)
           LocationChipDisplay(
@@ -160,10 +140,27 @@ class _MemoryCardState extends State<MemoryCard>
   }
 
   Widget _buildTags() {
-    return TagChips(
-      tags: widget.memoryCardModel.tags,
-      spacing: widget.tagSpacing,
-      runSpacing: widget.tagRunSpacing,
+    if (widget.memoryCardModel.tags.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      child: Row(
+        children: [
+          ...widget.memoryCardModel.tags.map<Widget>(
+            (tag) => Padding(
+              padding: EdgeInsets.only(
+                right: widget.memoryCardModel.tags.last == tag
+                    ? 0
+                    : UIConstants.memoryCardTagSpacing,
+              ),
+              child: TagChip(tag: tag),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

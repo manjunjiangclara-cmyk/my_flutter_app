@@ -17,6 +17,8 @@ import 'package:my_flutter_app/core/services/google_places_service.dart'
     as _i805;
 import 'package:my_flutter_app/core/services/image_picker_service.dart'
     as _i193;
+import 'package:my_flutter_app/core/services/journal_change_notifier.dart'
+    as _i1200;
 import 'package:my_flutter_app/core/utils/file_storage_service.dart' as _i658;
 import 'package:my_flutter_app/core/utils/image_path_service.dart' as _i1035;
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart'
@@ -63,6 +65,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i658.FileStorageService>(() => _i658.FileStorageService());
     gh.factory<_i193.ImagePickerService>(() => _i193.ImagePickerService());
     gh.factory<_i1002.AppTabController>(() => _i1002.AppTabController());
+    gh.singleton<_i1200.JournalChangeNotifier>(
+      () => _i1200.JournalChangeNotifier(),
+    );
     gh.singleton<_i607.DatabaseHelper>(() => _i607.DatabaseHelper.new());
     gh.singleton<_i805.GooglePlacesService>(() => _i805.GooglePlacesService());
     gh.factory<_i424.JournalLocalDataSource>(
