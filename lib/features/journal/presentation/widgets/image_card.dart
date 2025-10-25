@@ -41,6 +41,17 @@ class _ImageCardState extends State<ImageCard>
           _absoluteImagePath = absolutePath;
           _isConvertingPath = false;
         });
+        // If we already know the aspect ratio (primed by another screen), use it
+        if (absolutePath != null) {
+          final cached = ImageWidgetUtils.getCachedAspectRatio(absolutePath);
+          if (cached != null && cached.isFinite && cached > 0) {
+            if (!mounted) return;
+            setState(() {
+              _aspectRatio = cached;
+            });
+            return;
+          }
+        }
         _loadAspectRatio();
       },
     );
@@ -60,6 +71,8 @@ class _ImageCardState extends State<ImageCard>
       setState(() {
         _aspectRatio = ratio;
       });
+      // Prime cache so detail screen can immediately stabilize layout
+      ImageWidgetUtils.cacheAspectRatio(path, ratio);
     } catch (_) {
       // If decoding fails, keep aspect ratio null so we fall back to placeholder
       if (!mounted) return;
