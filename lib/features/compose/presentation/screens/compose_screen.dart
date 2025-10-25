@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
+import 'package:my_flutter_app/core/services/journal_change_notifier.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart';
@@ -26,10 +27,7 @@ class ComposeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<ComposeBloc>(),
-      child: _ComposeScreenView(journalId: journalId),
-    );
+    return _ComposeScreenView(journalId: journalId);
   }
 }
 
@@ -66,7 +64,9 @@ class _ComposeScreenView extends StatelessWidget {
 
   void _handleStateChanges(BuildContext context, ComposeState state) {
     if (state is ComposePostSuccess) {
-      Navigator.of(context).pop();
+      // Signal global change for memory refresh
+      getIt<JournalChangeNotifier>().markChanged();
+      Navigator.of(context).pop(true);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text(ComposeStrings.memoryLodgedSuccessfully)),
       );

@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -59,8 +60,9 @@ class ImageGallery extends StatelessWidget {
                           StackTrace? stackTrace,
                         ) {
                           // Log the error for debugging
-                          print(
+                          developer.log(
                             'ImageGallery Error - Path: $path, Error: $error',
+                            name: 'ImageGallery',
                           );
                           return Center(
                             child: Column(

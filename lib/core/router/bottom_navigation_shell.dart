@@ -3,10 +3,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/router/tab_controller.dart';
+import 'package:my_flutter_app/core/services/journal_change_notifier.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart';
+import 'package:my_flutter_app/features/compose/presentation/bloc/compose_state.dart';
 import 'package:my_flutter_app/features/compose/presentation/screens/compose_home_screen.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_bloc.dart';
+import 'package:my_flutter_app/features/memory/presentation/bloc/memory_event.dart';
 import 'package:my_flutter_app/features/memory/presentation/screens/memory_screen.dart';
 import 'package:my_flutter_app/features/settings/presentation/screens/settings_screen.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/docked_toolbar.dart';
@@ -55,14 +58,8 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
 
   List<Widget> get pages {
     _pages ??= <Widget>[
-      BlocProvider(
-        create: (context) => getIt<MemoryBloc>(),
-        child: const MemoryScreen(),
-      ),
-      BlocProvider(
-        create: (context) => getIt<ComposeBloc>(),
-        child: const ComposeHomeScreen(),
-      ),
+      const MemoryScreen(),
+      const ComposeHomeScreen(),
       const SettingsScreen(),
     ];
     return _pages!;
@@ -72,60 +69,104 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
   Widget build(BuildContext context) {
     return Consumer<AppTabController>(
       builder: (context, tabController, child) {
-        return Scaffold(
-          extendBody: true,
-          body: NotificationListener<ScrollNotification>(
-            onNotification: (notification) {
-              if (notification is UserScrollNotification) {
-                _handleUserScroll(notification);
-              }
-              _handleScrollMetrics(notification.metrics);
-              return false; // allow scroll to propagate
-            },
-            child: Stack(
-              children: [
-                IndexedStack(
-                  index: tabController.currentIndex,
-                  children: pages,
-                ),
-                Positioned.fill(
-                  child: IgnorePointer(
-                    ignoring: true,
-                    child: const SizedBox.expand(),
-                  ),
-                ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: UIConstants.dockedBarBottomOffset,
-                  child: IgnorePointer(
-                    ignoring: false,
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 180),
-                      switchInCurve: Curves.easeInOutCubic,
-                      switchOutCurve: Curves.easeInOutCubic,
-                      transitionBuilder: (child, animation) {
-                        return FadeTransition(opacity: animation, child: child);
-                      },
-                      child: DockedToolbar(
-                        key: ValueKey<bool>(tabController.currentIndex == 0),
-                        items: const [
-                          DockedToolbarItem(icon: Icons.book, label: ''),
-                          DockedToolbarItem(icon: Icons.edit, label: ''),
-                          DockedToolbarItem(icon: Icons.settings, label: ''),
-                        ],
-                        currentIndex: tabController.currentIndex,
-                        onTap: (int index) {
-                          tabController.setIndex(index);
-                        },
-                        isVisible: _isToolbarVisible,
-                        elevationT: _elevationT,
-                        useLiquidGlass: tabController.currentIndex == 0,
-                      ),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider<MemoryBloc>(create: (_) => getIt<MemoryBloc>()),
+            BlocProvider<ComposeBloc>(create: (_) => getIt<ComposeBloc>()),
+          ],
+          child: Scaffold(
+            extendBody: true,
+            body: AnimatedBuilder(
+              animation: getIt<JournalChangeNotifier>(),
+              builder: (context, _) {
+                final notifier = getIt<JournalChangeNotifier>();
+                if (notifier.hasPendingChange &&
+                    tabController.currentIndex == 0) {
+                  notifier.consume();
+                  context.read<MemoryBloc>().add(
+                    const MemoryRefreshRequested(),
+                  );
+                }
+                return BlocListener<ComposeBloc, ComposeState>(
+                  listenWhen: (previous, current) =>
+                      current is ComposePostSuccess,
+                  listener: (context, state) {
+                    // For in-shell compose success, refresh immediately and go to Memory
+                    context.read<MemoryBloc>().add(
+                      const MemoryRefreshRequested(),
+                    );
+                    tabController.goToMemory();
+                  },
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (notification) {
+                      if (notification is UserScrollNotification) {
+                        _handleUserScroll(notification);
+                      }
+                      _handleScrollMetrics(notification.metrics);
+                      return false; // allow scroll to propagate
+                    },
+                    child: Stack(
+                      children: [
+                        IndexedStack(
+                          index: tabController.currentIndex,
+                          children: pages,
+                        ),
+                        Positioned.fill(
+                          child: IgnorePointer(
+                            ignoring: true,
+                            child: const SizedBox.expand(),
+                          ),
+                        ),
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: UIConstants.dockedBarBottomOffset,
+                          child: IgnorePointer(
+                            ignoring: false,
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 180),
+                              switchInCurve: Curves.easeInOutCubic,
+                              switchOutCurve: Curves.easeInOutCubic,
+                              transitionBuilder: (child, animation) {
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                );
+                              },
+                              child: DockedToolbar(
+                                key: ValueKey<bool>(
+                                  tabController.currentIndex == 0,
+                                ),
+                                items: const [
+                                  DockedToolbarItem(
+                                    icon: Icons.book,
+                                    label: '',
+                                  ),
+                                  DockedToolbarItem(
+                                    icon: Icons.edit,
+                                    label: '',
+                                  ),
+                                  DockedToolbarItem(
+                                    icon: Icons.settings,
+                                    label: '',
+                                  ),
+                                ],
+                                currentIndex: tabController.currentIndex,
+                                onTap: (int index) {
+                                  tabController.setIndex(index);
+                                },
+                                isVisible: _isToolbarVisible,
+                                elevationT: _elevationT,
+                                useLiquidGlass: tabController.currentIndex == 0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
+                );
+              },
             ),
           ),
         );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/core/utils/tag_color_utils.dart';
 
 /// A widget to display a list of tags as chips.
 class TagChips extends StatelessWidget {
@@ -36,72 +37,116 @@ class TagChips extends StatelessWidget {
 
 class TagChip extends StatelessWidget {
   final String tag;
-  final double chipHorizontalPadding;
-  final double chipVerticalPadding;
   final Function(String)? onRemoveTag;
 
-  const TagChip({
-    super.key,
-    required this.tag,
-    this.chipHorizontalPadding = 8.0,
-    this.chipVerticalPadding = 0.0,
-    this.onRemoveTag,
-  });
+  const TagChip({super.key, required this.tag, this.onRemoveTag});
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
+    final tagColor = TagColorUtils.getTagColor(tag);
+    final onSurfaceColor = Theme.of(context).colorScheme.onSurface;
 
-    if (onRemoveTag != null) {
-      // Interactive chip with close button
-      return Container(
+    return onRemoveTag != null
+        ? _buildInteractiveChip(context, tagColor, onSurfaceColor)
+        : _buildReadOnlyChip(context, tagColor, onSurfaceColor);
+  }
+
+  Widget _buildInteractiveChip(
+    BuildContext context,
+    Color tagColor,
+    Color onSurfaceColor,
+  ) {
+    // Blend tag color with onSurface color for better readability
+    final blendedColor = Color.lerp(tagColor, onSurfaceColor, 0.3) ?? tagColor;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: tagColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(UIConstants.locationChipRadius),
+        border: Border.all(
+          color: blendedColor.withValues(alpha: 0.2),
+          width: 1.0,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildTagText(tagColor, onSurfaceColor, isInteractive: true),
+          const SizedBox(width: UIConstants.tagCloseIconSpacing),
+          _buildCloseButton(tagColor, onSurfaceColor),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReadOnlyChip(
+    BuildContext context,
+    Color tagColor,
+    Color onSurfaceColor,
+  ) {
+    // Blend tag color with onSurface color for better readability
+    final blendedColor = Color.lerp(tagColor, onSurfaceColor, 0.3) ?? tagColor;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: tagColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(UIConstants.locationChipRadius),
+        border: Border.all(
+          color: blendedColor.withValues(alpha: 0.2),
+          width: 1.0,
+        ),
+      ),
+      child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: chipHorizontalPadding,
-          vertical: chipVerticalPadding,
+          horizontal: UIConstants.tagChipInteractiveHorizontalPadding,
+          vertical: UIConstants.tagChipInteractiveVerticalPadding,
         ),
-        decoration: BoxDecoration(
-          color: primary.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(UIConstants.locationChipRadius),
+        child: _buildTagText(tagColor, onSurfaceColor, isInteractive: false),
+      ),
+    );
+  }
+
+  Widget _buildTagText(
+    Color tagColor,
+    Color onSurfaceColor, {
+    required bool isInteractive,
+  }) {
+    // Blend tag color with onSurface color for better readability
+    final blendedColor = Color.lerp(tagColor, onSurfaceColor, 0.3) ?? tagColor;
+    final textStyle = AppTypography.labelSmall.copyWith(color: blendedColor);
+
+    if (isInteractive) {
+      return Padding(
+        padding: EdgeInsets.only(
+          left: UIConstants.tagChipInteractiveHorizontalPadding,
+          top: UIConstants.tagChipInteractiveVerticalPadding,
+          bottom: UIConstants.tagChipInteractiveVerticalPadding,
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              tag,
-              style: AppTypography.labelSmall.copyWith(
-                color: primary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(width: UIConstants.tagCloseIconSpacing),
-            GestureDetector(
-              onTap: () => onRemoveTag!(tag),
-              child: Icon(
-                Icons.close,
-                size: UIConstants.tagCloseIconSize,
-                color: primary,
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      // Read-only chip using Material Chip widget with primary outline
-      return Chip(
-        label: Text(
-          tag,
-          style: AppTypography.labelSmall.copyWith(color: primary),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(UIConstants.locationChipRadius),
-          side: BorderSide(color: primary), // Primary color outline
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: chipHorizontalPadding,
-          vertical: chipVerticalPadding,
-        ),
+        child: Text(tag, style: textStyle),
       );
     }
+
+    return Text(tag, style: textStyle);
+  }
+
+  Widget _buildCloseButton(Color tagColor, Color onSurfaceColor) {
+    // Blend tag color with onSurface color for better readability
+    final blendedColor = Color.lerp(tagColor, onSurfaceColor, 0.3) ?? tagColor;
+
+    return Padding(
+      padding: EdgeInsets.only(
+        right: UIConstants.tagChipInteractiveVerticalPadding,
+        top: UIConstants.tagChipInteractiveVerticalPadding,
+        bottom: UIConstants.tagChipInteractiveVerticalPadding,
+      ),
+      child: GestureDetector(
+        onTap: () => onRemoveTag!(tag),
+        child: Icon(
+          Icons.close,
+          size: UIConstants.tagCloseIconSize,
+          color: blendedColor,
+        ),
+      ),
+    );
   }
 }

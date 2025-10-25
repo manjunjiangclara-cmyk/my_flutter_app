@@ -19,8 +19,8 @@ import 'compose_state.dart';
 @injectable
 class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   final CreateJournal _createJournal;
-  GetJournalById? _getJournalById;
-  UpdateJournal? _updateJournal;
+  final GetJournalById _getJournalById;
+  final UpdateJournal _updateJournal;
   final TextEditingController textController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController tagController = TextEditingController();
@@ -33,7 +33,8 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   ImagePickerService? _imagePickerService;
   FileStorageService? _fileStorageService;
 
-  ComposeBloc(this._createJournal) : super(const ComposeInitial()) {
+  ComposeBloc(this._createJournal, this._getJournalById, this._updateJournal)
+    : super(const ComposeInitial()) {
     on<ComposeInitializeForEdit>(_onInitializeForEdit);
     on<ComposeTextChanged>(_onTextChanged);
     on<ComposePhotoAddedFromGallery>(_onPhotoAddedFromGallery);
@@ -49,22 +50,13 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     // Initialize with empty content state
     add(const ComposeTextChanged(''));
   }
-  GetJournalById get _getJournalByIdInstance {
-    _getJournalById ??= getIt<GetJournalById>();
-    return _getJournalById!;
-  }
-
-  UpdateJournal get _updateJournalInstance {
-    _updateJournal ??= getIt<UpdateJournal>();
-    return _updateJournal!;
-  }
 
   Future<void> _onInitializeForEdit(
     ComposeInitializeForEdit event,
     Emitter<ComposeState> emit,
   ) async {
     try {
-      final result = await _getJournalByIdInstance(
+      final result = await _getJournalById(
         GetJournalByIdParams(event.journalId),
       );
       await result.fold(
@@ -309,7 +301,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
       );
 
       final result = isEditing
-          ? await _updateJournalInstance(UpdateJournalParams(journal))
+          ? await _updateJournal(UpdateJournalParams(journal))
           : await _createJournal(CreateJournalParams(journal));
 
       result.fold(

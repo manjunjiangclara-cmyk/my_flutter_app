@@ -1,4 +1,7 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_flutter_app/core/di/injection.dart';
+import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart';
 import 'package:my_flutter_app/features/compose/presentation/screens/compose_home_screen.dart';
 import 'package:my_flutter_app/features/compose/presentation/screens/compose_screen.dart';
 
@@ -21,14 +24,20 @@ class ComposeRouter {
     GoRoute(
       path: composePath,
       name: composeName,
-      builder: (context, state) => const ComposeScreen(),
+      builder: (context, state) => BlocProvider(
+        create: (_) => getIt<ComposeBloc>(),
+        child: const ComposeScreen(),
+      ),
     ),
     GoRoute(
       path: composeEditPath,
       name: composeEditName,
       builder: (context, state) {
         final journalId = state.pathParameters['journalId'];
-        return ComposeScreen(journalId: journalId);
+        return BlocProvider(
+          create: (_) => getIt<ComposeBloc>(),
+          child: ComposeScreen(journalId: journalId),
+        );
       },
     ),
   ];

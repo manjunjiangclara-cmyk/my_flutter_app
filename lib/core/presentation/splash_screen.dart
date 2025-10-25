@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_flutter_app/core/strings.dart';
@@ -62,7 +64,10 @@ class _SplashScreenState extends State<SplashScreen>
         context.go('/');
       }
     } catch (e) {
-      print('❌ Error during splash screen navigation: $e');
+      developer.log(
+        '❌ Error during splash screen navigation: $e',
+        name: 'SplashScreen',
+      );
       // Still navigate even if there's an error
       if (mounted) {
         context.go('/');

@@ -63,6 +63,21 @@ class AppColors {
   // Subtle shadow tint that blends a hint of primary into shadows
   static const Color shadowTint = Color(0xFF19120E);
 
+  // ========== TAG COLORS ==========
+
+  /// Colorful tag palette - 8 colors with similar value and saturation
+  /// Each tag gets a consistent color based on its name hash
+  static const List<Color> tagColors = [
+    Color(0xFFD4A07B), // Orange (similar to primary)
+    Color(0xFFD47B7B), // Red
+    Color(0xFFD47BC7), // Magenta (more distinct from red)
+    Color(0xFFA07BD4), // Purple
+    Color(0xFF7BA0D4), // Blue
+    Color(0xFF7BD4C7), // Light Teal (more distinct)
+    Color(0xFF7BB87B), // Forest Green (more distinct)
+    Color(0xFFD4C77B), // Golden Yellow (more distinct)
+  ];
+
   // ========== THEME SCHEMES ==========
 
   /// Light theme color scheme (no seed)

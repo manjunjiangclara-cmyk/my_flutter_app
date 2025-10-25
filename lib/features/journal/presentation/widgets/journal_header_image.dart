@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ui' as ui;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +22,10 @@ class _JournalHeaderImageState extends State<JournalHeaderImage> {
   final ImagePathService _imagePathService = ImagePathService();
   String? _absoluteImagePath;
   Map<String, String> _absolutePaths = {};
-  double? _aspectRatio; // width / height
+  double _displayAspectRatio = UIConstants.journalHeaderDefaultAspectRatio;
+  bool _isImageReady = false;
+  ImageStream? _imageStream;
+  ImageStreamListener? _imageStreamListener;
 
   @override
   void initState() {
@@ -41,32 +43,59 @@ class _JournalHeaderImageState extends State<JournalHeaderImage> {
         if (!mounted) return;
         setState(() {
           _absoluteImagePath = absolutePath;
+          // Prefer cached aspect ratio if available to stabilize first frame
+          final cached = absolutePath == null
+              ? null
+              : ImageWidgetUtils.getCachedAspectRatio(absolutePath);
+          if (cached != null && cached.isFinite && cached > 0) {
+            _displayAspectRatio = cached;
+          } else {
+            _displayAspectRatio = UIConstants.journalHeaderDefaultAspectRatio;
+          }
         });
-        _loadAspectRatio();
+        // Use image stream to get real size and mark ready
+        if (absolutePath != null) {
+          _startImageStream(absolutePath);
+        }
       },
     );
   }
 
-  Future<void> _loadAspectRatio() async {
-    final path = _absoluteImagePath;
-    if (path == null) return;
-    try {
-      final file = File(path);
-      final bytes = await file.readAsBytes();
-      final ui.Codec codec = await ui.instantiateImageCodec(bytes);
-      final ui.FrameInfo frame = await codec.getNextFrame();
-      final ui.Image image = frame.image;
-      final double ratio = image.width / image.height;
-      if (!mounted) return;
-      setState(() {
-        _aspectRatio = ratio;
-      });
-    } catch (_) {
-      if (!mounted) return;
-      setState(() {
-        _aspectRatio = null;
-      });
+  void _startImageStream(String path) {
+    if (_imageStream != null && _imageStreamListener != null) {
+      _imageStream!.removeListener(_imageStreamListener!);
     }
+    final provider = FileImage(File(path));
+    final stream = provider.resolve(const ImageConfiguration());
+    final listener = ImageStreamListener(
+      (ImageInfo info, bool synchronousCall) {
+        final image = info.image;
+        final double ratio = image.width / image.height;
+        ImageWidgetUtils.cacheAspectRatio(path, ratio);
+        if (!mounted) return;
+        setState(() {
+          _displayAspectRatio = ratio;
+          _isImageReady = true;
+        });
+      },
+      onError: (dynamic _, __) {
+        if (!mounted) return;
+        setState(() {
+          _isImageReady = false;
+        });
+      },
+    );
+    stream.addListener(listener);
+    _imageStream = stream;
+    _imageStreamListener = listener;
+  }
+
+  @override
+  void dispose() {
+    if (_imageStream != null && _imageStreamListener != null) {
+      _imageStream!.removeListener(_imageStreamListener!);
+    }
+    super.dispose();
   }
 
   Future<void> _convertAllPathsToAbsolute() async {
@@ -114,24 +143,42 @@ class _JournalHeaderImageState extends State<JournalHeaderImage> {
   }
 
   Widget _buildImage(BuildContext context) {
-    // While aspect ratio is unknown, keep a stable placeholder height
-    if (_aspectRatio == null) {
-      return SizedBox(
-        height: UIConstants.journalHeaderImageHeight,
-        width: double.infinity,
-        child: _buildPlaceholder(context),
-      );
-    }
+    return LayoutBuilder(
+      builder: (ctx, constraints) {
+        final double width = constraints.maxWidth.isFinite
+            ? constraints.maxWidth
+            : MediaQuery.of(context).size.width;
+        final double height = width / _displayAspectRatio;
 
-    return AspectRatio(
-      aspectRatio: _aspectRatio!,
-      child: Image.file(
-        File(_absoluteImagePath!),
-        width: double.infinity,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) =>
-            _buildPlaceholder(context),
-      ),
+        return AnimatedContainer(
+          duration: UIConstants.fastAnimation,
+          curve: Curves.easeInOut,
+          height: height,
+          width: double.infinity,
+          child: AnimatedSwitcher(
+            duration: UIConstants.fastAnimation,
+            switchInCurve: Curves.easeOut,
+            switchOutCurve: Curves.easeIn,
+            child: _isImageReady
+                ? Image.file(
+                    File(_absoluteImagePath!),
+                    key: const ValueKey('headerImage'),
+                    width: double.infinity,
+                    height: height,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        _buildPlaceholder(context),
+                  )
+                : Container(
+                    key: const ValueKey('headerPlaceholder'),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.outline.withOpacity(0.08),
+                    child: _buildPlaceholder(context),
+                  ),
+          ),
+        );
+      },
     );
   }
 

@@ -52,12 +52,11 @@ class JournalContentScroll extends StatelessWidget {
                       locationTypes: journal.locationTypes,
                     ),
                     const SizedBox(height: Spacing.md),
+                    JournalContentSection(content: journal.content),
+                    const SizedBox(height: Spacing.lg),
                     if (journal.tags.isNotEmpty) ...[
                       TagChips(tags: journal.tags),
                     ],
-                    const SizedBox(height: Spacing.lg),
-                    JournalContentSection(content: journal.content),
-                    const SizedBox(height: Spacing.lg),
                     Builder(
                       builder: (context) {
                         final total = journal.imagePaths.length;
