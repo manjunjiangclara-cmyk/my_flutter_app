@@ -50,6 +50,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     on<ComposeTagRemoved>(_onTagRemoved);
     on<ComposePostSubmitted>(_onPostSubmitted);
     on<ComposePhotosReordered>(_onPhotosReordered);
+    on<ComposeDateSelected>(_onDateSelected);
 
     PerformanceMonitor.endTiming('ComposeBloc_Initialization');
   }
@@ -298,6 +299,15 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     }
   }
 
+  void _onDateSelected(ComposeDateSelected event, Emitter<ComposeState> emit) {
+    if (state is ComposeContent) {
+      final currentState = state as ComposeContent;
+      emit(currentState.copyWith(originalCreatedAt: event.date));
+    } else {
+      emit(ComposeContent(originalCreatedAt: event.date));
+    }
+  }
+
   Future<void> _onPostSubmitted(
     ComposePostSubmitted event,
     Emitter<ComposeState> emit,
@@ -326,7 +336,8 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
             ? currentState.editingJournalId!
             : now.toUtc().millisecondsSinceEpoch.toString(),
         content: currentState.text,
-        createdAt: isEditing ? (currentState.originalCreatedAt ?? now) : now,
+        // Allow backdating for both new and edit when user selected a date
+        createdAt: currentState.originalCreatedAt ?? now,
         updatedAt: now,
         tags: currentState.selectedTags,
         imagePaths: currentState.attachedPhotoPaths,

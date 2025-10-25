@@ -129,6 +129,11 @@ class UIConstants {
   static const double photoViewerDotSpacing = 4.0;
   static const double photoViewerDotOpacity = 0.5;
 
+  // Date Picker (Compose)
+  static const int datePickerFirstYear = 1970;
+  static const int datePickerLastYear = 2100;
+  static const double cupertinoDatePickerHeight = 216.0;
+
   // Image Picker
   static const int imageQuality = 85;
   static const int maxPhotos = 9;

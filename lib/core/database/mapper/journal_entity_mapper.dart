@@ -44,6 +44,7 @@ class JournalEntityMapper {
   static Map<String, dynamic> journalToUpdateMap(Journal journal) {
     return {
       'content': journal.content,
+      'created_at': journal.createdAt.toIso8601String(),
       'updated_at': journal.updatedAt.toIso8601String(),
       'is_favorite': journal.isFavorite ? 1 : 0,
       'tags': journal.tags.join(','),

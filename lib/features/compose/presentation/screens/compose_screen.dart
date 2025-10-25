@@ -1,9 +1,13 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/services/journal_change_notifier.dart';
+import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/core/utils/date_formatter.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_event.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_state.dart';
@@ -91,10 +95,125 @@ class _ComposeScreenView extends StatelessWidget {
     ComposeContent content,
     bool isPosting,
   ) {
+    final date = content.originalCreatedAt;
+    final dateText = date != null
+        ? DateFormatter.formatDate(date, format: 'MMMM d, yyyy')
+        : AppStrings.sampleDate;
     return ComposeAppBar(
       onPost: () =>
           context.read<ComposeBloc>().add(const ComposePostSubmitted()),
       canPost: content.canPost && !isPosting,
+      dateText: dateText,
+      onTapDate: () => _showDatePickerAdaptive(context, date),
+    );
+  }
+
+  Future<void> _showDatePickerAdaptive(
+    BuildContext context,
+    DateTime? initial,
+  ) async {
+    final platform = defaultTargetPlatform;
+    if (platform == TargetPlatform.iOS) {
+      await _showDateScroller(context, initial);
+    } else {
+      await _showMaterialDatePicker(context, initial);
+    }
+  }
+
+  Future<void> _showMaterialDatePicker(
+    BuildContext context,
+    DateTime? initial,
+  ) async {
+    final now = DateTime.now();
+    final firstDate = DateTime(UIConstants.datePickerFirstYear);
+    final lastDate = now; // Prevent future dates
+    final selected = await showDatePicker(
+      context: context,
+      initialDate: initial ?? now,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      helpText: 'Select date',
+      cancelText: AppStrings.cancel,
+      confirmText: AppStrings.ok,
+    );
+    if (selected != null) {
+      context.read<ComposeBloc>().add(ComposeDateSelected(selected));
+    }
+  }
+
+  Future<void> _showDateScroller(
+    BuildContext context,
+    DateTime? initial,
+  ) async {
+    DateTime temp = initial ?? DateTime.now();
+
+    await showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(ctx).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(UIConstants.extraLargeRadius),
+            ),
+          ),
+          padding: const EdgeInsets.only(
+            left: UIConstants.defaultPadding,
+            right: UIConstants.defaultPadding,
+            top: UIConstants.defaultPadding,
+            bottom: UIConstants.defaultPadding,
+          ),
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.of(ctx).pop(),
+                      child: const Text(AppStrings.cancel),
+                    ),
+                    Text(
+                      'Select Date',
+                      style: Theme.of(ctx).textTheme.titleMedium,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                        context.read<ComposeBloc>().add(
+                          ComposeDateSelected(temp),
+                        );
+                      },
+                      child: const Text(AppStrings.ok),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: UIConstants.cupertinoDatePickerHeight,
+                  child: CupertinoTheme(
+                    data: CupertinoTheme.of(ctx),
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.date,
+                      initialDateTime: temp,
+                      minimumDate: DateTime(
+                        UIConstants.datePickerFirstYear,
+                        1,
+                        1,
+                      ),
+                      maximumDate: DateTime.now(), // Prevent future dates
+                      onDateTimeChanged: (d) => temp = d,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

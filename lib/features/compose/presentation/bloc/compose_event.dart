@@ -90,6 +90,16 @@ class ComposeTagAdded extends ComposeEvent {
   List<Object?> get props => [tag];
 }
 
+/// Event for selecting/setting the created date (supports new and edit)
+class ComposeDateSelected extends ComposeEvent {
+  final DateTime date;
+
+  const ComposeDateSelected(this.date);
+
+  @override
+  List<Object?> get props => [date];
+}
+
 /// Event for removing a tag
 class ComposeTagRemoved extends ComposeEvent {
   final String tag;
