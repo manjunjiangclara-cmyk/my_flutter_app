@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_flutter_app/core/di/injection.dart';
+import 'package:my_flutter_app/core/services/journal_change_notifier.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
@@ -113,19 +115,27 @@ class _MemoryListState extends State<_MemoryList> {
     });
   }
 
-  /// Toggles the expanded state of a month-year group
-  void _toggleGroup(MonthYearKey monthYearKey) {
-    setState(() {
-      if (_expandedGroups.contains(monthYearKey)) {
-        _expandedGroups.remove(monthYearKey);
-      } else {
-        _expandedGroups.add(monthYearKey);
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: getIt<JournalChangeNotifier>(),
+      builder: (context, _) {
+        final notifier = getIt<JournalChangeNotifier>();
+        // Refresh memory data when there are pending changes
+        if (notifier.hasPendingChange) {
+          // Schedule refresh first, then consume the notification
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.read<MemoryBloc>().add(const MemoryRefreshRequested());
+            notifier.consume();
+          });
+        }
+
+        return _buildMemoryContent();
+      },
+    );
+  }
+
+  Widget _buildMemoryContent() {
     return BlocBuilder<MemoryBloc, MemoryState>(
       builder: (context, state) {
         if (state.isLoading) {
@@ -277,6 +287,17 @@ class _MemoryListState extends State<_MemoryList> {
 
     // Fallback (should not reach here)
     return const SizedBox.shrink();
+  }
+
+  /// Toggles the expanded state of a month-year group
+  void _toggleGroup(MonthYearKey monthYearKey) {
+    setState(() {
+      if (_expandedGroups.contains(monthYearKey)) {
+        _expandedGroups.remove(monthYearKey);
+      } else {
+        _expandedGroups.add(monthYearKey);
+      }
+    });
   }
 }
 

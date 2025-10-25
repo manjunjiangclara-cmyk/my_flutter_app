@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -42,7 +44,10 @@ class ImagePathService {
 
       return absolutePath;
     } catch (e) {
-      print('❌ Error converting image path: $e');
+      developer.log(
+        '❌ Error converting image path: $e',
+        name: 'ImagePathService',
+      );
       return imagePath; // Return original path as fallback
     }
   }

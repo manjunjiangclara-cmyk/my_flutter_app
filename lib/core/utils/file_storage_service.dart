@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'dart:io';
 import 'dart:math';
 
@@ -63,16 +64,25 @@ class FileStorageService {
         from: documentsDir.path,
       );
 
-      // Debug: Print the saved path
-      print('✅ Image saved to: ${localFile.path}');
-      print('📁 Relative path: $relativePath');
-      print('📁 Images directory: ${imagesDir.path}');
-      print('📄 File exists: ${await localFile.exists()}');
-      print('📏 File size: ${await localFile.length()} bytes');
+      // Debug: Log the saved path
+      developer.log('✅ Image saved to: ${localFile.path}', name: 'FileStorage');
+      developer.log('📁 Relative path: $relativePath', name: 'FileStorage');
+      developer.log(
+        '📁 Images directory: ${imagesDir.path}',
+        name: 'FileStorage',
+      );
+      developer.log(
+        '📄 File exists: ${await localFile.exists()}',
+        name: 'FileStorage',
+      );
+      developer.log(
+        '📏 File size: ${await localFile.length()} bytes',
+        name: 'FileStorage',
+      );
 
       return relativePath; // Return relative path instead of absolute
     } catch (e) {
-      print('❌ Error saving image: $e');
+      developer.log('❌ Error saving image: $e', name: 'FileStorage');
       return null;
     }
   }
@@ -112,7 +122,7 @@ class FileStorageService {
       }
       return false;
     } catch (e) {
-      print('Error deleting file: $e');
+      developer.log('Error deleting file: $e', name: 'FileStorage');
       return false;
     }
   }
@@ -157,7 +167,10 @@ class FileStorageService {
         }
       }
     } catch (e) {
-      print('Error cleaning up orphaned files: $e');
+      developer.log(
+        'Error cleaning up orphaned files: $e',
+        name: 'FileStorage',
+      );
     }
   }
 }

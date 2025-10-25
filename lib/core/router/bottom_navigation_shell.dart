@@ -95,7 +95,7 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
                     context.read<MemoryBloc>().add(
                       const MemoryRefreshRequested(),
                     );
-                    context.read<AppTabController>().goToMemory();
+                    tabController.goToMemory();
                   },
                   child: NotificationListener<ScrollNotification>(
                     onNotification: (notification) {

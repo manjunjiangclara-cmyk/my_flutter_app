@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart';
 import 'package:my_flutter_app/features/compose/presentation/screens/compose_screen.dart';
 
 class ComposeHomeScreen extends StatelessWidget {
@@ -58,8 +61,13 @@ class ComposeHomeScreen extends StatelessWidget {
   }
 
   void _navigateToCompose(BuildContext context) {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (context) => const ComposeScreen()));
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (_) => getIt<ComposeBloc>(),
+          child: const ComposeScreen(),
+        ),
+      ),
+    );
   }
 }

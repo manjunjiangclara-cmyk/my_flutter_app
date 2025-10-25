@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -33,7 +35,10 @@ void main() async {
       ]);
     } catch (e) {
       // Ignore orientation setting errors on some devices
-      print('Warning: Could not set device orientation: $e');
+      developer.log(
+        'Warning: Could not set device orientation: $e',
+        name: 'Main',
+      );
     }
 
     // Run the app
@@ -92,7 +97,7 @@ class _MyAppState extends State<MyApp> {
         });
       }
     } catch (e) {
-      print('❌ Error initializing app: $e');
+      developer.log('❌ Error initializing app: $e', name: 'Main');
       if (mounted) {
         setState(() {
           _isInitialized = true; // Still show the app even if DI fails

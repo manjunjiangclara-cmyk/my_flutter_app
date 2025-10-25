@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/router/navigation_helper.dart';
+import 'package:my_flutter_app/core/services/journal_change_notifier.dart';
 import 'package:my_flutter_app/core/strings/app_strings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/share_capture_util.dart';
@@ -47,6 +48,8 @@ class _JournalViewScreenView extends StatelessWidget {
     return BlocListener<JournalViewBloc, JournalViewState>(
       listener: (context, state) {
         if (state is JournalDeleted) {
+          // Signal global change for memory refresh
+          getIt<JournalChangeNotifier>().markChanged();
           Navigator.of(context).pop();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text(JournalStrings.deleteJournalSuccess)),
