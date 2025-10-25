@@ -5,6 +5,16 @@ import 'package:my_flutter_app/core/utils/image_path_service.dart';
 /// Utility class for common image widget operations
 class ImageWidgetUtils {
   static final ImagePathService _imagePathService = ImagePathService();
+  // Lightweight in-memory cache for image aspect ratios to stabilize layout
+  static final Map<String, double> _pathToAspectRatio = {};
+
+  static double? getCachedAspectRatio(String path) => _pathToAspectRatio[path];
+
+  static void cacheAspectRatio(String path, double aspectRatio) {
+    if (aspectRatio.isFinite && aspectRatio > 0) {
+      _pathToAspectRatio[path] = aspectRatio;
+    }
+  }
 
   /// Converts image path to absolute path with loading state management
   static Future<String?> convertToAbsolutePath({

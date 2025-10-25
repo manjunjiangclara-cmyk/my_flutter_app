@@ -178,6 +178,7 @@ class UIConstants {
   // Journal View Screen
   static const double journalHeaderImageHeight = 180.0;
   static const double journalHeaderImageElevation = imageGalleryElevation;
+  static const double journalHeaderDefaultAspectRatio = 1.5; // 3:2 default
   static const double journalAppBarIconSize = 24.0;
   static const double journalAppBarIconSizeSmall = 20.0;
   static const double journalAppBarIconPadding = 12.0;
