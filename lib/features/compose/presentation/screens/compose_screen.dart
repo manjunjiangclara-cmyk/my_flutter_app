@@ -81,7 +81,8 @@ class _ComposeScreenView extends StatelessWidget {
     if (state is ComposeContent) {
       return state;
     }
-    // Always return a fresh ComposeContent with null selectedLocation
+    // For initial state, return a default ComposeContent
+    // This avoids unnecessary state transitions during initialization
     return const ComposeContent();
   }
 
@@ -104,11 +105,25 @@ class _ComposeScreenView extends StatelessWidget {
   ) {
     return Column(
       children: [
-        Expanded(child: _ComposeContentArea(content: content)),
+        Expanded(
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => _focusTextInput(context),
+            child: _ComposeContentArea(content: content),
+          ),
+        ),
         _ComposeActionArea(),
         if (isPosting) const _PostingIndicator(),
       ],
     );
+  }
+
+  void _focusTextInput(BuildContext context) {
+    final bloc = context.read<ComposeBloc>();
+    // Request focus immediately to ensure cursor shows without delay
+    if (!bloc.textFocusNode.hasFocus) {
+      FocusScope.of(context).requestFocus(bloc.textFocusNode);
+    }
   }
 }
 
@@ -120,34 +135,26 @@ class _ComposeContentArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _focusTextInput(context),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(UIConstants.defaultPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _TextInputSection(content: content),
-            const SizedBox(height: Spacing.lg),
-            _AttachmentsSection(content: content),
-            const SizedBox(height: Spacing.lg),
-            _LocationSection(content: content),
-            const SizedBox(height: Spacing.lg),
-            _TagsSection(content: content),
-            _KeyboardPadding(),
-          ],
-        ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(UIConstants.defaultPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _TextInputSection(content: content),
+          const SizedBox(height: Spacing.lg),
+          _AttachmentsSection(content: content),
+          const SizedBox(height: Spacing.lg),
+          _LocationSection(content: content),
+          const SizedBox(height: Spacing.lg),
+          _TagsSection(content: content),
+          _KeyboardPadding(),
+        ],
       ),
     );
   }
-
-  void _focusTextInput(BuildContext context) {
-    final bloc = context.read<ComposeBloc>();
-    bloc.textFocusNode.requestFocus();
-  }
 }
 
-/// Text input section
+/// Text input section with optimized performance
 class _TextInputSection extends StatelessWidget {
   final ComposeContent content;
 
@@ -155,11 +162,25 @@ class _TextInputSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ComposeTextInput(
-      controller: context.read<ComposeBloc>().textController,
-      focusNode: context.read<ComposeBloc>().textFocusNode,
-      onChanged: (text) =>
-          context.read<ComposeBloc>().add(ComposeTextChanged(text)),
+    return BlocBuilder<ComposeBloc, ComposeState>(
+      buildWhen: (previous, current) {
+        // Only rebuild when text content changes
+        final prevText = previous is ComposeContent ? previous.text : '';
+        final currText = current is ComposeContent ? current.text : '';
+        return prevText != currText;
+      },
+      builder: (context, state) {
+        final bloc = context.read<ComposeBloc>();
+        return ComposeTextInput(
+          controller: bloc.textController,
+          focusNode: bloc.textFocusNode,
+          onChanged: (text) {
+            // This will automatically transition from ComposeInitial to ComposeContent
+            // when user starts typing, avoiding unnecessary initialization
+            bloc.add(ComposeTextChanged(text));
+          },
+        );
+      },
     );
   }
 }

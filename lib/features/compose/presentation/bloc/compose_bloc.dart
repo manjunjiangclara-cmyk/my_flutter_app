@@ -6,6 +6,7 @@ import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/services/image_picker_service.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/file_storage_service.dart';
+import 'package:my_flutter_app/core/utils/performance_monitor.dart';
 import 'package:my_flutter_app/features/compose/presentation/models/location_search_models.dart';
 import 'package:my_flutter_app/shared/domain/entities/journal.dart';
 import 'package:my_flutter_app/shared/domain/usecases/create_journal.dart';
@@ -21,13 +22,14 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   final CreateJournal _createJournal;
   final GetJournalById _getJournalById;
   final UpdateJournal _updateJournal;
-  final TextEditingController textController = TextEditingController();
-  final TextEditingController locationController = TextEditingController();
-  final TextEditingController tagController = TextEditingController();
+  // Lazy-loaded controllers to improve initialization performance
+  TextEditingController? _textController;
+  TextEditingController? _locationController;
+  TextEditingController? _tagController;
 
-  final FocusNode textFocusNode = FocusNode();
-  final FocusNode locationFocusNode = FocusNode();
-  final FocusNode tagFocusNode = FocusNode();
+  FocusNode? _textFocusNode;
+  FocusNode? _locationFocusNode;
+  FocusNode? _tagFocusNode;
 
   // Lazy-loaded services to avoid blocking UI during initialization
   ImagePickerService? _imagePickerService;
@@ -35,6 +37,8 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
   ComposeBloc(this._createJournal, this._getJournalById, this._updateJournal)
     : super(const ComposeInitial()) {
+    PerformanceMonitor.startTiming('ComposeBloc_Initialization');
+
     on<ComposeInitializeForEdit>(_onInitializeForEdit);
     on<ComposeTextChanged>(_onTextChanged);
     on<ComposePhotoAddedFromGallery>(_onPhotoAddedFromGallery);
@@ -47,8 +51,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     on<ComposePostSubmitted>(_onPostSubmitted);
     on<ComposePhotosReordered>(_onPhotosReordered);
 
-    // Initialize with empty content state
-    add(const ComposeTextChanged(''));
+    PerformanceMonitor.endTiming('ComposeBloc_Initialization');
   }
 
   Future<void> _onInitializeForEdit(
@@ -89,6 +92,37 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     } catch (_) {
       // swallow; UI remains in initial state
     }
+  }
+
+  // Lazy getters for controllers to improve initialization performance
+  TextEditingController get textController {
+    _textController ??= TextEditingController();
+    return _textController!;
+  }
+
+  TextEditingController get locationController {
+    _locationController ??= TextEditingController();
+    return _locationController!;
+  }
+
+  TextEditingController get tagController {
+    _tagController ??= TextEditingController();
+    return _tagController!;
+  }
+
+  FocusNode get textFocusNode {
+    _textFocusNode ??= FocusNode();
+    return _textFocusNode!;
+  }
+
+  FocusNode get locationFocusNode {
+    _locationFocusNode ??= FocusNode();
+    return _locationFocusNode!;
+  }
+
+  FocusNode get tagFocusNode {
+    _tagFocusNode ??= FocusNode();
+    return _tagFocusNode!;
   }
 
   // Lazy getters for services to avoid blocking UI during initialization
@@ -328,12 +362,12 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
   @override
   Future<void> close() {
-    textController.dispose();
-    locationController.dispose();
-    tagController.dispose();
-    textFocusNode.dispose();
-    locationFocusNode.dispose();
-    tagFocusNode.dispose();
+    _textController?.dispose();
+    _locationController?.dispose();
+    _tagController?.dispose();
+    _textFocusNode?.dispose();
+    _locationFocusNode?.dispose();
+    _tagFocusNode?.dispose();
     return super.close();
   }
 }
