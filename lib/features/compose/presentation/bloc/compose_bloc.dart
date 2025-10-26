@@ -81,7 +81,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
                     types: journal.locationTypes,
                   ),
             editingJournalId: journal.id,
-            originalCreatedAt: journal.createdAt,
+            selectedCreatedAt: journal.createdAt,
           );
 
           // Prefill controllers for immediate UI reflection
@@ -302,9 +302,9 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   void _onDateSelected(ComposeDateSelected event, Emitter<ComposeState> emit) {
     if (state is ComposeContent) {
       final currentState = state as ComposeContent;
-      emit(currentState.copyWith(originalCreatedAt: event.date));
+      emit(currentState.copyWith(selectedCreatedAt: event.date));
     } else {
-      emit(ComposeContent(originalCreatedAt: event.date));
+      emit(ComposeContent(selectedCreatedAt: event.date));
     }
   }
 
@@ -324,6 +324,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         attachedPhotoPaths: currentState.attachedPhotoPaths,
         selectedTags: currentState.selectedTags,
         selectedLocation: currentState.selectedLocation,
+        selectedCreatedAt: currentState.selectedCreatedAt,
       ),
     );
 
@@ -337,7 +338,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
             : now.toUtc().millisecondsSinceEpoch.toString(),
         content: currentState.text,
         // Allow backdating for both new and edit when user selected a date
-        createdAt: currentState.originalCreatedAt ?? now,
+        createdAt: currentState.selectedCreatedAt ?? now,
         updatedAt: now,
         tags: currentState.selectedTags,
         imagePaths: currentState.attachedPhotoPaths,
@@ -361,9 +362,6 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
           // Emit success state
           emit(const ComposePostSuccess());
-
-          // Reset to initial state immediately after successful post
-          emit(const ComposeInitial());
         },
       );
     } catch (e) {

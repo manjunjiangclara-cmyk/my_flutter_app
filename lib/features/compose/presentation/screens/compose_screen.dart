@@ -85,6 +85,17 @@ class _ComposeScreenView extends StatelessWidget {
     if (state is ComposeContent) {
       return state;
     }
+    if (state is ComposePosting) {
+      // Preserve selected values during posting to avoid UI flicker
+      return ComposeContent(
+        text: state.text,
+        attachedPhotoPaths: state.attachedPhotoPaths,
+        selectedTags: state.selectedTags,
+        selectedLocation: state.selectedLocation,
+        selectedCreatedAt: state.selectedCreatedAt,
+        isPosting: true,
+      );
+    }
     // For initial state, return a default ComposeContent
     // This avoids unnecessary state transitions during initialization
     return const ComposeContent();
@@ -95,7 +106,7 @@ class _ComposeScreenView extends StatelessWidget {
     ComposeContent content,
     bool isPosting,
   ) {
-    final date = content.originalCreatedAt;
+    final date = content.selectedCreatedAt;
     final dateText = date != null
         ? DateFormatter.formatDate(date, format: 'MMMM d, yyyy')
         : AppStrings.sampleDate;

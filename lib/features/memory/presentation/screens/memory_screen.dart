@@ -181,13 +181,11 @@ class _MemoryListState extends State<_MemoryList> {
         final groupedMemories = state.groupedMemories;
         final sortedKeys = state.sortedGroupKeys;
 
-        // Expand only first N groups by default if they haven't been toggled yet
+        // Expand all groups by default if they haven't been toggled yet
         if (_expandedGroups.isEmpty && sortedKeys.isNotEmpty) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             setState(() {
-              _expandedGroups.addAll(
-                sortedKeys.take(UIConstants.memoryDefaultExpandedGroupCount),
-              );
+              _expandedGroups.addAll(sortedKeys);
             });
           });
         }
