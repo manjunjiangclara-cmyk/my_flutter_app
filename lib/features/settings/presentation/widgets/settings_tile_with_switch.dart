@@ -55,8 +55,8 @@ class SettingsTileWithSwitch extends StatelessWidget {
             children: [
               // Leading icon
               SizedBox(
-                width: 40,
-                height: 40,
+                width: UIConstants.settingsTileIconContainerSize,
+                height: UIConstants.settingsTileIconContainerSize,
                 child: Icon(
                   icon,
                   size: UIConstants.settingsTileIconSize,
