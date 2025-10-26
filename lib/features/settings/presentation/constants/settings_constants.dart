@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_app/core/services/biometric_auth_provider.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/theme_provider.dart';
 import 'package:my_flutter_app/features/settings/presentation/models/settings_item_model.dart';
@@ -26,63 +27,75 @@ class SettingsConstants {
   }
 
   /// All settings sections with their items.
-  static List<SettingsSectionModel> getSettingsSections(BuildContext context) =>
-      [
-        SettingsSectionModel(
-          title: AppStrings.general,
-          items: [
-            SettingsItemModel(
-              icon: Icons.palette_outlined,
-              title: AppStrings.theme,
-              value: getThemeDisplayValue(context),
-              onTap: (context) {
-                ThemeBottomSheet.show(context);
-              },
-            ),
-            SettingsItemModel(
-              icon: Icons.notifications_outlined,
-              title: AppStrings.notifications,
-              onTap: (context) {
-                // Handle notification settings
-              },
-            ),
-          ],
+  static List<SettingsSectionModel> getSettingsSections(
+    BuildContext context,
+  ) => [
+    SettingsSectionModel(
+      title: AppStrings.general,
+      items: [
+        SettingsItemModel(
+          icon: Icons.palette_outlined,
+          title: AppStrings.theme,
+          value: getThemeDisplayValue(context),
+          onTap: (context) {
+            ThemeBottomSheet.show(context);
+          },
         ),
-        SettingsSectionModel(
-          title: AppStrings.dataAndPrivacy,
-          items: [
-            SettingsItemModel(
-              icon: Icons.backup_outlined,
-              title: AppStrings.backupAndSync,
-              onTap: (context) {
-                // Handle backup settings
-              },
-            ),
-            SettingsItemModel(
-              icon: Icons.security_outlined,
-              title: AppStrings.privacy,
-              onTap: (context) {
-                // Handle privacy settings
-              },
-            ),
-          ],
+        SettingsItemModel(
+          icon: Icons.notifications_outlined,
+          title: AppStrings.notifications,
+          onTap: (context) {
+            // Handle notification settings
+          },
         ),
-        SettingsSectionModel(
-          title: 'About',
-          items: [
-            SettingsItemModel(
-              icon: Icons.info_outlined,
-              title: AppStrings.appVersion,
-              enabled: false, // Version info is not clickable
-            ),
-            SettingsItemModel(
-              icon: Icons.help_outlined,
-              title: AppStrings.helpAndSupport,
-              onTap: (context) {
-                // Handle help
-              },
-            ),
-          ],
+      ],
+    ),
+    SettingsSectionModel(
+      title: AppStrings.dataAndPrivacy,
+      items: [
+        // Biometric toggle
+        SettingsItemModel(
+          icon: Icons.face_retouching_natural_outlined,
+          title: AppStrings.requireBiometricOnLaunch,
+          subtitle: AppStrings.biometricDescription,
+          isSwitch: true,
+          switchValue: context.watch<BiometricAuthProvider>().requireOnLaunch,
+          onSwitchChanged: (value) {
+            context.read<BiometricAuthProvider>().setRequireOnLaunch(value);
+          },
         ),
-      ];
+        SettingsItemModel(
+          icon: Icons.backup_outlined,
+          title: AppStrings.backupAndSync,
+          onTap: (context) {
+            // Handle backup settings
+          },
+        ),
+        SettingsItemModel(
+          icon: Icons.security_outlined,
+          title: AppStrings.privacy,
+          onTap: (context) {
+            // Handle privacy settings
+          },
+        ),
+      ],
+    ),
+    SettingsSectionModel(
+      title: 'About',
+      items: [
+        SettingsItemModel(
+          icon: Icons.info_outlined,
+          title: AppStrings.appVersion,
+          enabled: false, // Version info is not clickable
+        ),
+        SettingsItemModel(
+          icon: Icons.help_outlined,
+          title: AppStrings.helpAndSupport,
+          onTap: (context) {
+            // Handle help
+          },
+        ),
+      ],
+    ),
+  ];
 }

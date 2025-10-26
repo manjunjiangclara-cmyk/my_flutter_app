@@ -34,8 +34,8 @@ class SettingsSection extends StatelessWidget {
         padding: const EdgeInsets.only(
           left: UIConstants.settingsCardContentLeftPadding,
           right: UIConstants.defaultCardPadding,
-          top: UIConstants.defaultCardPadding,
-          bottom: UIConstants.defaultCardPadding,
+          top: UIConstants.smallPadding,
+          bottom: UIConstants.smallPadding,
         ),
         child: Column(children: [...children]),
       ),

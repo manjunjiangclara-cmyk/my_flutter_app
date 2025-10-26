@@ -45,5 +45,7 @@
 	<string>This app needs access to photo library to select photos for your memories.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This app needs permission to save images to your photo library.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Unlock the app with Face ID or Touch ID to protect your memories.</string>
 </dict>
 </plist>

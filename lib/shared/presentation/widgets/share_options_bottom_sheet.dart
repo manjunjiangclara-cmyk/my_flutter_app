@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/strings.dart';
+import 'package:my_flutter_app/core/theme/fonts.dart';
+import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/base_bottom_sheet.dart';
 
@@ -19,7 +21,7 @@ class ShareOptionsBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
     return Column(
       children: [
         _ShareOptionItem(
@@ -27,11 +29,16 @@ class ShareOptionsBottomSheet extends StatelessWidget {
           label: AppStrings.shareToApps,
           onTap: () => Navigator.of(context).pop(ShareOption.shareToApps),
         ),
-        Divider(
-          height: 1,
-          color: colorScheme.outline,
-          indent: UIConstants.defaultPadding,
-          endIndent: UIConstants.defaultPadding,
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: UIConstants.smallPadding,
+            vertical: UIConstants.extraSmallPadding,
+          ),
+          child: Divider(
+            height: UIConstants.settingsSectionDividerHeight,
+            thickness: UIConstants.settingsSectionDividerHeight,
+            color: theme.colorScheme.outline.withOpacity(0.4),
+          ),
         ),
         _ShareOptionItem(
           icon: Icons.photo_library_outlined,
@@ -56,35 +63,45 @@ class _ShareOptionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: UIConstants.defaultPadding,
-        vertical: UIConstants.smallPadding,
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(UIConstants.shareOptionItemPadding),
-            child: Row(
-              children: [
-                Icon(
+    final theme = Theme.of(context);
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        splashColor: theme.primaryColor.withOpacity(0.1),
+        highlightColor: theme.primaryColor.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: UIConstants.settingsTileHorizontalPadding,
+            vertical: UIConstants.settingsTileVerticalPadding,
+          ),
+          child: Row(
+            children: [
+              // Leading icon
+              SizedBox(
+                width: 40,
+                height: 40,
+                child: Icon(
                   icon,
-                  size: UIConstants.shareOptionIconSize,
-                  color: colorScheme.primary,
+                  size: UIConstants.settingsTileIconSize,
+                  color: theme.colorScheme.primary,
                 ),
-                const SizedBox(width: UIConstants.mediumPadding),
-                Text(
-                  label,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyLarge?.copyWith(fontFamily: 'San Serif'),
-                ),
-              ],
-            ),
+              ),
+
+              const SizedBox(width: Spacing.md),
+
+              // Title
+              Expanded(child: Text(label, style: AppTypography.bodyLarge)),
+
+              // Trailing chevron
+              Icon(
+                Icons.chevron_right,
+                size: UIConstants.settingsTileTrailingIconSize,
+                color: theme.colorScheme.onSurface.withOpacity(0.4),
+              ),
+            ],
           ),
         ),
       ),

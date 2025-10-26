@@ -57,6 +57,7 @@ dependencies:
   printing: ^5.13.3
   screenshot: ^3.0.0
   image_gallery_saver: ^2.0.3
+  local_auth: ^2.2.0
 
 dev_dependencies:
   flutter_test:

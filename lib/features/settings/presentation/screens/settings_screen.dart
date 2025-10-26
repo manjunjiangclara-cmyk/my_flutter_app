@@ -14,7 +14,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const SettingsAppBar(),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(UIConstants.defaultPadding),
         child: Consumer<ThemeProvider>(
           builder: (context, themeProvider, child) {

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/services/journal_change_notifier.dart';
 import 'package:my_flutter_app/core/strings.dart';
+import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/date_formatter.dart';
@@ -188,10 +189,7 @@ class _ComposeScreenView extends StatelessWidget {
                       onPressed: () => Navigator.of(ctx).pop(),
                       child: const Text(AppStrings.cancel),
                     ),
-                    Text(
-                      'Select Date',
-                      style: Theme.of(ctx).textTheme.titleMedium,
-                    ),
+                    Text(AppStrings.selectDate, style: AppTypography.bodyLarge),
                     TextButton(
                       onPressed: () {
                         Navigator.of(ctx).pop();

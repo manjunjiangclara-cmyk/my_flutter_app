@@ -10,6 +10,7 @@ class AppConstants {
   static const String tokenKey = 'auth_token';
   static const String userKey = 'user_data';
   static const String themeKey = 'app_theme';
+  static const String biometricOnLaunchKey = 'biometric_on_launch';
 
   // ---------- Validation ----------
   static const int minPasswordLength = 8;
