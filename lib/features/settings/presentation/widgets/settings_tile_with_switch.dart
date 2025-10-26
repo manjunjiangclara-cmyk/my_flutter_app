@@ -3,40 +3,45 @@ import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
-/// A reusable widget for displaying settings items with a value and light dropdown arrow.
-class SettingsTileWithValue extends StatelessWidget {
+/// A reusable widget for displaying settings items with a switch.
+class SettingsTileWithSwitch extends StatelessWidget {
   /// The icon to display for this setting.
   final IconData icon;
 
   /// The title of the setting.
   final String title;
 
-  /// The current value to display on the right side.
-  final String value;
+  /// The subtitle/description of the setting (optional).
+  final String? subtitle;
 
-  /// The callback to execute when the tile is tapped.
-  final void Function(BuildContext)? onTap;
+  /// The current switch value.
+  final bool value;
 
-  /// Whether this tile is enabled (can be tapped).
+  /// The callback when the switch value changes.
+  final void Function(bool)? onChanged;
+
+  /// Whether this tile is enabled (can be toggled).
   final bool enabled;
 
-  const SettingsTileWithValue({
+  const SettingsTileWithSwitch({
     super.key,
     required this.icon,
     required this.title,
+    this.subtitle,
     required this.value,
-    this.onTap,
+    this.onChanged,
     this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: enabled ? () => onTap?.call(context) : null,
+        onTap: enabled ? () => onChanged?.call(!value) : null,
         splashColor: theme.primaryColor.withOpacity(0.1),
         highlightColor: theme.primaryColor.withOpacity(0.05),
         borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
@@ -46,6 +51,7 @@ class SettingsTileWithValue extends StatelessWidget {
             vertical: UIConstants.settingsTileVerticalPadding,
           ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Leading icon
               SizedBox(
@@ -62,42 +68,47 @@ class SettingsTileWithValue extends StatelessWidget {
 
               const SizedBox(width: Spacing.md),
 
-              // Title
+              // Title and subtitle
               Expanded(
-                child: Text(
-                  title,
-                  style: AppTypography.bodyLarge.copyWith(
-                    color: enabled
-                        ? theme.colorScheme.onSurface
-                        : theme.disabledColor,
-                  ),
-                ),
-              ),
-
-              // Value with light dropdown arrow
-              if (enabled)
-                Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      value,
+                      title,
                       style: AppTypography.bodyLarge.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                        color: enabled
+                            ? theme.colorScheme.onSurface
+                            : theme.disabledColor,
                       ),
                     ),
-                    const SizedBox(width: Spacing.xs),
-                    Transform.rotate(
-                      angle: UIConstants.lightDropdownArrowRotation,
-                      child: Icon(
-                        Icons.keyboard_arrow_down,
-                        size: UIConstants.lightDropdownArrowSize,
-                        color: theme.colorScheme.onSurface.withOpacity(
-                          UIConstants.lightDropdownArrowOpacity,
+                    if (subtitle != null) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        subtitle!,
+                        style: AppTypography.labelSmall.copyWith(
+                          color: enabled
+                              ? theme.colorScheme.onSurface.withOpacity(0.6)
+                              : theme.disabledColor,
                         ),
                       ),
-                    ),
+                    ],
                   ],
                 ),
+              ),
+
+              // Switch
+              Switch(
+                value: value,
+                onChanged: enabled ? onChanged : null,
+                activeThumbColor: theme.colorScheme.primary,
+                inactiveThumbColor: isDark
+                    ? theme.colorScheme.outline
+                    : theme.colorScheme.outline,
+                inactiveTrackColor: isDark
+                    ? theme.colorScheme.outline.withOpacity(0.3)
+                    : theme.colorScheme.outline.withOpacity(0.3),
+              ),
             ],
           ),
         ),

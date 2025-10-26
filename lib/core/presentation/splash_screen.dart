@@ -2,6 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_flutter_app/core/services/biometric_auth_service.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
@@ -58,6 +59,20 @@ class _SplashScreenState extends State<SplashScreen>
     try {
       // Wait for minimum display duration to show splash screen
       await Future.delayed(UIConstants.splashMinDisplayDuration);
+
+      // If biometric on launch is enabled, prompt user
+      final service = BiometricAuthService.instance;
+      await service.init();
+      final require = service.requireOnLaunch;
+      if (require) {
+        final success = await service.authenticate(
+          localizedReason: AppStrings.biometricUnlockReason,
+        );
+        if (!success) {
+          // Stay on splash if failed; optionally allow retry by calling again
+          return;
+        }
+      }
 
       // Navigate to main app
       if (mounted) {

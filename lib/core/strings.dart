@@ -37,6 +37,7 @@ class AppStrings {
   static const String post = 'Post';
   static const String addLocation = 'Add Location';
   static const String addTag = 'Add Tag';
+  static const String selectDate = 'Select Date';
   static const String searchTagsHint = 'Search or add tags...';
   static const String searchLocationHint = 'Search for a location...';
   static const String enterTagHint = 'Enter a tag...';
@@ -66,7 +67,7 @@ class AppStrings {
 
   // ---------- Screens: Journal ----------
   static const String location = 'Location';
-  static const String shareToApps = 'Share to apps';
+  static const String shareToApps = 'Share to Apps';
   static const String saveToPhotos = 'Save to Photos';
   static const String shareOptionsTitle = 'Share Options';
   static const String shareAsImage = 'Share as Image';
@@ -79,6 +80,9 @@ class AppStrings {
   static const String dataAndPrivacy = 'Data & Privacy';
   static const String theme = 'Theme';
   static const String notifications = 'Notifications';
+  static const String requireBiometricOnLaunch = 'Require authentication';
+  static const String biometricDescription =
+      'Sign in with Face ID when opening the app';
   static const String backupAndSync = 'Backup & Sync';
   static const String privacy = 'Privacy';
   static const String changeAppAppearance = 'Change app appearance';
@@ -115,4 +119,12 @@ class AppStrings {
   static const String splashTitle = 'Hibi';
   static const String splashSubtitle = 'Capture your memories';
   static const String splashLoading = 'Loading...';
+
+  // ---------- Biometric Auth ----------
+  static const String biometricUnlockReason = 'Unlock to continue';
+  static const String biometricUnavailable = 'Authentication unavailable';
+  static const String biometricNotEnrolled = 'No authentication method set up';
+  static const String biometricLockedOut = 'Too many attempts. Try again later';
+  static const String biometricCancel = 'Cancel';
+  static const String biometricTryAgain = 'Try Again';
 }

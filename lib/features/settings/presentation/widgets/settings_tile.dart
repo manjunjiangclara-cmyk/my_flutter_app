@@ -28,7 +28,6 @@ class SettingsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Material(
       color: Colors.transparent,
@@ -46,8 +45,8 @@ class SettingsTile extends StatelessWidget {
             children: [
               // Leading icon
               SizedBox(
-                width: 40,
-                height: 40,
+                width: UIConstants.settingsTileIconContainerSize,
+                height: UIConstants.settingsTileIconContainerSize,
                 child: Icon(
                   icon,
                   size: UIConstants.settingsTileIconSize,

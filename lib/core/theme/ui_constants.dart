@@ -428,5 +428,5 @@ class UIConstants {
   static const double settingsCardSpacing = defaultPadding;
 
   // Settings card content left padding (aligns with app bar title)
-  static const double settingsCardContentLeftPadding = defaultPadding;
+  static const double settingsCardContentLeftPadding = smallPadding;
 }

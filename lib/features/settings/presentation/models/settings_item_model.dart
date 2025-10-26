@@ -8,6 +8,9 @@ class SettingsItemModel {
   /// The title of the setting.
   final String title;
 
+  /// The subtitle/description of the setting (optional).
+  final String? subtitle;
+
   /// The current value to display (optional, for items with values).
   final String? value;
 
@@ -17,12 +20,25 @@ class SettingsItemModel {
   /// Whether this item is enabled (can be tapped).
   final bool enabled;
 
+  /// Whether this item is a switch
+  final bool isSwitch;
+
+  /// Current switch value (only used when isSwitch == true)
+  final bool? switchValue;
+
+  /// Callback when switch value changes
+  final void Function(bool)? onSwitchChanged;
+
   const SettingsItemModel({
     required this.icon,
     required this.title,
+    this.subtitle,
     this.value,
     this.onTap,
     this.enabled = true,
+    this.isSwitch = false,
+    this.switchValue,
+    this.onSwitchChanged,
   });
 }
 
