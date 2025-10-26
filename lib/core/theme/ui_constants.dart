@@ -131,7 +131,7 @@ class UIConstants {
 
   // Date Picker (Compose)
   static const int datePickerFirstYear = 1970;
-  static const int datePickerLastYear = 2100;
+  static int get datePickerLastYear => DateTime.now().year;
   static const double cupertinoDatePickerHeight = 216.0;
 
   // Image Picker
