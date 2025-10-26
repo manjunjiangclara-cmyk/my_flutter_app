@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/action_button.dart';
 
 class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onPost;
   final bool canPost;
+  final String dateText;
+  final VoidCallback? onTapDate;
 
-  const ComposeAppBar({super.key, required this.onPost, required this.canPost});
+  const ComposeAppBar({
+    super.key,
+    required this.onPost,
+    required this.canPost,
+    required this.dateText,
+    this.onTapDate,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +25,15 @@ class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: const Icon(Icons.arrow_back_ios_new),
         onPressed: () => Navigator.of(context).pop(),
       ),
-      title: Text(
-        AppStrings.sampleDate,
-        style: AppTypography.bodyLarge.copyWith(fontWeight: FontWeight.bold),
+      title: GestureDetector(
+        onTap: onTapDate,
+        child: Text(
+          dateText,
+          style: AppTypography.bodyLarge.copyWith(
+            fontWeight: FontWeight.bold,
+            decoration: TextDecoration.underline,
+          ),
+        ),
       ),
       actions: [
         ActionButton(

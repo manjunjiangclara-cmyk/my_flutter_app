@@ -22,7 +22,7 @@ class ComposeContent extends ComposeState {
   final LocationSearchResult? selectedLocation;
   final bool isPosting;
   final String? editingJournalId;
-  final DateTime? originalCreatedAt;
+  final DateTime? selectedCreatedAt;
 
   const ComposeContent({
     this.text = '',
@@ -31,7 +31,7 @@ class ComposeContent extends ComposeState {
     this.selectedLocation,
     this.isPosting = false,
     this.editingJournalId,
-    this.originalCreatedAt,
+    this.selectedCreatedAt,
   });
 
   /// Whether the compose form can be posted
@@ -50,7 +50,7 @@ class ComposeContent extends ComposeState {
     bool? isPosting,
     bool removeSelectedLocation = false,
     String? editingJournalId,
-    DateTime? originalCreatedAt,
+    DateTime? selectedCreatedAt,
   }) {
     return ComposeContent(
       text: text ?? this.text,
@@ -61,7 +61,7 @@ class ComposeContent extends ComposeState {
           : (selectedLocation ?? this.selectedLocation),
       isPosting: isPosting ?? this.isPosting,
       editingJournalId: editingJournalId ?? this.editingJournalId,
-      originalCreatedAt: originalCreatedAt ?? this.originalCreatedAt,
+      selectedCreatedAt: selectedCreatedAt ?? this.selectedCreatedAt,
     );
   }
 
@@ -73,7 +73,7 @@ class ComposeContent extends ComposeState {
     selectedLocation,
     isPosting,
     editingJournalId,
-    originalCreatedAt,
+    selectedCreatedAt,
   ];
 }
 
@@ -83,12 +83,14 @@ class ComposePosting extends ComposeState {
   final List<String> attachedPhotoPaths;
   final List<String> selectedTags;
   final LocationSearchResult? selectedLocation;
+  final DateTime? selectedCreatedAt;
 
   const ComposePosting({
     required this.text,
     required this.attachedPhotoPaths,
     required this.selectedTags,
     this.selectedLocation,
+    this.selectedCreatedAt,
   });
 
   @override
@@ -97,6 +99,7 @@ class ComposePosting extends ComposeState {
     attachedPhotoPaths,
     selectedTags,
     selectedLocation,
+    selectedCreatedAt,
   ];
 }
 

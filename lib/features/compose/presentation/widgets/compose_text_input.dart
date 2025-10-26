@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 
-class ComposeTextInput extends StatelessWidget {
+class ComposeTextInput extends StatefulWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final ValueChanged<String> onChanged;
@@ -15,12 +15,22 @@ class ComposeTextInput extends StatelessWidget {
   });
 
   @override
+  State<ComposeTextInput> createState() => _ComposeTextInputState();
+}
+
+class _ComposeTextInputState extends State<ComposeTextInput> {
+  @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: controller,
-      focusNode: focusNode,
+      controller: widget.controller,
+      focusNode: widget.focusNode,
       maxLines: null,
+      // Optimize cursor rendering
       cursorColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+      cursorWidth: 2.0,
+      // Improve text input performance
+      textInputAction: TextInputAction.newline,
+      keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
         hintText: AppStrings.composePrompt,
         hintStyle: AppTypography.bodyLarge.copyWith(
@@ -28,9 +38,11 @@ class ComposeTextInput extends StatelessWidget {
         ),
         border: InputBorder.none,
         contentPadding: EdgeInsets.zero,
+        // Remove unnecessary decorations for better performance
+        isDense: true,
       ),
       style: AppTypography.bodyLarge,
-      onChanged: onChanged,
+      onChanged: widget.onChanged,
     );
   }
 }
