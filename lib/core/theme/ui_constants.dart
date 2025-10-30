@@ -150,6 +150,12 @@ class UIConstants {
 
   static const double actionButtonIconSize = 24.0;
   static const double actionButtonPadding = 12.0;
+  // Circular action button sizing
+  static const double actionButtonDiameter = defaultButtonHeight; // 48.0
+  static const double actionButtonSplashRadius = actionButtonDiameter / 2;
+  static const double actionButtonBorderWidth = 1.0;
+  // Action button colors
+  static const double actionButtonBackgroundLerp = 0.3;
 
   static const double dialogBorderWidth = 1.0;
   static const double dialogOpacity = 0.3;
@@ -291,6 +297,13 @@ class UIConstants {
   static const double dockedBarSelectedTextOpacity = 0.8;
   static const double dockedBarUnselectedTextOpacity = 0.7;
 
+  // Docked Toolbar Sliding Indicator
+  static const double dockedBarIndicatorWidth = 24.0;
+  static const double dockedBarIndicatorHeight = 3.0;
+  static const double dockedBarIndicatorRadius = 2.0;
+  static const double dockedBarIndicatorBottomInset = 6.0;
+  static const double dockedBarIndicatorOpacity = 0.85;
+
   // LiquidGlass specific tweaks
   static const double liquidGlassUnselectedIconOpacity = 0.6;
 
@@ -363,10 +376,18 @@ class UIConstants {
   // ========== SPLASH SCREEN ==========
 
   /// Splash screen animation duration
-  static const Duration splashFadeInDuration = Duration(milliseconds: 800);
+  static const Duration splashFadeInDuration = Duration(milliseconds: 200);
+
+  /// Splash screen fade-out duration
+  static const Duration splashFadeOutDuration = Duration(milliseconds: 600);
 
   /// Splash screen display duration (minimum time to show)
-  static const Duration splashMinDisplayDuration = Duration(seconds: 1);
+  static const Duration splashMinDisplayDuration = Duration(milliseconds: 2000);
+
+  /// Splash route transition (cross-fade) duration
+  static const Duration splashRouteTransitionDuration = Duration(
+    milliseconds: 260,
+  );
 
   /// Splash screen logo size
   static const double splashLogoSize = 120.0;
@@ -378,13 +399,22 @@ class UIConstants {
   static const double splashSubtitleFontSize = 16.0;
 
   /// Splash screen loading indicator size
-  static const double splashLoadingIndicatorSize = 24.0;
+  static const double splashLoadingIndicatorSize = 40.0;
 
   /// Splash screen vertical spacing between elements
   static const double splashVerticalSpacing = 24.0;
 
   /// Splash screen horizontal padding
   static const double splashHorizontalPadding = 32.0;
+
+  /// Splash screen quote font size (short, readable)
+  static const double splashQuoteFontSize = 20.0;
+
+  /// Splash screen author font size (smaller than quote)
+  static const double splashAuthorFontSize = 14.0;
+
+  /// Splash screen quote max text width to keep lines short on wide screens
+  static const double splashQuoteMaxWidth = 320.0;
 
   // ========== SETTINGS TILES ==========
 

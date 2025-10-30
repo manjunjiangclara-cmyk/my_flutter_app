@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
+import 'package:my_flutter_app/features/settings/presentation/widgets/settings_text_styles.dart';
+import 'package:my_flutter_app/features/settings/presentation/widgets/settings_tile_helpers.dart';
 
 /// A reusable widget for displaying settings items with a switch.
 class SettingsTileWithSwitch extends StatelessWidget {
@@ -54,17 +55,7 @@ class SettingsTileWithSwitch extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Leading icon
-              SizedBox(
-                width: UIConstants.settingsTileIconContainerSize,
-                height: UIConstants.settingsTileIconContainerSize,
-                child: Icon(
-                  icon,
-                  size: UIConstants.settingsTileIconSize,
-                  color: enabled
-                      ? theme.colorScheme.primary
-                      : theme.disabledColor,
-                ),
-              ),
+              settingsLeadingIcon(context, icon: icon, enabled: enabled),
 
               const SizedBox(width: Spacing.md),
 
@@ -76,20 +67,15 @@ class SettingsTileWithSwitch extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: AppTypography.bodyLarge.copyWith(
-                        color: enabled
-                            ? theme.colorScheme.onSurface
-                            : theme.disabledColor,
-                      ),
+                      style: settingsTitleTextStyle(context, enabled: enabled),
                     ),
                     if (subtitle != null) ...[
                       const SizedBox(height: 2),
                       Text(
                         subtitle!,
-                        style: AppTypography.labelSmall.copyWith(
-                          color: enabled
-                              ? theme.colorScheme.onSurface.withOpacity(0.6)
-                              : theme.disabledColor,
+                        style: settingsSubtitleTextStyle(
+                          context,
+                          enabled: enabled,
                         ),
                       ),
                     ],

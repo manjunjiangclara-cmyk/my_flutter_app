@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/services/journal_change_notifier.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
@@ -15,7 +16,6 @@ import 'package:my_flutter_app/features/memory/presentation/strings/memory_strin
 import 'package:my_flutter_app/features/memory/presentation/widgets/memory_card.dart';
 import 'package:my_flutter_app/features/memory/presentation/widgets/month_year_header.dart';
 import 'package:my_flutter_app/features/memory/presentation/widgets/timeline_indicator.dart';
-import 'package:my_flutter_app/shared/presentation/widgets/expressive_loading_indicator.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/refresh_indicator.dart';
 
 class MemoryScreen extends StatelessWidget {
@@ -139,7 +139,11 @@ class _MemoryListState extends State<_MemoryList> {
     return BlocBuilder<MemoryBloc, MemoryState>(
       builder: (context, state) {
         if (state.isLoading) {
-          return const Center(child: ExpressiveLoadingIndicator());
+          return Center(
+            child: SpinKitRing(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          );
         }
 
         if (state.errorMessage != null) {

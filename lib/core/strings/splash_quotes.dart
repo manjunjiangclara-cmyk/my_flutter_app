@@ -1,0 +1,113 @@
+/// Splash quotes (English) focused on resilience and calm.
+class SplashQuoteStrings {
+  SplashQuoteStrings._();
+
+  /// Ultra-short quotes with authors
+  /// Keys: 'q' for quote, 'a' for author
+  static const List<Map<String, String>> splashQuotesShortWithAuthorsEn = [
+    {'q': 'Less is more.', 'a': 'Mies van der Rohe'},
+    {'q': 'Be here now.', 'a': 'Ram Dass'},
+    {'q': 'Begin anywhere.', 'a': 'John Cage'},
+    {'q': 'Know thyself.', 'a': 'Socrates'},
+    {'q': 'Act without expectation.', 'a': 'Lao Tzu'},
+    {'q': 'The obstacle is the way.', 'a': 'Marcus Aurelius'},
+    {'q': 'What you seek is seeking you.', 'a': 'Rumi'},
+    {'q': 'Stay hungry. Stay foolish.', 'a': 'Steve Jobs'},
+    {'q': 'Make it simple.', 'a': 'Hartmut Esslinger'},
+    {'q': 'The only way out is through.', 'a': 'Robert Frost'},
+    {'q': 'Silence is a source of great strength.', 'a': 'Lao Tzu'},
+    {
+      'q': 'Simplicity is the ultimate sophistication.',
+      'a': 'Leonardo da Vinci',
+    },
+    {'q': 'Less but better.', 'a': 'Dieter Rams'},
+    {'q': 'We suffer more in imagination than in reality.', 'a': 'Seneca'},
+    {'q': 'Endure and persist.', 'a': 'Ovid'},
+    {'q': 'Be water, my friend.', 'a': 'Bruce Lee'},
+    {'q': 'Still I rise.', 'a': 'Maya Angelou'},
+    {
+      'q': 'If you are going through hell, keep going.',
+      'a': 'Winston Churchill',
+    },
+    {'q': 'Peace begins with a smile.', 'a': 'Mother Teresa'},
+    {'q': 'No mud, no lotus.', 'a': 'Thich Nhat Hanh'},
+    {'q': 'Smile, breathe, and go slowly.', 'a': 'Thich Nhat Hanh'},
+    {'q': 'He who has a why can bear any how.', 'a': 'Friedrich Nietzsche'},
+    {
+      'q': 'Act as if what you do makes a difference. It does.',
+      'a': 'William James',
+    },
+    {'q': 'Let go or be dragged.', 'a': 'Zen Proverb'},
+    {'q': 'Fall seven times, stand up eight.', 'a': 'Japanese Proverb'},
+    {'q': 'Well begun is half done.', 'a': 'Aristotle'},
+    {
+      'q': 'Do what you can, with what you have, where you are.',
+      'a': 'Theodore Roosevelt',
+    },
+    {'q': 'Courage is grace under pressure.', 'a': 'Ernest Hemingway'},
+    {
+      'q': 'To be calm is the highest achievement of the self.',
+      'a': 'Zen Saying',
+    },
+    {'q': 'Patience is bitter, but its fruit is sweet.', 'a': 'Aristotle'},
+    {'q': 'Wherever you go, go with all your heart.', 'a': 'Confucius'},
+    {'q': 'Enough is as good as a feast.', 'a': 'Mary Poppins'},
+    {'q': 'Stillness is the key.', 'a': 'Ryan Holiday'},
+    {'q': 'Little by little, one travels far.', 'a': 'J. R. R. Tolkien'},
+    {'q': 'Softly, you can shake the world.', 'a': 'Mahatma Gandhi'},
+    {'q': 'Do small things with great love.', 'a': 'Mother Teresa'},
+    {'q': 'Pain is inevitable. Suffering is optional.', 'a': 'Haruki Murakami'},
+    {
+      'q': 'Adopt the pace of nature: her secret is patience.',
+      'a': 'Ralph Waldo Emerson',
+    },
+    {'q': 'The quieter you become, the more you can hear.', 'a': 'Ram Dass'},
+    {'q': 'He conquers who endures.', 'a': 'Persius'},
+    {'q': 'Make haste slowly.', 'a': 'Augustus'},
+    {
+      'q': 'Stand still. The trees ahead and bushes beside you are not lost.',
+      'a': 'David Wagoner',
+    },
+    {'q': 'The best way out is always through.', 'a': 'Robert Frost'},
+    {'q': 'Patience is also a form of action.', 'a': 'Auguste Rodin'},
+    {'q': 'Flow with whatever may happen.', 'a': 'Zhuangzi'},
+    {'q': 'Enough is plenty.', 'a': 'Unknown'},
+    {'q': 'Every day is a new beginning.', 'a': 'Unknown'},
+    {'q': 'Storms make trees take deeper roots.', 'a': 'Dolly Parton'},
+    {'q': 'Peace is always beautiful.', 'a': 'Walt Whitman'},
+    {
+      'q': 'Be kind, for everyone you meet is fighting a hard battle.',
+      'a': 'Ian Maclaren',
+    },
+    {'q': 'What you practice grows stronger.', 'a': 'Shauna Shapiro'},
+  ];
+
+  /// Ultra-short quotes without authors (fallback)
+  static const List<String> splashQuotesShortEn = [
+    'Breathe. One moment at a time.',
+    'You’re allowed to start over.',
+    'Small steps still move mountains.',
+    'Be the calm in your own storm.',
+    'Choose progress over perfection.',
+    'What you water grows.',
+    'Let today be lighter than yesterday.',
+    'Do it scared; do it anyway.',
+    'Rest is productive.',
+    'Kindness is a strategy.',
+    'Consistency beats intensity.',
+    'Your pace is perfect.',
+    'You are not your thoughts.',
+    'Let go to make room.',
+    'Gratitude turns enough into more.',
+    'Replace worry with action.',
+    'Courage is a quiet habit.',
+    'Make it simple; make it happen.',
+    'Slow is smooth. Smooth is fast.',
+    'Turn the page. Write the next line.',
+    'Calm is a choice.',
+    'Steady wins quietly.',
+    'Begin with one small step.',
+    'Move gently; move surely.',
+    'Hold your center.',
+  ];
+}

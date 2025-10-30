@@ -80,6 +80,9 @@ class AppStrings {
   static const String dataAndPrivacy = 'Data & Privacy';
   static const String theme = 'Theme';
   static const String notifications = 'Notifications';
+  static const String showSplashQuote = 'Show splash quote';
+  static const String showSplashQuoteSubtitle =
+      'Show a quote on startup and pause briefly';
   static const String requireBiometricOnLaunch = 'Require authentication';
   static const String biometricDescription =
       'Sign in with Face ID when opening the app';
@@ -119,6 +122,8 @@ class AppStrings {
   static const String splashTitle = 'Hibi';
   static const String splashSubtitle = 'Capture your memories';
   static const String splashLoading = 'Loading...';
+
+  // Splash quotes were moved to `core/strings/splash_quotes.dart`.
 
   // ---------- Biometric Auth ----------
   static const String biometricUnlockReason = 'Unlock to continue';

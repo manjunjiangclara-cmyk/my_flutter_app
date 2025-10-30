@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
@@ -10,7 +11,6 @@ import 'package:my_flutter_app/features/compose/presentation/bloc/location_picke
 import 'package:my_flutter_app/features/compose/presentation/bloc/location_picker/location_picker_state.dart';
 import 'package:my_flutter_app/features/compose/presentation/models/location_search_models.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/location/location_search_result_item.dart';
-import 'package:my_flutter_app/shared/presentation/widgets/expressive_loading_indicator.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/refresh_indicator.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/search_bar.dart';
 
@@ -147,7 +147,11 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
 
   Widget _buildContent(LocationPickerState state) {
     if (state is LocationPickerLoading) {
-      return const Center(child: ExpressiveLoadingIndicator());
+      return Center(
+        child: SpinKitRing(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
+      );
     }
 
     if (state is LocationPickerError) {
