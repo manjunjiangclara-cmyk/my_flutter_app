@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/image_path_service.dart';
-import 'package:my_flutter_app/shared/presentation/widgets/expressive_loading_indicator.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/photo_viewer.dart';
 import 'package:reorderables/reorderables.dart';
 
@@ -303,11 +303,13 @@ class _ImageGalleryState extends State<ImageGallery> {
         borderRadius: BorderRadius.circular(UIConstants.largeRadius),
         child: Container(
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          child: const Center(
+          child: Center(
             child: SizedBox(
               width: UIConstants.photoAttachmentIconSize,
               height: UIConstants.photoAttachmentIconSize,
-              child: ExpressiveLoadingIndicator(),
+              child: SpinKitRing(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
         ),

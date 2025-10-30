@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/services/biometric_auth_provider.dart';
+import 'package:my_flutter_app/core/services/splash_settings_provider.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/theme_provider.dart';
 import 'package:my_flutter_app/features/settings/presentation/models/settings_item_model.dart';
@@ -39,6 +40,16 @@ class SettingsConstants {
           value: getThemeDisplayValue(context),
           onTap: (context) {
             ThemeBottomSheet.show(context);
+          },
+        ),
+        SettingsItemModel(
+          icon: Icons.format_quote_outlined,
+          title: AppStrings.showSplashQuote,
+          subtitle: AppStrings.showSplashQuoteSubtitle,
+          isSwitch: true,
+          switchValue: context.watch<SplashSettingsProvider>().showQuote,
+          onSwitchChanged: (value) {
+            context.read<SplashSettingsProvider>().setShowQuote(value);
           },
         ),
         SettingsItemModel(

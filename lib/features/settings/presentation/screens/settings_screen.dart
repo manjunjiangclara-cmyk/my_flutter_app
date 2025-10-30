@@ -14,14 +14,23 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const SettingsAppBar(),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(UIConstants.defaultPadding),
-        child: Consumer<ThemeProvider>(
-          builder: (context, themeProvider, child) {
-            return SettingsList(
-              sections: SettingsConstants.getSettingsSections(context),
-            );
-          },
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(
+            UIConstants.defaultPadding,
+            UIConstants.defaultPadding,
+            UIConstants.defaultPadding,
+            UIConstants.defaultPadding +
+                UIConstants.dockedBarHeight +
+                UIConstants.dockedBarMargin,
+          ),
+          child: Consumer<ThemeProvider>(
+            builder: (context, themeProvider, child) {
+              return SettingsList(
+                sections: SettingsConstants.getSettingsSections(context),
+              );
+            },
+          ),
         ),
       ),
     );

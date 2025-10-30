@@ -1,13 +1,16 @@
 import 'dart:developer' as developer;
+import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_flutter_app/core/services/biometric_auth_service.dart';
+import 'package:my_flutter_app/core/services/splash_settings_provider.dart';
 import 'package:my_flutter_app/core/strings.dart';
-import 'package:my_flutter_app/core/theme/colors.dart';
+import 'package:my_flutter_app/core/strings/splash_quotes.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
-import 'package:my_flutter_app/shared/presentation/widgets/expressive_loading_indicator.dart';
+import 'package:provider/provider.dart';
 
 /// Splash screen widget that displays app branding and loading indicator
 class SplashScreen extends StatefulWidget {
@@ -23,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _scaleController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
+  late final _RandomQuote _quote;
 
   @override
   void initState() {
@@ -53,12 +57,20 @@ class _SplashScreenState extends State<SplashScreen>
     // Start animations
     _fadeController.forward();
     _scaleController.forward();
+
+    // Pick a random quote for this launch
+    _quote = _pickRandomQuote();
   }
 
   Future<void> _navigateToMainApp() async {
     try {
+      final showQuote = mounted
+          ? context.read<SplashSettingsProvider>().showQuote
+          : true;
       // Wait for minimum display duration to show splash screen
-      await Future.delayed(UIConstants.splashMinDisplayDuration);
+      if (showQuote) {
+        await Future.delayed(UIConstants.splashMinDisplayDuration);
+      }
 
       // If biometric on launch is enabled, prompt user
       final service = BiometricAuthService.instance;
@@ -74,9 +86,16 @@ class _SplashScreenState extends State<SplashScreen>
         }
       }
 
-      // Navigate to main app
+      // Graceful fade-out before navigating
       if (mounted) {
-        context.go('/');
+        await _fadeController.animateTo(
+          0.0,
+          duration: UIConstants.splashFadeOutDuration,
+          curve: Curves.easeInOut,
+        );
+        if (mounted) {
+          context.go('/');
+        }
       }
     } catch (e) {
       developer.log(
@@ -85,7 +104,14 @@ class _SplashScreenState extends State<SplashScreen>
       );
       // Still navigate even if there's an error
       if (mounted) {
-        context.go('/');
+        await _fadeController.animateTo(
+          0.0,
+          duration: UIConstants.splashFadeOutDuration,
+          curve: Curves.easeInOut,
+        );
+        if (mounted) {
+          context.go('/');
+        }
       }
     }
   }
@@ -100,103 +126,82 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
+    final colorScheme = theme.colorScheme;
     return Scaffold(
-      backgroundColor: isDark
-          ? AppColors.backgroundDark
-          : AppColors.backgroundLight,
+      backgroundColor: colorScheme.surface,
       body: Center(
         child: AnimatedBuilder(
           animation: Listenable.merge([_fadeAnimation, _scaleAnimation]),
           builder: (context, child) {
             return FadeTransition(
               opacity: _fadeAnimation,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // App Logo/Icon
-                  Transform.scale(
-                    scale: _scaleAnimation.value,
-                    child: Container(
-                      width: UIConstants.splashLogoSize,
-                      height: UIConstants.splashLogoSize,
-                      decoration: BoxDecoration(
-                        color: isDark
-                            ? AppColors.accentDark
-                            : AppColors.accentLight,
-                        borderRadius: BorderRadius.circular(
-                          UIConstants.largeRadius,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color:
-                                (isDark
-                                        ? AppColors.accentDark
-                                        : AppColors.accentLight)
-                                    .withValues(alpha: 0.3),
-                            blurRadius: 20,
-                            spreadRadius: 5,
-                          ),
-                        ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: UIConstants.splashHorizontalPadding,
+                ),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: UIConstants.splashQuoteMaxWidth,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Quote text (conditionally shown)
+                      Consumer<SplashSettingsProvider>(
+                        builder: (context, splashSettings, _) {
+                          if (!splashSettings.showQuote) {
+                            return const SizedBox.shrink();
+                          }
+                          return Text(
+                            _quote.text,
+                            textAlign: TextAlign.center,
+                            style: AppTypography.bodyLarge.copyWith(
+                              fontSize: UIConstants.splashQuoteFontSize,
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.w600,
+                              height: 1.3,
+                            ),
+                          );
+                        },
                       ),
-                      child: Icon(
-                        Icons.auto_stories_rounded,
-                        size: UIConstants.splashLogoSize * 0.6,
-                        color: Colors.white,
+
+                      Consumer<SplashSettingsProvider>(
+                        builder: (context, splashSettings, _) {
+                          if (!splashSettings.showQuote) {
+                            return const SizedBox.shrink();
+                          }
+                          if (_quote.author != null &&
+                              _quote.author!.isNotEmpty) {
+                            return Column(
+                              children: [
+                                SizedBox(height: UIConstants.smallPadding),
+                                Text(
+                                  '— ${_quote.author!}',
+                                  textAlign: TextAlign.center,
+                                  style: AppTypography.bodyMedium.copyWith(
+                                    fontSize: UIConstants.splashAuthorFontSize,
+                                    color: colorScheme.onSurfaceVariant,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
                       ),
-                    ),
+
+                      SizedBox(height: UIConstants.splashVerticalSpacing * 1.5),
+
+                      // Loading Indicator
+                      SpinKitDoubleBounce(
+                        color: colorScheme.primary,
+                        size: UIConstants.splashLoadingIndicatorSize,
+                      ),
+                    ],
                   ),
-
-                  SizedBox(height: UIConstants.splashVerticalSpacing),
-
-                  // App Title
-                  Text(
-                    AppStrings.splashTitle,
-                    style: AppTypography.displayLarge.copyWith(
-                      fontSize: UIConstants.splashTitleFontSize,
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : AppColors.textPrimaryLight,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  SizedBox(height: UIConstants.smallPadding),
-
-                  // App Subtitle
-                  Text(
-                    AppStrings.splashSubtitle,
-                    style: AppTypography.bodyLarge.copyWith(
-                      fontSize: UIConstants.splashSubtitleFontSize,
-                      color: isDark
-                          ? AppColors.textSecondaryDark
-                          : AppColors.textSecondaryLight,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-
-                  SizedBox(height: UIConstants.splashVerticalSpacing * 1.5),
-
-                  // Loading Indicator
-                  SizedBox(
-                    width: UIConstants.splashLoadingIndicatorSize,
-                    height: UIConstants.splashLoadingIndicatorSize,
-                    child: const ExpressiveLoadingIndicator(),
-                  ),
-
-                  SizedBox(height: UIConstants.mediumPadding),
-
-                  // Loading Text
-                  Text(
-                    AppStrings.splashLoading,
-                    style: AppTypography.labelMedium.copyWith(
-                      color: isDark
-                          ? AppColors.textSecondaryDark
-                          : AppColors.textSecondaryLight,
-                    ),
-                  ),
-                ],
+                ),
               ),
             );
           },
@@ -204,4 +209,38 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
   }
+}
+
+class _RandomQuote {
+  final String text;
+  final String? author;
+  const _RandomQuote(this.text, [this.author]);
+}
+
+_RandomQuote _pickRandomQuote() {
+  final random = Random();
+  const double authorQuoteProbability = 0.75;
+  final useWithAuthor = random.nextDouble() < authorQuoteProbability;
+  if (useWithAuthor &&
+      SplashQuoteStrings.splashQuotesShortWithAuthorsEn.isNotEmpty) {
+    final pair =
+        SplashQuoteStrings.splashQuotesShortWithAuthorsEn[random.nextInt(
+          SplashQuoteStrings.splashQuotesShortWithAuthorsEn.length,
+        )];
+    final text = pair['q'] ?? '';
+    final author = pair['a'] ?? '';
+    if (text.isNotEmpty) {
+      return _RandomQuote(text, author);
+    }
+  }
+  // Fallback to authorless quotes
+  if (SplashQuoteStrings.splashQuotesShortEn.isNotEmpty) {
+    final text =
+        SplashQuoteStrings.splashQuotesShortEn[random.nextInt(
+          SplashQuoteStrings.splashQuotesShortEn.length,
+        )];
+    return _RandomQuote(text);
+  }
+  // Ultimate fallback to previous strings
+  return _RandomQuote(AppStrings.splashSubtitle);
 }

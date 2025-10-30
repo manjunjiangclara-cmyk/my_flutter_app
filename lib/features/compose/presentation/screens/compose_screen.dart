@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/services/journal_change_notifier.dart';
 import 'package:my_flutter_app/core/strings.dart';
@@ -21,7 +22,6 @@ import 'package:my_flutter_app/features/compose/presentation/widgets/compose_tex
 import 'package:my_flutter_app/features/compose/presentation/widgets/location/location_chip.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/photo/photo_attachments.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/tags/tag_picker_bottom_sheet.dart';
-import 'package:my_flutter_app/shared/presentation/widgets/expressive_loading_indicator.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/tag_chip.dart';
 
 /// Main compose screen with improved organization and tap-to-edit functionality
@@ -453,12 +453,14 @@ class _PostingIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(Spacing.md),
-      child: const Row(
+      child: Row(
         children: [
           SizedBox(
             width: ComposeConstants.postingIndicatorSize,
             height: ComposeConstants.postingIndicatorSize,
-            child: ExpressiveLoadingIndicator(),
+            child: SpinKitRing(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
           SizedBox(width: Spacing.sm),
           Text(ComposeStrings.postingMemory),

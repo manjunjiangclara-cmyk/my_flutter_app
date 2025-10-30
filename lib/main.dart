@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/router/router_exports.dart';
 import 'package:my_flutter_app/core/services/biometric_auth_provider.dart';
+import 'package:my_flutter_app/core/services/splash_settings_provider.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/colors.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
@@ -14,7 +15,6 @@ import 'package:my_flutter_app/core/theme/theme_provider.dart';
 import 'package:my_flutter_app/core/utils/date_formatter.dart';
 import 'package:my_flutter_app/core/utils/error_handler.dart';
 import 'package:my_flutter_app/core/utils/image_path_service.dart';
-import 'package:my_flutter_app/shared/presentation/widgets/expressive_loading_indicator.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -110,11 +110,12 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // Don't show any loading - router will show splash screen immediately
     if (!_isInitialized) {
-      return MaterialApp(
+      return const MaterialApp(
         debugShowCheckedModeBanner: false,
         title: AppStrings.appName,
-        home: const Scaffold(body: Center(child: ExpressiveLoadingIndicator())),
+        home: Scaffold(body: Center(child: SizedBox.shrink())),
       );
     }
 
@@ -123,6 +124,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => getIt<AppTabController>()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => BiometricAuthProvider()),
+        ChangeNotifierProvider(create: (context) => SplashSettingsProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:my_flutter_app/core/theme/spacings.dart';
-import 'package:my_flutter_app/shared/presentation/widgets/expressive_loading_indicator.dart';
 
 /// Loading state widget for journal view
 class JournalLoadingState extends StatelessWidget {
@@ -8,12 +8,12 @@ class JournalLoadingState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ExpressiveLoadingIndicator(),
+            SpinKitRing(color: Theme.of(context).colorScheme.onSurfaceVariant),
             SizedBox(height: Spacing.md),
             Text('Loading journal...'),
           ],
