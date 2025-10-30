@@ -27,10 +27,30 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
   List<Widget>? _pages;
   bool _isToolbarVisible = true;
   double _elevationT = 0.0;
+  late final PageController _pageController;
+  double _pageProgress = 0.0;
+  bool _scrollListenerAttached = false;
 
   @override
   void initState() {
     super.initState();
+    _pageController = PageController(initialPage: 0);
+    _pageProgress = 0.0;
+    _pageController.addListener(() {
+      final double? p = _pageController.hasClients
+          ? _pageController.page
+          : null;
+      if (p != null) {
+        // Update only when it changes meaningfully to avoid rebuild churn
+        if ((_pageProgress - p).abs() > 0.001) {
+          setState(() => _pageProgress = p);
+        }
+      }
+    });
+    // Attach isScrolling listener after first frame when position is available
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _attachScrollStateListenerIfNeeded();
+    });
   }
   // We use NotificationListener to detect scroll direction across nested scrollables
 
@@ -63,6 +83,41 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
       const SettingsScreen(),
     ];
     return _pages!;
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _attachScrollStateListenerIfNeeded() {
+    if (!_pageController.hasClients || _scrollListenerAttached) return;
+    try {
+      _pageController.position.isScrollingNotifier.addListener(
+        _onScrollStateChanged,
+      );
+      _scrollListenerAttached = true;
+    } catch (_) {
+      // Position might not be ready yet; retry next frame
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _attachScrollStateListenerIfNeeded();
+      });
+    }
+  }
+
+  void _onScrollStateChanged() {
+    // When scrolling stops, snap the tab index to the final page only
+    if (!_pageController.position.isScrollingNotifier.value) {
+      final double? page = _pageController.page;
+      if (page != null) {
+        final int finalIndex = page.round();
+        final appTabs = Provider.of<AppTabController>(context, listen: false);
+        if (finalIndex != appTabs.currentIndex) {
+          appTabs.setIndex(finalIndex);
+        }
+      }
+    }
   }
 
   @override
@@ -107,10 +162,7 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
                     },
                     child: Stack(
                       children: [
-                        IndexedStack(
-                          index: tabController.currentIndex,
-                          children: pages,
-                        ),
+                        PageView(controller: _pageController, children: pages),
                         Positioned.fill(
                           child: IgnorePointer(
                             ignoring: true,
@@ -153,11 +205,22 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
                                 ],
                                 currentIndex: tabController.currentIndex,
                                 onTap: (int index) {
-                                  tabController.setIndex(index);
+                                  // Animate to the requested page; AppTabController syncs in onPageChanged
+                                  if (_pageController.hasClients) {
+                                    _pageController.animateToPage(
+                                      index,
+                                      duration: UIConstants.defaultAnimation,
+                                      curve: Curves.easeInOutCubic,
+                                    );
+                                  }
                                 },
                                 isVisible: _isToolbarVisible,
                                 elevationT: _elevationT,
                                 useLiquidGlass: tabController.currentIndex == 0,
+                                selectedProgress: _pageController.hasClients
+                                    ? (_pageController.page ??
+                                          tabController.currentIndex.toDouble())
+                                    : tabController.currentIndex.toDouble(),
                               ),
                             ),
                           ),

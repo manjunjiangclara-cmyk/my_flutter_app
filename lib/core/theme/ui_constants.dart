@@ -297,6 +297,13 @@ class UIConstants {
   static const double dockedBarSelectedTextOpacity = 0.8;
   static const double dockedBarUnselectedTextOpacity = 0.7;
 
+  // Docked Toolbar Sliding Indicator
+  static const double dockedBarIndicatorWidth = 24.0;
+  static const double dockedBarIndicatorHeight = 3.0;
+  static const double dockedBarIndicatorRadius = 2.0;
+  static const double dockedBarIndicatorBottomInset = 6.0;
+  static const double dockedBarIndicatorOpacity = 0.85;
+
   // LiquidGlass specific tweaks
   static const double liquidGlassUnselectedIconOpacity = 0.6;
 

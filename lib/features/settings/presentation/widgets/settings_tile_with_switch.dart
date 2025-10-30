@@ -55,11 +55,7 @@ class SettingsTileWithSwitch extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Leading icon
-              settingsLeadingIcon(
-                context,
-                icon: icon,
-                enabled: enabled,
-              ),
+              settingsLeadingIcon(context, icon: icon, enabled: enabled),
 
               const SizedBox(width: Spacing.md),
 

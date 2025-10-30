@@ -18,12 +18,14 @@ class DockedToolbar extends StatelessWidget {
   final bool isVisible;
   final double elevationT;
   final bool useLiquidGlass;
+  final double selectedProgress;
 
   const DockedToolbar({
     super.key,
     required this.items,
     required this.currentIndex,
     required this.onTap,
+    required this.selectedProgress,
     this.isVisible = true,
     this.elevationT = 0.0,
     this.useLiquidGlass = false,
@@ -125,6 +127,7 @@ class DockedToolbar extends StatelessWidget {
                   child: useLiquidGlass
                       ? LiquidGlassToolbar(
                           selectedIndex: currentIndex,
+                          selectedProgress: selectedProgress,
                           onButtonTap: (index) {
                             HapticFeedback.lightImpact();
                             onTap(index);

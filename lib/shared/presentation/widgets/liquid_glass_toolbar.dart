@@ -8,10 +8,12 @@ class LiquidGlassToolbar extends StatefulWidget {
   final int selectedIndex;
   final ValueChanged<int>? onButtonTap;
   final List<IconData>? icons;
+  final double selectedProgress;
 
   const LiquidGlassToolbar({
     super.key,
     required this.selectedIndex,
+    required this.selectedProgress,
     this.onButtonTap,
     this.icons,
   });
