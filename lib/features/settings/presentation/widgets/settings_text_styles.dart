@@ -7,7 +7,7 @@ TextStyle settingsTitleTextStyle(
 }) {
   final theme = Theme.of(context);
   return AppTypography.labelMedium.copyWith(
-    color: enabled ? theme.colorScheme.onSurface : theme.disabledColor,
+    color: enabled ? theme.colorScheme.onSurfaceVariant : theme.disabledColor,
   );
 }
 

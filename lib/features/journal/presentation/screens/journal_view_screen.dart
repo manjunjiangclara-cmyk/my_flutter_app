@@ -139,9 +139,9 @@ class _JournalViewContent extends StatefulWidget {
 
 class _JournalViewContentState extends State<_JournalViewContent> {
   bool _isAppBarVisible = false;
+  bool _isSharing = false;
   final ScreenshotController _screenshotController = ScreenshotController();
   final GlobalKey _captureKey = GlobalKey();
-  bool _isSharing = false;
 
   void _toggleAppBar() {
     HapticFeedback.lightImpact();
@@ -178,15 +178,7 @@ class _JournalViewContentState extends State<_JournalViewContent> {
             onClose: () => NavigationHelper.goBack(context),
             onEdit: widget.onEdit,
             onDelete: widget.onDelete,
-            onShareTap: () async {
-              final selected = await ShareOptionsBottomSheet.show(context);
-              if (selected == null) return;
-              if (selected == ShareOption.shareToApps) {
-                await _captureAndShare(context);
-              } else if (selected == ShareOption.saveToPhotos) {
-                await _captureAndSave(context);
-              }
-            },
+            onShareTap: () => _handleShareTap(context),
           ),
 
           if (_isSharing) ...[
@@ -212,7 +204,18 @@ class _JournalViewContentState extends State<_JournalViewContent> {
     return scaffold;
   }
 
-  Future<void> _captureAndShare(BuildContext context) async {
+  Future<void> _handleShareTap(BuildContext context) async {
+    final selected = await ShareOptionsBottomSheet.show(context);
+    if (selected == null) return;
+
+    if (selected == ShareOption.shareToApps) {
+      await _shareToApps(context);
+    } else if (selected == ShareOption.saveToPhotos) {
+      await _saveToPhotos(context);
+    }
+  }
+
+  Future<void> _shareToApps(BuildContext context) async {
     try {
       setState(() {
         _isSharing = true;
@@ -248,7 +251,7 @@ class _JournalViewContentState extends State<_JournalViewContent> {
     }
   }
 
-  Future<void> _captureAndSave(BuildContext context) async {
+  Future<void> _saveToPhotos(BuildContext context) async {
     try {
       setState(() {
         _isSharing = true;

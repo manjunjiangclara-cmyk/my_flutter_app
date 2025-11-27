@@ -21,6 +21,8 @@ class AppColors {
   // Text
   static const Color textPrimaryLight = Color(0xFF5A4A3A);
   static const Color textSecondaryLight = Color(0xFF666666);
+  // Dark gray with subtle warm accent tint (90% gray + 10% accent)
+  static const Color onSurfaceVariantLight = Color(0xFF5A5552);
 
   // Containers (light) — very light grey
   static const Color primaryContainerLight = Color(0xFFFAFAFA);
@@ -46,6 +48,8 @@ class AppColors {
   // Text
   static const Color textPrimaryDark = Color(0xFFE8D5C7);
   static const Color textSecondaryDark = Color(0xFFB0B0B0);
+  // Medium gray with subtle warm accent tint (90% gray + 10% accent)
+  static const Color onSurfaceVariantDark = Color(0xFFA09994);
 
   // Containers (dark) — dark grey
   static const Color primaryContainerDark = Color(0xFF2A2A2A);
@@ -53,16 +57,6 @@ class AppColors {
 
   // Button background (dark) — Color.lerp(grey[800], surface, 0.3) ≈ #2C2C2C
   static const Color buttonBackgroundDark = Color(0xFF2C2C2C);
-
-  // ========== LEGACY SUPPORT (for backward compatibility) ==========
-  static const Color primary = primaryLight;
-  static const Color background = backgroundLight;
-  static const Color border = borderLight;
-  static const Color accent = accentLight;
-  static const Color success = successLight;
-  static const Color error = errorLight;
-  static const Color textPrimary = textPrimaryLight;
-  static const Color textSecondary = textSecondaryLight;
 
   // Subtle shadow tint that blends a hint of primary into shadows
   static const Color shadowTint = Color(0xFF19120E);
@@ -97,7 +91,7 @@ class AppColors {
     surface: surfaceLight,
     onSurface: textPrimaryLight,
     surfaceContainerHighest: surfaceLight,
-    onSurfaceVariant: textSecondaryLight,
+    onSurfaceVariant: onSurfaceVariantLight,
     outline: borderLight,
     error: errorLight,
     onError: Colors.white,
@@ -116,7 +110,7 @@ class AppColors {
     surface: surfaceDark,
     onSurface: textPrimaryDark,
     surfaceContainerHighest: surfaceDark,
-    onSurfaceVariant: textSecondaryDark,
+    onSurfaceVariant: onSurfaceVariantDark,
     outline: borderDark,
     error: errorDark,
     onError: Colors.white,
