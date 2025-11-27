@@ -430,6 +430,9 @@ class UIConstants {
   /// Settings tile icon size
   static const double settingsTileIconSize = 24.0;
 
+  /// Settings tile icon background opacity
+  static const double settingsTileIconBackgroundOpacity = 0.15;
+
   /// Settings tile trailing icon size
   static const double settingsTileTrailingIconSize = 16.0;
 

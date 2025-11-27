@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
@@ -143,6 +144,7 @@ class _JournalViewContentState extends State<_JournalViewContent> {
   bool _isSharing = false;
 
   void _toggleAppBar() {
+    HapticFeedback.lightImpact();
     setState(() {
       _isAppBarVisible = !_isAppBarVisible;
     });

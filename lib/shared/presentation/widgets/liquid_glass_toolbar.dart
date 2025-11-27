@@ -23,22 +23,6 @@ class LiquidGlassToolbar extends StatefulWidget {
 }
 
 class _LiquidGlassToolbarState extends State<LiquidGlassToolbar> {
-  int _selectedIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.selectedIndex;
-  }
-
-  @override
-  void didUpdateWidget(LiquidGlassToolbar oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.selectedIndex != oldWidget.selectedIndex) {
-      _selectedIndex = widget.selectedIndex;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -134,14 +118,14 @@ class _LiquidGlassToolbarState extends State<LiquidGlassToolbar> {
   }
 
   Widget _buildButton(IconData icon, int index) {
-    final isSelected = index == _selectedIndex;
+    // Use selectedProgress to determine selection state during swipe
+    // Round to nearest index for selection, but allow smooth transitions
+    final int progressIndex = widget.selectedProgress.round().clamp(0, 2);
+    final isSelected = index == progressIndex;
     final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _selectedIndex = index;
-        });
         widget.onButtonTap?.call(index);
       },
       child: Container(

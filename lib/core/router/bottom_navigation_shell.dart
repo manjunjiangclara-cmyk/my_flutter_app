@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/router/tab_controller.dart';
@@ -30,17 +31,26 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
   late final PageController _pageController;
   double _pageProgress = 0.0;
   bool _scrollListenerAttached = false;
+  int _previousRoundedPage = 0;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
     _pageProgress = 0.0;
+    _previousRoundedPage = 0;
     _pageController.addListener(() {
       final double? p = _pageController.hasClients
           ? _pageController.page
           : null;
       if (p != null) {
+        // Detect when page crosses an integer boundary (screen transition)
+        final int currentRoundedPage = p.round();
+        if (currentRoundedPage != _previousRoundedPage) {
+          // Trigger haptic feedback when crossing screen boundaries
+          HapticFeedback.mediumImpact();
+          _previousRoundedPage = currentRoundedPage;
+        }
         // Update only when it changes meaningfully to avoid rebuild churn
         if ((_pageProgress - p).abs() > 0.001) {
           setState(() => _pageProgress = p);
@@ -55,6 +65,48 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
   // We use NotificationListener to detect scroll direction across nested scrollables
 
   void _handleUserScroll(UserScrollNotification notification) {
+    // Check if PageView is currently scrolling/swiping
+    final bool isPageViewScrolling =
+        _pageController.hasClients &&
+        _pageController.position.isScrollingNotifier.value;
+
+    // Check if we're in the middle of a page transition by examining page progress
+    // If page progress is not close to an integer, we're transitioning
+    final double distanceFromNearestInteger =
+        (_pageProgress - _pageProgress.round()).abs();
+    final bool isTransitioning = distanceFromNearestInteger > 0.1;
+
+    // If PageView is scrolling or transitioning, don't process scroll notifications
+    // to avoid hiding toolbar during page transitions
+    if (isPageViewScrolling || isTransitioning) {
+      // Ensure toolbar stays visible during page transitions
+      if (!_isToolbarVisible) {
+        setState(() => _isToolbarVisible = true);
+      }
+      return;
+    }
+
+    // Only handle scroll-based toolbar visibility on the first page (memory screen)
+    // to avoid hiding toolbar when swiping between pages
+    final double? currentPage =
+        _pageController.hasClients && _pageController.page != null
+        ? _pageController.page
+        : 0.0;
+
+    // Check if we're exactly on the first page (not transitioning)
+    // Use a small threshold to account for floating point precision
+    final bool isOnFirstPage =
+        currentPage != null && (currentPage - 0.0).abs() < 0.1;
+
+    // Only process scroll notifications when exactly on the first page
+    if (!isOnFirstPage) {
+      // Always show toolbar when not on first page
+      if (!_isToolbarVisible) {
+        setState(() => _isToolbarVisible = true);
+      }
+      return;
+    }
+
     final direction = notification.direction;
     if (direction == ScrollDirection.reverse && _isToolbarVisible) {
       setState(() => _isToolbarVisible = false);
@@ -115,6 +167,10 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
         final appTabs = Provider.of<AppTabController>(context, listen: false);
         if (finalIndex != appTabs.currentIndex) {
           appTabs.setIndex(finalIndex);
+        }
+        // Ensure toolbar is visible when not on first page
+        if (finalIndex != 0 && !_isToolbarVisible) {
+          setState(() => _isToolbarVisible = true);
         }
       }
     }
@@ -216,7 +272,7 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
                                 },
                                 isVisible: _isToolbarVisible,
                                 elevationT: _elevationT,
-                                useLiquidGlass: tabController.currentIndex == 0,
+                                useLiquidGlass: true,
                                 selectedProgress: _pageController.hasClients
                                     ? (_pageController.page ??
                                           tabController.currentIndex.toDouble())

@@ -170,16 +170,10 @@ class ActionButton extends StatelessWidget {
             padding: effectivePadding,
             decoration: BoxDecoration(
               color: enabled
-                  ? Color.lerp(
-                      Colors.grey[100]!,
-                      Theme.of(context).colorScheme.surface,
-                      0.3,
-                    )
-                  : Color.lerp(
-                      Colors.grey[100]!,
-                      Theme.of(context).colorScheme.surface,
-                      0.3,
-                    )!.withValues(alpha: 0.5),
+                  ? Theme.of(context).colorScheme.secondary
+                  : Theme.of(
+                      context,
+                    ).colorScheme.secondary.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
             child: iconWidget,

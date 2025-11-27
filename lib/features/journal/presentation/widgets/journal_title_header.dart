@@ -6,12 +6,12 @@ import 'package:my_flutter_app/features/journal/presentation/strings/journal_str
 import 'package:my_flutter_app/shared/presentation/widgets/location_chip_display.dart';
 
 /// Event details header widget for journal view
-class JournalEventDetails extends StatelessWidget {
+class JournalTitleHeader extends StatelessWidget {
   final String date;
   final String? location;
   final List<String> locationTypes;
 
-  const JournalEventDetails({
+  const JournalTitleHeader({
     super.key,
     required this.date,
     this.location,
@@ -43,6 +43,4 @@ class JournalEventDetails extends StatelessWidget {
       ],
     );
   }
-
-  // Removed private chip builder in favor of shared `LocationChipDisplay`.
 }

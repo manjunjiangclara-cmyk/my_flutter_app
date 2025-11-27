@@ -2,7 +2,6 @@ import 'dart:developer' as developer;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_flutter_app/core/services/biometric_auth_service.dart';
 import 'package:my_flutter_app/core/services/splash_settings_provider.dart';
@@ -12,7 +11,7 @@ import 'package:my_flutter_app/core/theme/fonts.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:provider/provider.dart';
 
-/// Splash screen widget that displays app branding and loading indicator
+/// Splash screen widget that displays app icon and optional quote
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -147,21 +146,37 @@ class _SplashScreenState extends State<SplashScreen>
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Quote text (conditionally shown)
+                      // App Icon with scale animation
+                      ScaleTransition(
+                        scale: _scaleAnimation,
+                        child: Image.asset(
+                          AppStrings.splashAppIconPath,
+                          width: UIConstants.splashLogoSize,
+                          height: UIConstants.splashLogoSize,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+
+                      // Quote text (conditionally shown below icon)
                       Consumer<SplashSettingsProvider>(
                         builder: (context, splashSettings, _) {
                           if (!splashSettings.showQuote) {
                             return const SizedBox.shrink();
                           }
-                          return Text(
-                            _quote.text,
-                            textAlign: TextAlign.center,
-                            style: AppTypography.bodyLarge.copyWith(
-                              fontSize: UIConstants.splashQuoteFontSize,
-                              color: colorScheme.onSurface,
-                              fontWeight: FontWeight.w600,
-                              height: 1.3,
-                            ),
+                          return Column(
+                            children: [
+                              SizedBox(height: UIConstants.splashVerticalSpacing * 1.5),
+                              Text(
+                                _quote.text,
+                                textAlign: TextAlign.center,
+                                style: AppTypography.bodyLarge.copyWith(
+                                  fontSize: UIConstants.splashQuoteFontSize,
+                                  color: colorScheme.onSurface,
+                                  fontWeight: FontWeight.w600,
+                                  height: 1.3,
+                                ),
+                              ),
+                            ],
                           );
                         },
                       ),
@@ -190,14 +205,6 @@ class _SplashScreenState extends State<SplashScreen>
                           }
                           return const SizedBox.shrink();
                         },
-                      ),
-
-                      SizedBox(height: UIConstants.splashVerticalSpacing * 1.5),
-
-                      // Loading Indicator
-                      SpinKitDoubleBounce(
-                        color: colorScheme.primary,
-                        size: UIConstants.splashLoadingIndicatorSize,
                       ),
                     ],
                   ),

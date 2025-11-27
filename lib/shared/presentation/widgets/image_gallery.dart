@@ -194,6 +194,7 @@ class _ImageGalleryState extends State<ImageGallery> {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.zero,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: effectiveCrossAxisCount,
         crossAxisSpacing: widget.config.crossAxisSpacing,
@@ -265,6 +266,7 @@ class _ImageGalleryState extends State<ImageGallery> {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.zero,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: _effectiveCrossAxisCount(filteredPaths.length),
         crossAxisSpacing: widget.config.crossAxisSpacing,

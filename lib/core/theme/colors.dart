@@ -22,9 +22,12 @@ class AppColors {
   static const Color textPrimaryLight = Color(0xFF5A4A3A);
   static const Color textSecondaryLight = Color(0xFF666666);
 
-  // Containers (light) — almost white with subtle warm tint
-  static const Color primaryContainerLight = Color(0xFFFDF9F6);
+  // Containers (light) — very light grey
+  static const Color primaryContainerLight = Color(0xFFFAFAFA);
   static const Color onPrimaryContainerLight = textPrimaryLight;
+
+  // Button background (light) — Color.lerp(grey[100], surface, 0.3) ≈ #F8F8F8
+  static const Color buttonBackgroundLight = Color(0xFFF8F8F8);
 
   // ========== DARK MODE COLORS ==========
 
@@ -44,11 +47,12 @@ class AppColors {
   static const Color textPrimaryDark = Color(0xFFE8D5C7);
   static const Color textSecondaryDark = Color(0xFFB0B0B0);
 
-  // Containers (dark) — same as memory cards in dark mode
-  static const Color primaryContainerDark = Color(
-    0xFF252525,
-  ); // surfaceDark + 6% white
-  static const Color onPrimaryContainerDark = Color(0xFFF5E6D9);
+  // Containers (dark) — dark grey
+  static const Color primaryContainerDark = Color(0xFF2A2A2A);
+  static const Color onPrimaryContainerDark = textPrimaryDark;
+
+  // Button background (dark) — Color.lerp(grey[800], surface, 0.3) ≈ #2C2C2C
+  static const Color buttonBackgroundDark = Color(0xFF2C2C2C);
 
   // ========== LEGACY SUPPORT (for backward compatibility) ==========
   static const Color primary = primaryLight;
@@ -86,7 +90,7 @@ class AppColors {
     onPrimary: Colors.white,
     primaryContainer: primaryContainerLight,
     onPrimaryContainer: onPrimaryContainerLight,
-    secondary: primaryLight,
+    secondary: buttonBackgroundLight,
     onSecondary: textPrimaryLight,
     tertiary: accentAltLight,
     onTertiary: Colors.white,
@@ -105,8 +109,8 @@ class AppColors {
     onPrimary: Colors.white,
     primaryContainer: primaryContainerDark,
     onPrimaryContainer: onPrimaryContainerDark,
-    secondary: accentAltDark,
-    onSecondary: Colors.white,
+    secondary: buttonBackgroundDark,
+    onSecondary: textPrimaryDark,
     tertiary: accentAltDark,
     onTertiary: Colors.white,
     surface: surfaceDark,
