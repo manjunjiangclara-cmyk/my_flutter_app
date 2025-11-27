@@ -42,6 +42,7 @@ class ComposeActionButtons extends StatelessWidget {
               tooltip: 'Add Photo',
               diameter: UIConstants.actionButtonDiameter,
               borderWidth: UIConstants.actionButtonBorderWidth,
+              enableInnerGlow: true,
             ),
             const SizedBox(width: Spacing.lg),
             RoundIconButton(
@@ -50,6 +51,7 @@ class ComposeActionButtons extends StatelessWidget {
               tooltip: 'Add Location',
               diameter: UIConstants.actionButtonDiameter,
               borderWidth: UIConstants.actionButtonBorderWidth,
+              enableInnerGlow: true,
             ),
             const SizedBox(width: Spacing.lg),
             RoundIconButton(
@@ -58,6 +60,7 @@ class ComposeActionButtons extends StatelessWidget {
               tooltip: 'Add Tag',
               diameter: UIConstants.actionButtonDiameter,
               borderWidth: UIConstants.actionButtonBorderWidth,
+              enableInnerGlow: true,
             ),
             const Spacer(),
           ],

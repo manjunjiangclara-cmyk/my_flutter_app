@@ -49,6 +49,7 @@ class _MonthYearHeaderState extends State<MonthYearHeader> {
                   widget.monthYear,
                   style: AppTypography.labelLarge.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
@@ -57,7 +58,9 @@ class _MonthYearHeaderState extends State<MonthYearHeader> {
                 duration: const Duration(milliseconds: 200),
                 child: Icon(
                   Icons.keyboard_arrow_down,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.6),
                 ),
               ),
             ],

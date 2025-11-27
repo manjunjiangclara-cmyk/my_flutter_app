@@ -140,7 +140,6 @@ class UIConstants {
   static const int maxImageSizeMB = 10;
   static const int maxImageSizeBytes = maxImageSizeMB * 1024 * 1024;
 
-  static const double locationIconSize = 16.0;
   static const double tagCloseIconSize = 14.0;
   static const double tagCloseIconSpacing = 4.0;
 
@@ -156,6 +155,10 @@ class UIConstants {
   static const double actionButtonBorderWidth = 1.0;
   // Action button colors
   static const double actionButtonBackgroundLerp = 0.3;
+  // Action button inner glow
+  static const double actionButtonInnerGlowBlur = 6.0;
+  static const double actionButtonInnerGlowSpread = -3.0;
+  static const double actionButtonInnerGlowOpacity = 0.25;
 
   static const double dialogBorderWidth = 1.0;
   static const double dialogOpacity = 0.3;
@@ -193,6 +196,8 @@ class UIConstants {
   static const double journalAppBarIconSize = 24.0;
   static const double journalAppBarIconSizeSmall = 20.0;
   static const double journalAppBarIconPadding = 12.0;
+  static const double journalAppBarOverlayButtonDiameter = 48.0;
+  static const double journalAppBarOverlayButtonSpacing = 20.0;
   static const double journalContentPadding = 16.0;
   static const double journalAppBarOverlayOpacity = 0.8;
   static const double journalAppBarGradientStartOpacity = 0.5;

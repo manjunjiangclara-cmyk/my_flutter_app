@@ -12,6 +12,7 @@ import 'package:my_flutter_app/core/utils/share_capture_util.dart';
 import 'package:my_flutter_app/core/utils/ui_calculations.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/journal_app_bar_overlay.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/journal_content_scroll.dart';
+import 'package:my_flutter_app/features/journal/presentation/widgets/journal_fab_buttons.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/share_options_bottom_sheet.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -176,6 +177,14 @@ class _JournalViewContentState extends State<_JournalViewContent> {
             statusBarHeight: statusBarHeight,
             isVisible: _isAppBarVisible,
             onClose: () => NavigationHelper.goBack(context),
+            onEdit: widget.onEdit,
+            onDelete: widget.onDelete,
+            onShareTap: () => _handleShareTap(context),
+          ),
+
+          // FAB buttons in bottom right corner
+          JournalFabButtons(
+            isVisible: _isAppBarVisible,
             onEdit: widget.onEdit,
             onDelete: widget.onDelete,
             onShareTap: () => _handleShareTap(context),

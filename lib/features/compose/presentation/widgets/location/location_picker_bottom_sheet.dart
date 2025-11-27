@@ -98,6 +98,23 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
             ),
           ),
 
+          // Title
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: UIConstants.defaultPadding,
+              vertical: Spacing.md,
+            ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                AppStrings.locationPickerTitle,
+                style: AppTypography.labelMedium.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+            ),
+          ),
+
           // Search bar
           UniversalSearchBar(
             hintText: AppStrings.locationSearchHint,

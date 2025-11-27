@@ -21,7 +21,7 @@ class AppColors {
   // Text
   static const Color textPrimaryLight = Color(0xFF5A4A3A);
   static const Color textSecondaryLight = Color(0xFF666666);
-  // Dark gray with subtle warm accent tint (90% gray + 10% accent)
+  // Darker for better contrast in light mode
   static const Color onSurfaceVariantLight = Color(0xFF5A5552);
 
   // Containers (light) — very light grey
@@ -46,10 +46,11 @@ class AppColors {
   static const Color errorDark = Color(0xFFD32F2F);
 
   // Text
-  static const Color textPrimaryDark = Color(0xFFE8D5C7);
+  // Less yellow, more neutral gray with subtle warmth
+  static const Color textPrimaryDark = Color(0xFFD8D0C8);
   static const Color textSecondaryDark = Color(0xFFB0B0B0);
-  // Medium gray with subtle warm accent tint (90% gray + 10% accent)
-  static const Color onSurfaceVariantDark = Color(0xFFA09994);
+  // Lighter for better contrast in dark mode
+  static const Color onSurfaceVariantDark = Color(0xFFC0B8B0);
 
   // Containers (dark) — dark grey
   static const Color primaryContainerDark = Color(0xFF2A2A2A);

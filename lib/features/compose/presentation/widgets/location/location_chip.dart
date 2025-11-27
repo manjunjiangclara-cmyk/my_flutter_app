@@ -59,7 +59,7 @@ class LocationChip extends StatelessWidget {
             onTap: onRemove,
             child: Icon(
               Icons.close,
-              size: UIConstants.locationIconSize,
+              size: UIConstants.tagCloseIconSize,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),

@@ -149,12 +149,25 @@ class _SplashScreenState extends State<SplashScreen>
                       // App Icon with scale animation
                       ScaleTransition(
                         scale: _scaleAnimation,
-                        child: Image.asset(
-                          AppStrings.splashAppIconPath,
-                          width: UIConstants.splashLogoSize,
-                          height: UIConstants.splashLogoSize,
-                          fit: BoxFit.contain,
-                        ),
+                        child: theme.brightness == Brightness.dark
+                            ? ColorFiltered(
+                                colorFilter: const ColorFilter.mode(
+                                  Colors.white,
+                                  BlendMode.srcIn,
+                                ),
+                                child: Image.asset(
+                                  AppStrings.splashAppIconPath,
+                                  width: UIConstants.splashLogoSize,
+                                  height: UIConstants.splashLogoSize,
+                                  fit: BoxFit.contain,
+                                ),
+                              )
+                            : Image.asset(
+                                AppStrings.splashAppIconPath,
+                                width: UIConstants.splashLogoSize,
+                                height: UIConstants.splashLogoSize,
+                                fit: BoxFit.contain,
+                              ),
                       ),
 
                       // Quote text (conditionally shown below icon)

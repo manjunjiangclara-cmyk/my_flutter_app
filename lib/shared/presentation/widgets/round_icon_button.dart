@@ -15,6 +15,7 @@ class RoundIconButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? borderColor;
   final double? borderWidth;
+  final bool enableInnerGlow;
 
   const RoundIconButton({
     super.key,
@@ -29,6 +30,7 @@ class RoundIconButton extends StatelessWidget {
     this.backgroundColor,
     this.borderColor,
     this.borderWidth,
+    this.enableInnerGlow = false,
   }) : assert(
          icon != null || svgAssetPath != null,
          'Provide icon or svgAssetPath',
@@ -71,6 +73,22 @@ class RoundIconButton extends StatelessWidget {
       splashRadius: UIConstants.actionButtonSplashRadius,
     );
 
+    // Build inner glow shadow if enabled
+    List<BoxShadow>? innerGlowShadows;
+    if (enableInnerGlow) {
+      // Use a subtle inner glow - lighter for both themes for clean, visible effect
+      final Color glowColor = Colors.white.withValues(
+        alpha: UIConstants.actionButtonInnerGlowOpacity,
+      );
+      innerGlowShadows = [
+        BoxShadow(
+          color: glowColor,
+          blurRadius: UIConstants.actionButtonInnerGlowBlur,
+          spreadRadius: UIConstants.actionButtonInnerGlowSpread,
+        ),
+      ];
+    }
+
     // Apply border if specified
     if (borderWidth != null && borderWidth! > 0) {
       final Color effectiveBorderColor =
@@ -83,6 +101,26 @@ class RoundIconButton extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(color: effectiveBorderColor, width: borderWidth!),
+          boxShadow: innerGlowShadows,
+        ),
+        child: ClipOval(
+          child: Material(
+            color: effectiveBackground,
+            shape: const CircleBorder(),
+            child: buttonContent,
+          ),
+        ),
+      );
+    }
+
+    // Apply inner glow without border
+    if (enableInnerGlow && innerGlowShadows != null) {
+      return Container(
+        width: effectiveDiameter,
+        height: effectiveDiameter,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: innerGlowShadows,
         ),
         child: ClipOval(
           child: Material(

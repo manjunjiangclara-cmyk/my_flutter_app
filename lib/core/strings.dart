@@ -54,6 +54,7 @@ class AppStrings {
   static const String locationSearchRetry = 'Retry';
   static const String locationSearching = 'Searching...';
   static const String locationSearchHint = 'Somewhere that holds a memory';
+  static const String locationPickerTitle = 'Add somewhere special to you ✨';
   static const String locationRecentSearches = 'Recent Searches';
   static const String locationNearby = 'Nearby';
   static const String locationSelectLocation = 'Select Location';
