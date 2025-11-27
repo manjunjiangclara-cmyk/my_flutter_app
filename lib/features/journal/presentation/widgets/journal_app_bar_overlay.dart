@@ -23,6 +23,12 @@ class JournalAppBarOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final startOpacity = isDark
+        ? UIConstants.journalAppBarGradientStartOpacity * 0.6
+        : UIConstants.journalAppBarGradientStartOpacity;
+    final endOpacity = UIConstants.journalAppBarGradientEndOpacity;
+
     return Positioned(
       top: 0,
       left: 0,
@@ -40,12 +46,12 @@ class JournalAppBarOverlay extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Theme.of(context).colorScheme.onSurface.withValues(
-                    alpha: UIConstants.journalAppBarGradientStartOpacity,
-                  ),
-                  Theme.of(context).colorScheme.onSurface.withValues(
-                    alpha: UIConstants.journalAppBarGradientEndOpacity,
-                  ),
+                  Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: startOpacity),
+                  Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: endOpacity),
                 ],
               ),
             ),
