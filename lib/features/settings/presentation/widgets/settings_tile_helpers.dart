@@ -7,15 +7,27 @@ Widget settingsLeadingIcon(
   required bool enabled,
 }) {
   final theme = Theme.of(context);
-  return SizedBox.fromSize(
-    size: const Size(
-      UIConstants.settingsTileIconContainerSize,
-      UIConstants.settingsTileIconContainerSize,
+  return Container(
+    width: UIConstants.settingsTileIconContainerSize,
+    height: UIConstants.settingsTileIconContainerSize,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      color: enabled
+          ? theme.colorScheme.primaryContainer.withOpacity(
+              UIConstants.settingsTileIconBackgroundOpacity,
+            )
+          : theme.colorScheme.surfaceContainerHighest.withOpacity(
+              UIConstants.settingsTileIconBackgroundOpacity * 0.5,
+            ),
     ),
-    child: Icon(
-      icon,
-      size: UIConstants.settingsTileIconSize,
-      color: enabled ? theme.colorScheme.primary : theme.disabledColor,
+    child: Center(
+      child: Icon(
+        icon,
+        size: UIConstants.settingsTileIconSize,
+        color: enabled
+            ? theme.colorScheme.primary
+            : theme.disabledColor,
+      ),
     ),
   );
 }

@@ -122,6 +122,7 @@ class AppStrings {
   static const String splashTitle = 'Hibi';
   static const String splashSubtitle = 'Capture your memories';
   static const String splashLoading = 'Loading...';
+  static const String splashAppIconPath = 'assets/icons/hibi_transparent.png';
 
   // Splash quotes were moved to `core/strings/splash_quotes.dart`.
 

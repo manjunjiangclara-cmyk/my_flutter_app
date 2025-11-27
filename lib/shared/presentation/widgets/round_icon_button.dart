@@ -43,14 +43,8 @@ class RoundIconButton extends StatelessWidget {
         padding ?? const EdgeInsets.all(UIConstants.smallPadding);
 
     final ColorScheme scheme = Theme.of(context).colorScheme;
-    final Color effectiveForeground = foregroundColor ?? scheme.onSurface;
-    final Color effectiveBackground =
-        backgroundColor ??
-        Color.lerp(
-          Colors.grey[100]!,
-          scheme.surface,
-          UIConstants.actionButtonBackgroundLerp,
-        )!;
+    final Color effectiveForeground = foregroundColor ?? scheme.onSecondary;
+    final Color effectiveBackground = backgroundColor ?? scheme.secondary;
 
     final Widget iconWidget = svgAssetPath != null
         ? SvgPicture.asset(

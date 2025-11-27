@@ -28,7 +28,7 @@ class DockedToolbar extends StatelessWidget {
     required this.selectedProgress,
     this.isVisible = true,
     this.elevationT = 0.0,
-    this.useLiquidGlass = false,
+    this.useLiquidGlass = true,
   }) : assert(items.length >= 2);
 
   @override
@@ -198,7 +198,12 @@ class DockedToolbar extends StatelessWidget {
                                   for (int i = 0; i < items.length; i++)
                                     _DockedToolbarButton(
                                       item: items[i],
-                                      isSelected: i == currentIndex,
+                                      isSelected:
+                                          i ==
+                                          selectedProgress.round().clamp(
+                                            0,
+                                            items.length - 1,
+                                          ),
                                       onPressed: () {
                                         HapticFeedback.lightImpact();
                                         onTap(i);
