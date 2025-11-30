@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import '../../../../../core/database/dao/tag_dao.dart';
 import '../../../../../core/strings.dart';
 import '../../../../../core/theme/fonts.dart';
-import '../../../../../core/theme/spacings.dart';
 import '../../../../../core/theme/ui_constants.dart';
+import '../../../../../shared/presentation/widgets/base_bottom_sheet.dart';
 import '../../../../../shared/presentation/widgets/search_bar.dart';
 import '../../../../../shared/presentation/widgets/tag_chip.dart';
 
@@ -84,55 +84,16 @@ class _TagPickerBottomSheetState extends State<TagPickerBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return BaseBottomSheet(
+      title: AppStrings.selected,
       height: MediaQuery.of(context).size.height * UIConstants.tagPickerHeight,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(UIConstants.locationPickerCornerRadius),
-          topRight: Radius.circular(UIConstants.locationPickerCornerRadius),
-        ),
-      ),
+      rightActionText: AppStrings.ok,
+      onRightAction: () => widget.onDone(_selected),
+      closeButtonIconSize: UIConstants.datePickerCloseButtonIconSize,
+      contentPadding: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Handle bar
-          Container(
-            margin: const EdgeInsets.only(top: Spacing.md),
-            width: UIConstants.bottomSheetHandleWidth,
-            height: UIConstants.bottomSheetHandleHeight,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                UIConstants.bottomSheetHandleRadius,
-              ),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: UIConstants.defaultPadding,
-              vertical: Spacing.xs,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  AppStrings.selected,
-                  style: AppTypography.labelSmall.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(
-                  height: UIConstants.defaultButtonHeight,
-                  child: ElevatedButton(
-                    onPressed: () => widget.onDone(_selected),
-                    child: const Text(AppStrings.ok),
-                  ),
-                ),
-              ],
-            ),
-          ),
           if (_selected.isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(
@@ -141,14 +102,14 @@ class _TagPickerBottomSheetState extends State<TagPickerBottomSheet> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: Spacing.xs),
+                  SizedBox(height: UIConstants.smallPadding),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
                         for (final tag in _selected) ...[
                           TagChip(tag: tag, onRemoveTag: (t) => _toggleTag(t)),
-                          const SizedBox(width: Spacing.sm),
+                          const SizedBox(width: UIConstants.smallPadding),
                         ],
                       ],
                     ),
@@ -178,7 +139,7 @@ class _TagPickerBottomSheetState extends State<TagPickerBottomSheet> {
               onSubmitted: (_) => _addQueryAsTag(),
             ),
           ),
-          const SizedBox(height: Spacing.xs),
+          SizedBox(height: UIConstants.smallPadding),
           Expanded(
             child: _filtered.isEmpty
                 ? Center(
@@ -194,7 +155,7 @@ class _TagPickerBottomSheetState extends State<TagPickerBottomSheet> {
                         ScrollViewKeyboardDismissBehavior.onDrag,
                     padding: const EdgeInsets.symmetric(
                       horizontal: UIConstants.defaultPadding,
-                      vertical: Spacing.sm,
+                      vertical: UIConstants.smallPadding,
                     ),
                     itemBuilder: (_, i) {
                       final display = _filtered

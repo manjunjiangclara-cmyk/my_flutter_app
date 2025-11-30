@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
 class UniversalSearchBar extends StatefulWidget {
@@ -94,7 +93,7 @@ class _UniversalSearchBarState extends State<UniversalSearchBar> {
           filled: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-              widget.borderRadius ?? UIConstants.searchBarCornerRadius,
+              widget.borderRadius ?? UIConstants.searchBarRoundedCornerRadius,
             ),
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.outline,
@@ -102,7 +101,7 @@ class _UniversalSearchBarState extends State<UniversalSearchBar> {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-              widget.borderRadius ?? UIConstants.searchBarCornerRadius,
+              widget.borderRadius ?? UIConstants.searchBarRoundedCornerRadius,
             ),
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.outline,
@@ -110,7 +109,7 @@ class _UniversalSearchBarState extends State<UniversalSearchBar> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-              widget.borderRadius ?? UIConstants.searchBarCornerRadius,
+              widget.borderRadius ?? UIConstants.searchBarRoundedCornerRadius,
             ),
             borderSide: BorderSide(
               color: Theme.of(context).colorScheme.outline,
@@ -119,7 +118,7 @@ class _UniversalSearchBarState extends State<UniversalSearchBar> {
           ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: UIConstants.defaultPadding,
-            vertical: Spacing.md,
+            vertical: UIConstants.mediumSpacing,
           ),
         ),
         onChanged: _onSearchChanged,

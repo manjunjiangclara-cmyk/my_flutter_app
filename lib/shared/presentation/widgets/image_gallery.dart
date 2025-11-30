@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/image_path_service.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/photo_viewer.dart';
@@ -309,8 +308,8 @@ class _ImageGalleryState extends State<ImageGallery> {
             child: SizedBox(
               width: UIConstants.photoAttachmentIconSize,
               height: UIConstants.photoAttachmentIconSize,
-              child: SpinKitRing(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/round_icon_button.dart';
 
@@ -20,7 +19,7 @@ class ComposeActionButtons extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: UIConstants.defaultPadding,
-        vertical: Spacing.md,
+        vertical: UIConstants.mediumSpacing,
       ),
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
@@ -44,7 +43,7 @@ class ComposeActionButtons extends StatelessWidget {
               borderWidth: UIConstants.actionButtonBorderWidth,
               enableInnerGlow: true,
             ),
-            const SizedBox(width: Spacing.lg),
+            const SizedBox(width: UIConstants.defaultPadding),
             RoundIconButton(
               icon: Icons.location_on_outlined,
               onPressed: onAddLocation,
@@ -53,7 +52,7 @@ class ComposeActionButtons extends StatelessWidget {
               borderWidth: UIConstants.actionButtonBorderWidth,
               enableInnerGlow: true,
             ),
-            const SizedBox(width: Spacing.lg),
+            const SizedBox(width: UIConstants.defaultPadding),
             RoundIconButton(
               icon: Icons.tag_outlined,
               onPressed: onAddTag,

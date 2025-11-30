@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
 /// A read-only location chip used to display an emoji and a location name.
@@ -42,7 +41,7 @@ class LocationChipDisplay extends StatelessWidget {
                   UIConstants.locationEmojiScale,
             ),
           ),
-          const SizedBox(width: Spacing.xs),
+          const SizedBox(width: UIConstants.extraSmallPadding),
           Flexible(
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: maxWidth),

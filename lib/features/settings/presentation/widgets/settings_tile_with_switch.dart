@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/settings/presentation/widgets/settings_text_styles.dart';
 import 'package:my_flutter_app/features/settings/presentation/widgets/settings_tile_helpers.dart';
@@ -57,7 +56,7 @@ class SettingsTileWithSwitch extends StatelessWidget {
               // Leading icon
               settingsLeadingIcon(context, icon: icon, enabled: enabled),
 
-              const SizedBox(width: Spacing.md),
+              const SizedBox(width: UIConstants.mediumSpacing),
 
               // Title and subtitle
               Expanded(

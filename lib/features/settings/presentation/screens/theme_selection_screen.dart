@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/theme_provider.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +37,7 @@ class ThemeSelectionScreen extends StatelessWidget {
                       context,
                       title: AppStrings.systemTheme,
                       subtitle: AppStrings.followSystemTheme,
-                      icon: Icons.brightness_auto,
+                      icon: Icons.brightness_auto_outlined,
                       isSelected: themeProvider.themeMode == ThemeMode.system,
                       onTap: () => themeProvider.setThemeMode(ThemeMode.system),
                     ),
@@ -47,7 +46,7 @@ class ThemeSelectionScreen extends StatelessWidget {
                       context,
                       title: AppStrings.lightTheme,
                       subtitle: AppStrings.alwaysLight,
-                      icon: Icons.light_mode,
+                      icon: Icons.light_mode_outlined,
                       isSelected: themeProvider.themeMode == ThemeMode.light,
                       onTap: () => themeProvider.setThemeMode(ThemeMode.light),
                     ),
@@ -56,7 +55,7 @@ class ThemeSelectionScreen extends StatelessWidget {
                       context,
                       title: AppStrings.darkTheme,
                       subtitle: AppStrings.alwaysDark,
-                      icon: Icons.dark_mode,
+                      icon: Icons.dark_mode_outlined,
                       isSelected: themeProvider.themeMode == ThemeMode.dark,
                       onTap: () => themeProvider.setThemeMode(ThemeMode.dark),
                     ),
@@ -117,7 +116,7 @@ class ThemeSelectionScreen extends StatelessWidget {
                           : Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
-                  const SizedBox(height: Spacing.xs),
+                  const SizedBox(height: UIConstants.extraSmallPadding),
                   Text(
                     subtitle,
                     style: AppTypography.bodyMedium.copyWith(
@@ -129,7 +128,7 @@ class ThemeSelectionScreen extends StatelessWidget {
             ),
             if (isSelected)
               Icon(
-                Icons.check_circle,
+                Icons.check_circle_outlined,
                 color: Theme.of(context).colorScheme.primary,
                 size: UIConstants.defaultIconSize,
               ),

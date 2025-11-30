@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart';
 import 'package:my_flutter_app/features/compose/presentation/screens/compose_screen.dart';
@@ -32,7 +31,7 @@ class ComposeHomeScreen extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
-              SizedBox(height: Spacing.xl),
+              SizedBox(height: UIConstants.largeSpacing),
               Text(
                 AppStrings.composePrompt,
                 style: AppTypography.displayLarge.copyWith(
@@ -40,7 +39,7 @@ class ComposeHomeScreen extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: Spacing.xxxl),
+              SizedBox(height: UIConstants.largePadding),
               GestureDetector(
                 onTap: () => _navigateToCompose(context),
                 child: CircleAvatar(

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/location_picker/location_picker_bloc.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/location_picker/location_picker_event.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/location_picker/location_picker_state.dart';
 import 'package:my_flutter_app/features/compose/presentation/models/location_search_models.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/location/location_search_result_item.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/base_bottom_sheet.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/refresh_indicator.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/search_bar.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/section_divider.dart';
 
 class LocationPickerBottomSheet extends StatefulWidget {
   final Function(LocationSearchResult) onLocationSelected;
@@ -74,54 +74,22 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return BaseBottomSheet(
+      title: AppStrings.locationPickerTitle,
       height:
           MediaQuery.of(context).size.height * UIConstants.locationPickerHeight,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(UIConstants.locationPickerCornerRadius),
-          topRight: Radius.circular(UIConstants.locationPickerCornerRadius),
-        ),
-      ),
+      closeButtonIconSize: UIConstants.datePickerCloseButtonIconSize,
+      contentPadding: EdgeInsets.zero,
       child: Column(
         children: [
-          // Handle bar
-          Container(
-            margin: const EdgeInsets.only(top: Spacing.md),
-            width: UIConstants.bottomSheetHandleWidth,
-            height: UIConstants.bottomSheetHandleHeight,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                UIConstants.bottomSheetHandleRadius,
-              ),
-            ),
-          ),
-
-          // Title
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: UIConstants.defaultPadding,
-              vertical: Spacing.md,
-            ),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                AppStrings.locationPickerTitle,
-                style: AppTypography.labelMedium.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-            ),
-          ),
-
           // Search bar
           UniversalSearchBar(
             hintText: AppStrings.locationSearchHint,
             onSearchChanged: _onSearchChanged,
             onClearSearch: _clearSearch,
+            padding: EdgeInsets.zero,
           ),
-
+          SizedBox(height: UIConstants.smallPadding),
           // Content with gradient overlay
           Expanded(
             child: Stack(
@@ -165,8 +133,8 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
   Widget _buildContent(LocationPickerState state) {
     if (state is LocationPickerLoading) {
       return Center(
-        child: SpinKitRing(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        child: CircularProgressIndicator(
+          color: Theme.of(context).colorScheme.primary,
         ),
       );
     }
@@ -181,7 +149,7 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
               size: UIConstants.largeIconSize,
               color: Theme.of(context).colorScheme.error,
             ),
-            const SizedBox(height: Spacing.md),
+            const SizedBox(height: UIConstants.mediumSpacing),
             Text(
               'Error: ${state.message}',
               style: AppTypography.bodyLarge.copyWith(
@@ -199,14 +167,22 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
         onRefresh: _onRefresh,
         child: ListView.builder(
           padding: const EdgeInsets.symmetric(
+            vertical: UIConstants.smallPadding,
             horizontal: UIConstants.defaultPadding,
           ),
           itemCount: state.searchResults.length,
           itemBuilder: (context, index) {
             final location = state.searchResults[index];
-            return LocationSearchResultItem(
-              location: location,
-              onTap: () => _onLocationSelected(location),
+            final isLast = index == state.searchResults.length - 1;
+
+            return Column(
+              children: [
+                LocationSearchResultItem(
+                  location: location,
+                  onTap: () => _onLocationSelected(location),
+                ),
+                if (!isLast) const SectionDivider(),
+              ],
             );
           },
         ),
@@ -223,14 +199,14 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
               size: UIConstants.largeIconSize,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
-            const SizedBox(height: Spacing.md),
+            const SizedBox(height: UIConstants.mediumSpacing),
             Text(
               AppStrings.noLocationsFound,
               style: AppTypography.bodyLarge.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(height: Spacing.xs),
+            const SizedBox(height: UIConstants.extraSmallPadding),
             Text(
               AppStrings.tryDifferentLocation,
               style: AppTypography.bodyMedium.copyWith(

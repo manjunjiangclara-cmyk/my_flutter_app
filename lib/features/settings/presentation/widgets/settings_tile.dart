@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/settings/presentation/widgets/settings_text_styles.dart';
 import 'package:my_flutter_app/features/settings/presentation/widgets/settings_tile_helpers.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/trailing_chevron.dart';
 
 /// A reusable widget for displaying individual settings items in Airbnb style.
 class SettingsTile extends StatelessWidget {
@@ -47,7 +47,7 @@ class SettingsTile extends StatelessWidget {
               // Leading icon
               settingsLeadingIcon(context, icon: icon, enabled: enabled),
 
-              const SizedBox(width: Spacing.md),
+              const SizedBox(width: UIConstants.mediumSpacing),
 
               // Title
               Expanded(
@@ -58,12 +58,7 @@ class SettingsTile extends StatelessWidget {
               ),
 
               // Trailing chevron
-              if (enabled)
-                Icon(
-                  Icons.chevron_right,
-                  size: UIConstants.settingsTileTrailingIconSize,
-                  color: theme.colorScheme.onSurface.withOpacity(0.4),
-                ),
+              if (enabled) const TrailingChevron(),
             ],
           ),
         ),

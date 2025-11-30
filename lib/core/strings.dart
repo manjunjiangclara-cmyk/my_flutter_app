@@ -13,6 +13,7 @@ class AppStrings {
   static const String ok = 'OK';
   static const String cancel = 'Cancel';
   static const String confirm = 'Confirm';
+  static const String save = 'Save';
   static const String delete = 'Delete';
   static const String settings = 'Settings';
   static const String memory = 'Memory';

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
 /// Loading state widget for journal view
 class JournalLoadingState extends StatelessWidget {
@@ -13,8 +12,10 @@ class JournalLoadingState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SpinKitRing(color: Theme.of(context).colorScheme.onSurfaceVariant),
-            SizedBox(height: Spacing.md),
+            CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            SizedBox(height: UIConstants.mediumSpacing),
             Text('Loading journal...'),
           ],
         ),

@@ -19,7 +19,7 @@ class ThemeBottomSheet extends StatelessWidget {
             _buildThemeOption(
               context,
               title: AppStrings.systemTheme,
-              icon: Icons.brightness_auto,
+              icon: Icons.brightness_auto_outlined,
               isSelected: themeProvider.themeMode == ThemeMode.system,
               onTap: () {
                 themeProvider.setThemeMode(ThemeMode.system);
@@ -29,7 +29,7 @@ class ThemeBottomSheet extends StatelessWidget {
             _buildThemeOption(
               context,
               title: AppStrings.lightTheme,
-              icon: Icons.light_mode,
+              icon: Icons.light_mode_outlined,
               isSelected: themeProvider.themeMode == ThemeMode.light,
               onTap: () {
                 themeProvider.setThemeMode(ThemeMode.light);
@@ -39,7 +39,7 @@ class ThemeBottomSheet extends StatelessWidget {
             _buildThemeOption(
               context,
               title: AppStrings.darkTheme,
-              icon: Icons.dark_mode,
+              icon: Icons.dark_mode_outlined,
               isSelected: themeProvider.themeMode == ThemeMode.dark,
               onTap: () {
                 themeProvider.setThemeMode(ThemeMode.dark);
@@ -93,7 +93,7 @@ class ThemeBottomSheet extends StatelessWidget {
             ),
             if (isSelected)
               Icon(
-                Icons.check_circle,
+                Icons.check_circle_outlined,
                 color: theme.colorScheme.primary,
                 size: UIConstants.defaultIconSize,
               ),
@@ -111,6 +111,8 @@ class ThemeBottomSheet extends StatelessWidget {
       height:
           MediaQuery.of(context).size.height *
           UIConstants.themeBottomSheetHeight,
+      onClose: () => Navigator.of(context).pop(),
+      closeButtonIconSize: UIConstants.datePickerCloseButtonIconSize,
       child: const ThemeBottomSheet(),
     );
   }

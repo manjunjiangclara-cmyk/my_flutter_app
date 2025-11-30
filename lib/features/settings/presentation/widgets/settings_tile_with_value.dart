@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/settings/presentation/widgets/settings_text_styles.dart';
 import 'package:my_flutter_app/features/settings/presentation/widgets/settings_tile_helpers.dart';
@@ -52,7 +51,7 @@ class SettingsTileWithValue extends StatelessWidget {
               // Leading icon
               settingsLeadingIcon(context, icon: icon, enabled: enabled),
 
-              const SizedBox(width: Spacing.md),
+              const SizedBox(width: UIConstants.mediumSpacing),
 
               // Title
               Expanded(
@@ -73,7 +72,7 @@ class SettingsTileWithValue extends StatelessWidget {
                         color: theme.colorScheme.onSurface.withOpacity(0.7),
                       ),
                     ),
-                    const SizedBox(width: Spacing.xs),
+                    const SizedBox(width: UIConstants.extraSmallPadding),
                     Transform.rotate(
                       angle: UIConstants.lightDropdownArrowRotation,
                       child: Icon(

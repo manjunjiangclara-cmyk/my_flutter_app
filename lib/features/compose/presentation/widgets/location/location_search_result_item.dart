@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/models/location_search_models.dart';
 import 'package:my_flutter_app/features/compose/presentation/models/place_types.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/trailing_chevron.dart';
 
 class LocationSearchResultItem extends StatelessWidget {
   final LocationSearchResult location;
@@ -26,8 +26,7 @@ class LocationSearchResultItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(UIConstants.defaultRadius),
         child: Container(
           padding: const EdgeInsets.symmetric(
-            horizontal: UIConstants.defaultPadding,
-            vertical: Spacing.md,
+            vertical: UIConstants.smallSpacing,
           ),
           decoration: BoxDecoration(
             color: isSelected
@@ -51,9 +50,9 @@ class LocationSearchResultItem extends StatelessWidget {
                             location.types!.isNotEmpty) ...[
                           Text(
                             emojiForTypes(location.types!),
-                            style: AppTypography.bodyLarge,
+                            style: AppTypography.labelLarge,
                           ),
-                          const SizedBox(width: Spacing.xs),
+                          const SizedBox(width: UIConstants.extraSmallPadding),
                         ],
                         Expanded(
                           child: Text(
@@ -67,43 +66,16 @@ class LocationSearchResultItem extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: Spacing.xs),
+                    const SizedBox(height: UIConstants.extraSmallPadding),
                     Text(
                       location.address,
-                      style: AppTypography.bodyMedium.copyWith(
+                      style: AppTypography.labelSmall.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: Spacing.xs),
-                    // Row(
-                    //   children: [
-                    //     Text(
-                    //       location.displayType,
-                    //       style: AppTypography.labelSmall.copyWith(
-                    //         color: Theme.of(context).colorScheme.primary,
-                    //         fontWeight: FontWeight.w500,
-                    //       ),
-                    //     ),
-                    //     if (location.rating != null) ...[
-                    //       const SizedBox(width: Spacing.sm),
-                    //       Icon(
-                    //         Icons.star,
-                    //         size: UIConstants.locationRatingIconSize,
-                    //         color: Theme.of(context).colorScheme.primary,
-                    //       ),
-                    //       const SizedBox(width: Spacing.xs),
-                    //       Text(
-                    //         location.rating!.toStringAsFixed(1),
-                    //         style: AppTypography.labelSmall.copyWith(
-                    //           color: Theme.of(context).colorScheme.primary,
-                    //           fontWeight: FontWeight.w500,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ],
-                    // ),
+                    const SizedBox(height: UIConstants.extraSmallPadding),
                   ],
                 ),
               ),
@@ -115,11 +87,7 @@ class LocationSearchResultItem extends StatelessWidget {
                   color: Theme.of(context).colorScheme.primary,
                 )
               else
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: UIConstants.smallIconSize,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+                const TrailingChevron(),
             ],
           ),
         ),

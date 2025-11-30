@@ -12,9 +12,9 @@ class JournalStrings {
   static const String closeJournal = 'Close Journal';
 
   // ---------- Delete Confirmation Dialog ----------
-  static const String deleteJournalTitle = 'Delete Journal';
+  static const String deleteJournalTitle = 'Delete memory?';
   static const String deleteJournalMessage =
-      'Are you sure you want to delete this journal? This action cannot be undone.';
+      'Are you sure you want to delete this memory? This action cannot be undone.';
   static const String deleteJournalSuccess = 'Journal deleted successfully';
   static const String cancel = 'Cancel';
 

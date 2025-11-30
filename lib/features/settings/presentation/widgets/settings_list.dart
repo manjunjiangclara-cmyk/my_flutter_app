@@ -6,6 +6,7 @@ import 'package:my_flutter_app/features/settings/presentation/widgets/settings_s
 import 'package:my_flutter_app/features/settings/presentation/widgets/settings_tile.dart';
 import 'package:my_flutter_app/features/settings/presentation/widgets/settings_tile_with_switch.dart';
 import 'package:my_flutter_app/features/settings/presentation/widgets/settings_tile_with_value.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/section_divider.dart';
 
 /// A widget that displays a list of settings sections.
 class SettingsList extends StatelessWidget {
@@ -17,7 +18,6 @@ class SettingsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: sections.asMap().entries.expand((entry) {
@@ -25,10 +25,10 @@ class SettingsList extends StatelessWidget {
         final section = entry.value;
         return [
           // Section title
-          if (index > 0) const SizedBox(height: UIConstants.largePadding),
+          if (index > 0) const SizedBox(height: UIConstants.mediumPadding),
           Padding(
             padding: const EdgeInsets.only(
-              left: UIConstants.settingsCardContentLeftPadding,
+              left: UIConstants.defaultPadding,
               bottom: UIConstants.smallPadding,
             ),
             child: Text(
@@ -73,18 +73,7 @@ class SettingsList extends StatelessWidget {
                           onTap: item.onTap,
                           enabled: item.enabled,
                         ),
-                  if (!isLast)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: UIConstants.smallPadding,
-                        vertical: UIConstants.extraSmallPadding,
-                      ),
-                      child: Divider(
-                        height: UIConstants.settingsSectionDividerHeight,
-                        thickness: UIConstants.settingsSectionDividerHeight,
-                        color: theme.colorScheme.outline.withOpacity(0.4),
-                      ),
-                    ),
+                  if (!isLast) const SectionDivider(),
                 ],
               );
             }).toList(),

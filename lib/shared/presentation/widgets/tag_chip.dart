@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/tag_color_utils.dart';
 
@@ -13,8 +12,8 @@ class TagChips extends StatelessWidget {
 
   const TagChips({
     required this.tags,
-    this.spacing = Spacing.sm,
-    this.runSpacing = Spacing.xs,
+    this.spacing = UIConstants.smallPadding,
+    this.runSpacing = UIConstants.extraSmallPadding,
     this.onRemoveTag,
     super.key,
   });

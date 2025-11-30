@@ -6,10 +6,13 @@ class UIConstants {
   static const bool enableImageShadows = false;
 
   // Spacing
-  static const double extraSmallPadding = 4.0;
   static const double tinyPadding = 2.0;
-  static const double defaultPadding = 16.0;
+  static const double extraSmallPadding = 4.0;
+  static const double smallSpacing = 6.0;
   static const double smallPadding = 8.0;
+  static const double mediumSpacing = 12.0;
+  static const double defaultPadding = 16.0;
+  static const double largeSpacing = 20.0;
   static const double mediumPadding = 24.0;
   static const double largePadding = 32.0;
   static const double extraLargePadding = 48.0;
@@ -36,7 +39,7 @@ class UIConstants {
   static const double iconButtonSize = 30.0;
 
   // Button Heights
-  static const double smallButtonHeight = 36.0;
+  static const double smallButtonHeight = 44.0;
   static const double defaultButtonHeight = 48.0;
   static const double largeButtonHeight = 56.0;
 
@@ -133,6 +136,8 @@ class UIConstants {
   static const int datePickerFirstYear = 1970;
   static int get datePickerLastYear => DateTime.now().year;
   static const double cupertinoDatePickerHeight = 216.0;
+  static const double datePickerHeaderSpacerWidth = 48.0;
+  static const double datePickerCloseButtonIconSize = 24.0;
 
   // Image Picker
   static const int imageQuality = 85;
@@ -150,7 +155,7 @@ class UIConstants {
   static const double actionButtonIconSize = 24.0;
   static const double actionButtonPadding = 12.0;
   // Circular action button sizing
-  static const double actionButtonDiameter = defaultButtonHeight; // 48.0
+  static const double actionButtonDiameter = defaultButtonHeight; // 44.0
   static const double actionButtonSplashRadius = actionButtonDiameter / 2;
   static const double actionButtonBorderWidth = 1.0;
   // Action button colors
@@ -202,8 +207,8 @@ class UIConstants {
   static const double journalAppBarOverlayOpacity = 0.8;
   static const double journalAppBarGradientStartOpacity = 0.5;
   static const double journalAppBarGradientEndOpacity = 0.0;
-  static const double journalAppBarActionShadowOpacity = 0.25;
-  static const double journalAppBarActionShadowBlur = 8.0;
+  static const double journalAppBarActionShadowOpacity = 0.12;
+  static const double journalAppBarActionShadowBlur = 6.0;
   static const double journalAppBarActionShadowOffsetY = 2.0;
   static const double journalAppBarSlideHiddenOffsetY = -1.0;
 
@@ -326,21 +331,30 @@ class UIConstants {
   static const double searchBarMaxResults = 20.0;
   static const Duration searchBarTimeout = Duration(seconds: 6);
   static const double searchBarCornerRadius = mediumRadius;
+  static const double searchBarRoundedCornerRadius = 24.0;
 
   // Bottom Sheet Handle
   static const double bottomSheetHandleWidth = 40.0;
   static const double bottomSheetHandleHeight = 4.0;
   static const double bottomSheetHandleRadius = 2.0;
 
+  // Bottom Sheet Radius
+  static const double bottomSheetRadius = 32.0;
+
   // Bottom Sheet Heights
   static const double locationPickerHeight = 0.8;
   static const double tagPickerHeight = 0.85;
   static const double shareOptionsHeight = 0.35;
   static const double themeBottomSheetHeight = 0.35;
+  static const double deleteBottomSheetHeight = 0.4;
+
+  // Delete Button (Bottom Sheet)
+  static const double deleteButtonHeight = 48.0;
+  static const double deleteButtonBorderRadius = 24.0;
 
   // Location Picker Bottom Sheet
-  static const double locationPickerCornerRadius = extraLargeRadius;
-  static const double shareOptionsCornerRadius = extraLargeRadius;
+  static const double locationPickerCornerRadius = bottomSheetRadius;
+  static const double shareOptionsCornerRadius = bottomSheetRadius;
   static const double shareOptionItemPadding = 16.0;
   static const double shareOptionIconSize = defaultIconSize;
   static const double locationResultItemPadding = 16.0;

@@ -2,7 +2,6 @@ import 'dart:developer' as developer;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:reorderables/reorderables.dart';
 
@@ -95,8 +94,8 @@ class ImageGallery extends StatelessWidget {
             ),
             if (onImageDelete != null)
               Positioned(
-                top: Spacing.xxs,
-                right: Spacing.xxs,
+                top: UIConstants.tinyPadding,
+                right: UIConstants.tinyPadding,
                 child: GestureDetector(
                   onTap: () => onImageDelete!(index),
                   child: Container(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/date_formatter.dart';
 import 'package:my_flutter_app/features/journal/presentation/widgets/journal_header_image.dart';
@@ -47,7 +46,7 @@ class JournalContentScroll extends StatelessWidget {
                       location: journal.location,
                       locationTypes: journal.locationTypes,
                     ),
-                    const SizedBox(height: Spacing.xxl),
+                    const SizedBox(height: UIConstants.mediumPadding),
                     JournalContentSection(content: journal.content),
                     _JournalImageGallery(imagePaths: journal.imagePaths),
                     _JournalTags(tags: journal.tags),
@@ -97,14 +96,14 @@ class _JournalImageGallery extends StatelessWidget {
 
     if (filteredPaths.isEmpty) {
       // Return single spacing when no images to maintain consistent spacing
-      return const SizedBox(height: Spacing.xxl);
+      return const SizedBox(height: UIConstants.mediumPadding);
     }
 
     return Column(
       children: [
-        const SizedBox(height: Spacing.xxl),
+        const SizedBox(height: UIConstants.mediumPadding),
         ImageGallery(imagePaths: imagePaths, config: config),
-        const SizedBox(height: Spacing.xxl),
+        const SizedBox(height: UIConstants.mediumPadding),
       ],
     );
   }
@@ -121,13 +120,13 @@ class _JournalHeaderImage extends StatelessWidget {
         (imagePaths.length % UIConstants.journalImageGalleryColumns) == 1;
 
     if (!shouldShow) {
-      return const SizedBox(height: Spacing.xxl);
+      return const SizedBox(height: UIConstants.mediumPadding);
     }
 
     return Column(
       children: [
         JournalHeaderImage(imagePaths: imagePaths),
-        SizedBox(height: Spacing.xxl),
+        SizedBox(height: UIConstants.mediumPadding),
       ],
     );
   }

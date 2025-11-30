@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/compose/presentation/models/location_search_models.dart';
 
@@ -41,7 +40,7 @@ class LocationChip extends StatelessWidget {
                   UIConstants.locationEmojiScale,
             ),
           ),
-          const SizedBox(width: Spacing.xs),
+          const SizedBox(width: UIConstants.extraSmallPadding),
           Flexible(
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: maxWidth),
@@ -54,7 +53,7 @@ class LocationChip extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: Spacing.xs),
+          const SizedBox(width: UIConstants.extraSmallPadding),
           GestureDetector(
             onTap: onRemove,
             child: Icon(

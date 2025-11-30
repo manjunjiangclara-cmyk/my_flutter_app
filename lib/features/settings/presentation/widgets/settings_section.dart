@@ -28,7 +28,7 @@ class SettingsSection extends StatelessWidget {
       elevation: UIConstants.smallElevation,
       shadowColor: theme.colorScheme.shadow.withOpacity(0.2),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(UIConstants.largeRadius),
+        borderRadius: BorderRadius.circular(UIConstants.extraLargeRadius),
       ),
       child: Padding(
         padding: const EdgeInsets.only(

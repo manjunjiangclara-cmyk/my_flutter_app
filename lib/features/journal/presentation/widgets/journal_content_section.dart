@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
+import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/journal/presentation/strings/journal_strings.dart';
 
 /// Content section widget for journal view
@@ -28,7 +28,7 @@ class JournalContentSection extends StatelessWidget {
         children: [
           for (int i = 0; i < paragraphs.length; i++) ...<Widget>[
             Text(paragraphs[i], style: AppTypography.bodyLarge),
-            if (i < paragraphs.length - 1) const SizedBox(height: Spacing.lg),
+            if (i < paragraphs.length - 1) const SizedBox(height: UIConstants.defaultPadding),
           ],
         ],
       ),

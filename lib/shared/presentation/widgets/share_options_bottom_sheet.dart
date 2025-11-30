@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_app/core/strings.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/shared/presentation/widgets/base_bottom_sheet.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/section_divider.dart';
+import 'package:my_flutter_app/shared/presentation/widgets/trailing_chevron.dart';
 
 enum ShareOption { shareToApps, saveToPhotos }
 
@@ -13,15 +14,17 @@ class ShareOptionsBottomSheet extends StatelessWidget {
   static Future<ShareOption?> show(BuildContext context) {
     return BaseBottomSheet.show<ShareOption>(
       context: context,
+      title: AppStrings.shareOptionsTitle,
       height:
           MediaQuery.of(context).size.height * UIConstants.shareOptionsHeight,
+      onClose: () => Navigator.of(context).pop(),
+      closeButtonIconSize: UIConstants.datePickerCloseButtonIconSize,
       child: const ShareOptionsBottomSheet(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Column(
       children: [
         _ShareOptionItem(
@@ -29,17 +32,7 @@ class ShareOptionsBottomSheet extends StatelessWidget {
           label: AppStrings.shareToApps,
           onTap: () => Navigator.of(context).pop(ShareOption.shareToApps),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: UIConstants.smallPadding,
-            vertical: UIConstants.extraSmallPadding,
-          ),
-          child: Divider(
-            height: UIConstants.settingsSectionDividerHeight,
-            thickness: UIConstants.settingsSectionDividerHeight,
-            color: theme.colorScheme.outline.withOpacity(0.4),
-          ),
-        ),
+        const SectionDivider(),
         _ShareOptionItem(
           icon: Icons.photo_library_outlined,
           label: AppStrings.saveToPhotos,
@@ -90,17 +83,13 @@ class _ShareOptionItem extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(width: Spacing.md),
+              const SizedBox(width: UIConstants.mediumSpacing),
 
               // Title
               Expanded(child: Text(label, style: AppTypography.bodyLarge)),
 
               // Trailing chevron
-              Icon(
-                Icons.chevron_right,
-                size: UIConstants.settingsTileTrailingIconSize,
-                color: theme.colorScheme.onSurface.withOpacity(0.4),
-              ),
+              const TrailingChevron(),
             ],
           ),
         ),

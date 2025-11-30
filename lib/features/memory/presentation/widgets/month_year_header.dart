@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
 /// Displays a collapsible month and year header for grouped memories
@@ -39,7 +38,7 @@ class _MonthYearHeaderState extends State<MonthYearHeader> {
         duration: UIConstants.fastAnimation,
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            vertical: Spacing.lg,
+            vertical: UIConstants.defaultPadding,
             horizontal: 0,
           ),
           child: Row(

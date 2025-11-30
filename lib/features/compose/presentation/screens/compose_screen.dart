@@ -1,13 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/services/journal_change_notifier.dart';
 import 'package:my_flutter_app/core/strings.dart';
-import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/core/utils/date_formatter.dart';
 import 'package:my_flutter_app/features/compose/presentation/bloc/compose_bloc.dart';
@@ -19,6 +15,7 @@ import 'package:my_flutter_app/features/compose/presentation/widgets/compose_act
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_app_bar.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_dialogs.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/compose_text_input.dart';
+import 'package:my_flutter_app/features/compose/presentation/widgets/date_picker_bottom_sheet.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/location/location_chip.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/photo/photo_attachments.dart';
 import 'package:my_flutter_app/features/compose/presentation/widgets/tags/tag_picker_bottom_sheet.dart';
@@ -157,70 +154,16 @@ class _ComposeScreenView extends StatelessWidget {
     BuildContext context,
     DateTime? initial,
   ) async {
-    DateTime temp = initial ?? DateTime.now();
-
     await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (ctx) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Theme.of(ctx).colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(UIConstants.extraLargeRadius),
-            ),
-          ),
-          padding: const EdgeInsets.only(
-            left: UIConstants.defaultPadding,
-            right: UIConstants.defaultPadding,
-            top: UIConstants.defaultPadding,
-            bottom: UIConstants.defaultPadding,
-          ),
-          child: SafeArea(
-            top: false,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.of(ctx).pop(),
-                      child: const Text(AppStrings.cancel),
-                    ),
-                    Text(AppStrings.selectDate, style: AppTypography.bodyLarge),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(ctx).pop();
-                        context.read<ComposeBloc>().add(
-                          ComposeDateSelected(temp),
-                        );
-                      },
-                      child: const Text(AppStrings.ok),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: UIConstants.cupertinoDatePickerHeight,
-                  child: CupertinoTheme(
-                    data: CupertinoTheme.of(ctx),
-                    child: CupertinoDatePicker(
-                      mode: CupertinoDatePickerMode.date,
-                      initialDateTime: temp,
-                      minimumDate: DateTime(
-                        UIConstants.datePickerFirstYear,
-                        1,
-                        1,
-                      ),
-                      maximumDate: DateTime.now(), // Prevent future dates
-                      onDateTimeChanged: (d) => temp = d,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+        return DatePickerBottomSheet(
+          initialDate: initial,
+          onDateSelected: (date) {
+            context.read<ComposeBloc>().add(ComposeDateSelected(date));
+          },
         );
       },
     );
@@ -269,11 +212,11 @@ class _ComposeContentArea extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _TextInputSection(content: content),
-          const SizedBox(height: Spacing.lg),
+          const SizedBox(height: UIConstants.defaultPadding),
           _AttachmentsSection(content: content),
-          const SizedBox(height: Spacing.lg),
+          const SizedBox(height: UIConstants.defaultPadding),
           _LocationSection(content: content),
-          const SizedBox(height: Spacing.lg),
+          const SizedBox(height: UIConstants.defaultPadding),
           _TagsSection(content: content),
           _KeyboardPadding(),
         ],
@@ -452,17 +395,17 @@ class _PostingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(Spacing.md),
+      padding: const EdgeInsets.all(UIConstants.mediumSpacing),
       child: Row(
         children: [
           SizedBox(
             width: ComposeConstants.postingIndicatorSize,
             height: ComposeConstants.postingIndicatorSize,
-            child: SpinKitRing(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            child: CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
-          SizedBox(width: Spacing.sm),
+          SizedBox(width: UIConstants.smallPadding),
           Text(ComposeStrings.postingMemory),
         ],
       ),

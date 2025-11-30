@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 
 class TimelineIndicator extends StatelessWidget {
@@ -32,7 +31,7 @@ class TimelineIndicator extends StatelessWidget {
           )
         else
           const SizedBox(
-            height: Spacing.sm,
+            height: UIConstants.smallPadding,
           ), // Half the dot height to align its center for the first item
         Container(
           width: UIConstants.timelineDotSize,
@@ -85,7 +84,7 @@ class TimelineIndicator extends StatelessWidget {
           )
         else
           const SizedBox(
-            height: Spacing.sm,
+            height: UIConstants.smallPadding,
           ), // Half the dot height to align its center for the last item
       ],
     );

@@ -25,8 +25,12 @@ Widget settingsLeadingIcon(
         icon,
         size: UIConstants.settingsTileIconSize,
         color: enabled
-            ? theme.colorScheme.primary
-            : theme.disabledColor,
+            ? theme.colorScheme.primary.withValues(
+                alpha: UIConstants.dockedBarUnselectedTextOpacity,
+              )
+            : theme.colorScheme.primary.withValues(
+                alpha: UIConstants.dockedBarUnselectedTextOpacity * 0.5,
+              ),
       ),
     ),
   );

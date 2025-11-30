@@ -35,7 +35,7 @@ class SettingsConstants {
       title: AppStrings.general,
       items: [
         SettingsItemModel(
-          icon: Icons.palette_rounded,
+          icon: Icons.palette_outlined,
           title: AppStrings.theme,
           value: getThemeDisplayValue(context),
           onTap: (context) {
@@ -43,7 +43,7 @@ class SettingsConstants {
           },
         ),
         SettingsItemModel(
-          icon: Icons.format_quote_rounded,
+          icon: Icons.format_quote_outlined,
           title: AppStrings.showSplashQuote,
           subtitle: AppStrings.showSplashQuoteSubtitle,
           isSwitch: true,
@@ -53,7 +53,7 @@ class SettingsConstants {
           },
         ),
         SettingsItemModel(
-          icon: Icons.notifications_rounded,
+          icon: Icons.notifications_outlined,
           title: AppStrings.notifications,
           onTap: (context) {
             // Handle notification settings
@@ -66,7 +66,7 @@ class SettingsConstants {
       items: [
         // Biometric toggle
         SettingsItemModel(
-          icon: Icons.face_retouching_natural_rounded,
+          icon: Icons.face_retouching_natural_outlined,
           title: AppStrings.requireBiometricOnLaunch,
           subtitle: AppStrings.biometricDescription,
           isSwitch: true,
@@ -76,14 +76,14 @@ class SettingsConstants {
           },
         ),
         SettingsItemModel(
-          icon: Icons.backup_rounded,
+          icon: Icons.backup_outlined,
           title: AppStrings.backupAndSync,
           onTap: (context) {
             // Handle backup settings
           },
         ),
         SettingsItemModel(
-          icon: Icons.security_rounded,
+          icon: Icons.security_outlined,
           title: AppStrings.privacy,
           onTap: (context) {
             // Handle privacy settings
@@ -95,12 +95,12 @@ class SettingsConstants {
       title: 'About',
       items: [
         SettingsItemModel(
-          icon: Icons.info_rounded,
+          icon: Icons.info_outlined,
           title: AppStrings.appVersion,
           enabled: false, // Version info is not clickable
         ),
         SettingsItemModel(
-          icon: Icons.help_rounded,
+          icon: Icons.help_outlined,
           title: AppStrings.helpAndSupport,
           onTap: (context) {
             // Handle help

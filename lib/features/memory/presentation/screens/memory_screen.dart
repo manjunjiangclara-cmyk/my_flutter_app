@@ -2,11 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:my_flutter_app/core/di/injection.dart';
 import 'package:my_flutter_app/core/services/journal_change_notifier.dart';
 import 'package:my_flutter_app/core/theme/fonts.dart';
-import 'package:my_flutter_app/core/theme/spacings.dart';
 import 'package:my_flutter_app/core/theme/ui_constants.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:my_flutter_app/features/memory/presentation/bloc/memory_event.dart';
@@ -140,8 +138,8 @@ class _MemoryListState extends State<_MemoryList> {
       builder: (context, state) {
         if (state.isLoading) {
           return Center(
-            child: SpinKitRing(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            child: CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.primary,
             ),
           );
         }
@@ -152,7 +150,7 @@ class _MemoryListState extends State<_MemoryList> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(state.errorMessage!),
-                const SizedBox(height: Spacing.md),
+                const SizedBox(height: UIConstants.mediumSpacing),
                 ElevatedButton(
                   onPressed: () => context.read<MemoryBloc>().add(
                     const MemoryLoadRequested(),
@@ -268,7 +266,7 @@ class _MemoryListState extends State<_MemoryList> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 TimelineIndicator(isFirst: isFirst, isLast: isLast),
-                const SizedBox(width: Spacing.lg),
+                const SizedBox(width: UIConstants.defaultPadding),
                 Expanded(
                   child: MemoryCard(
                     key: ValueKey(memory.journalId),
